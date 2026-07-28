@@ -1,0 +1,21 @@
+{
+  "name": "leadforge",
+  "private": true,
+  "version": "0.1.0",
+  "description": "AI Website Lead Finder & Outreach Platform",
+  "packageManager": "pnpm@11.17.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "dev:worker": "pnpm --filter worker dev",
+    "build": "pnpm --filter web build",
+    "lint": "pnpm --filter web lint",
+    "worker": "pnpm --filter worker start"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

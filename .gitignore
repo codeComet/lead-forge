@@ -1,0 +1,36 @@
+# deps
+node_modules/
+.pnpm-store/
+
+# next
+.next/
+out/
+next-env.d.ts
+
+# build
+dist/
+build/
+
+# env
+.env
+.env*.local
+.env.local
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# os / editor
+.DS_Store
+.vscode/
+.idea/
+
+# misc
+*.tsbuildinfo
+coverage/
+playwright-report/
+.turbo/
+
+# supabase local CLI state (linked project ref, versions)
+supabase/.temp/

@@ -1,0 +1,45 @@
+// Google PageSpeed Insights (Lighthouse) — performance / SEO / accessibility
+// scores without running Lighthouse ourselves. Best-effort: returns null if no
+// key is configured or the call fails.
+
+const PSI_URL = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed";
+
+export async function runPageSpeed(url) {
+  const key = process.env.PAGESPEED_API_KEY;
+  if (!key || !url) return null;
+
+  const params = new URLSearchParams({ url, key, strategy: "mobile" });
+  for (const c of ["performance", "seo", "accessibility", "best-practices"]) {
+    params.append("category", c);
+  }
+
+  try {
+    const controller = new AbortController();
+    const t = setTimeout(() => controller.abort(), 45000);
+    const res = await fetch(`${PSI_URL}?${params}`, { signal: controller.signal });
+    clearTimeout(t);
+    if (!res.ok) return null;
+    const json = await res.json();
+
+    const cats = json?.lighthouseResult?.categories ?? {};
+    const audits = json?.lighthouseResult?.audits ?? {};
+    const pct = (c) => (cats[c]?.score != null ? Math.round(cats[c].score * 100) : null);
+
+    // Loading Experience field data (real-world) if present.
+    const lcp = audits["largest-contentful-paint"]?.numericValue ?? null;
+    const tti = audits["interactive"]?.numericValue ?? null;
+
+    return {
+      performance: pct("performance"),
+      seo: pct("seo"),
+      accessibility: pct("accessibility"),
+      bestPractices: pct("best-practices"),
+      lcpMs: lcp != null ? Math.round(lcp) : null,
+      ttiMs: tti != null ? Math.round(tti) : null,
+      // Lighthouse runs a mobile viewport; a decent perf+SEO implies mobile-ready.
+      mobileFriendly: pct("performance") != null ? pct("performance") >= 50 : null,
+    };
+  } catch {
+    return null;
+  }
+}

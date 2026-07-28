@@ -1,0 +1,17 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Native build-script decisions (required by this machine's pnpm supply-chain
+# policy). sharp is needed by Next.js image optimization; the other two are
+# optional perf/resolver extras we don't require.
+allowBuilds:
+  sharp: true
+  msgpackr-extract: false
+  unrs-resolver: false
+
+onlyBuiltDependencies:
+  - sharp
+
+# pnpm 11 reads settings from here, not .npmrc.
+verifyDepsBeforeRun: false
