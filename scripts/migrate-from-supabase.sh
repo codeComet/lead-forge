@@ -45,9 +45,29 @@ docker run --rm "$PGIMG" \
 echo "    $(wc -c < "$TMP/public.sql") bytes"
 
 echo "==> 3/4  Loading auth.users + synthesising identities into local db"
-docker compose exec -T db psql -U postgres -d "${POSTGRES_DB:-postgres}" -v ON_ERROR_STOP=1 \
-  -c "set session_replication_role = replica; \copy auth.users(${USER_COLS}) from stdin with csv" \
-  < "$TMP/users.csv"
+# SET + \copy must share ONE session (replica mode suppresses the signup
+# trigger during the load), and \copy is a psql meta-command — it can't ride in
+# a -c string next to SQL. So feed both, plus the CSV and the \. terminator, as
+# a single stdin stream to `psql -f -`.
+{ printf 'set session_replication_role = replica;\n'
+  printf '\\copy auth.users(%s) from stdin with csv\n' "${USER_COLS}"
+  cat "$TMP/users.csv"
+  printf '\\.\n'
+} | docker compose exec -T db psql -U postgres -d "${POSTGRES_DB:-postgres}" -v ON_ERROR_STOP=1 -f -
+
+# GoTrue scans these token columns into Go strings (non-nullable). Our curated
+# COPY doesn't carry them, so they land NULL and every login 500s with
+# "converting NULL to string is unsupported". Force them to ''.
+docker compose exec -T db psql -U postgres -d "${POSTGRES_DB:-postgres}" -v ON_ERROR_STOP=1 -c \
+"update auth.users set
+   confirmation_token         = coalesce(confirmation_token,''),
+   recovery_token             = coalesce(recovery_token,''),
+   email_change_token_new     = coalesce(email_change_token_new,''),
+   email_change_token_current = coalesce(email_change_token_current,''),
+   email_change               = coalesce(email_change,''),
+   phone_change               = coalesce(phone_change,''),
+   phone_change_token         = coalesce(phone_change_token,''),
+   reauthentication_token     = coalesce(reauthentication_token,'');"
 
 docker compose exec -T db psql -U postgres -d "${POSTGRES_DB:-postgres}" -v ON_ERROR_STOP=1 <<'SQL'
 insert into auth.identities (provider_id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
