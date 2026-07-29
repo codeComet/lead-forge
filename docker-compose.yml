@@ -203,8 +203,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    ports:
-      - "${KONG_HTTP_PORT:-8000}:8000/tcp"
+    # No published host ports: on Dokploy, Traefik joins this network and routes
+    # to kong:8000 by domain. Host 8000/3000 are taken by Dokploy itself, so
+    # publishing collides. Bare-docker users add ports via docker-compose.ports.yml.
     volumes:
       - ./docker/kong.yml:/home/kong/temp.yml:ro,z
       - ./docker/kong-entrypoint.sh:/home/kong/kong-entrypoint.sh:ro,z
@@ -274,8 +275,8 @@ services:
         condition: service_healthy
       migrator:
         condition: service_completed_successfully
-    ports:
-      - "${WEB_PORT:-3000}:3000"
+    # No published host ports on Dokploy (Traefik routes to web:3000 by domain);
+    # host 3000 is Dokploy's own dashboard. Bare-docker: docker-compose.ports.yml.
     environment:
       NODE_ENV: production
       PORT: 3000

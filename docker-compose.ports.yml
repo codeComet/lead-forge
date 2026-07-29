@@ -1,0 +1,21 @@
+# Bare-docker port publishing (opt-in).
+#
+# The base docker-compose.yml publishes NO host ports for `web`/`kong` — on
+# Dokploy (and most PaaS), a reverse proxy (Traefik) joins the compose network
+# and routes to the container ports by domain, and the host ports 3000/8000 are
+# already taken by the platform itself.
+#
+# For plain Docker without a proxy, layer this file to expose the ports:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.ports.yml up -d --build
+#
+# Override with WEB_PORT / KONG_HTTP_PORT in .env if those host ports are busy.
+name: leadforge
+
+services:
+  web:
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+  kong:
+    ports:
+      - "${KONG_HTTP_PORT:-8000}:8000/tcp"

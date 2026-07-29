@@ -85,13 +85,21 @@ SQL migrations, and exits. `web`/`worker` wait for it to finish before starting.
 ## 3B. Deploy with plain Docker
 
 ```bash
-docker compose up -d --build
+# Layer docker-compose.ports.yml to publish host ports for web + kong
+# (the base compose publishes none — see note below).
+docker compose -f docker-compose.yml -f docker-compose.ports.yml up -d --build
 docker compose logs -f migrator   # watch migrations apply, then exit 0
 ```
 
 Put your own reverse proxy (Caddy/nginx/Traefik) in front, mapping the two
-domains to `web:3000` and `kong:8000`, or just use the published host ports
-(`WEB_PORT`, `KONG_HTTP_PORT`).
+domains to `web:3000` and `kong:8000`, or use the published host ports from
+`docker-compose.ports.yml` (`WEB_PORT`, `KONG_HTTP_PORT`).
+
+> **Why no ports in the base compose?** On Dokploy/PaaS, Traefik joins the
+> compose network and routes to `web:3000` / `kong:8000` by domain — and the
+> host's 3000/8000 are already taken by the platform (Dokploy's own dashboard
+> runs on 3000), so publishing them collides. Bare Docker without a proxy layers
+> `docker-compose.ports.yml` to get the host bindings back.
 
 ---
 
