@@ -7,10 +7,13 @@ let transporter;
 function getTransporter() {
   if (!process.env.SMTP_USER || !process.env.SMTP_PASS) return null;
   if (!transporter) {
+    const port = Number(process.env.SMTP_PORT) || 465;
     transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || "smtp.gmail.com",
-      port: Number(process.env.SMTP_PORT) || 465,
-      secure: true, // implicit TLS on 465
+      port,
+      // 465 = implicit TLS; 587/25 = STARTTLS (secure must be false or you get
+      // "wrong version number" from a TLS handshake on a plaintext port)
+      secure: port === 465,
       auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
     });
   }

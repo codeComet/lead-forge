@@ -1,12 +1,15 @@
 import nodemailer from "nodemailer";
 import { supabase } from "../lib/supabase.js";
 
+const SMTP_PORT = Number(process.env.SMTP_PORT) || 465;
 const transporter =
   process.env.SMTP_USER && process.env.SMTP_PASS
     ? nodemailer.createTransport({
         host: process.env.SMTP_HOST || "smtp.gmail.com",
-        port: Number(process.env.SMTP_PORT) || 465,
-        secure: true, // implicit TLS on 465
+        port: SMTP_PORT,
+        // 465 = implicit TLS; 587/25 = STARTTLS (secure must be false or you get
+        // "wrong version number" from a TLS handshake on a plaintext port)
+        secure: SMTP_PORT === 465,
         auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
       })
     : null;
