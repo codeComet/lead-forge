@@ -2,10 +2,11 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
+const here = dirname(fileURLToPath(import.meta.url));
+
 // The env file lives at the monorepo root; Next only auto-loads from this app's
 // directory. Load the root .env manually (no dependency) before config export.
 try {
-  const here = dirname(fileURLToPath(import.meta.url));
   const raw = readFileSync(resolve(here, "../../.env"), "utf8");
   for (const line of raw.split("\n")) {
     const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
@@ -21,6 +22,11 @@ try {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Self-contained server bundle for Docker (copies traced deps into
+  // .next/standalone). Trace from the monorepo root so @leadforge/shared and
+  // hoisted workspace deps are included.
+  output: "standalone",
+  outputFileTracingRoot: resolve(here, "../../"),
   // @leadforge/shared is a workspace package shipped as source; transpile it.
   transpilePackages: ["@leadforge/shared"],
   images: {

@@ -795,3 +795,33 @@ keywords to a curated, verified photo pool per subject (food, chef, gym, salon,
 law, dental, …) and keeping the original dimensions so layouts are untouched.
 The preview route applies it at serve time, so the fix covers both existing and
 future demos without regenerating them.
+
+## Self-hosted Docker deployment
+
+For servers without managed Supabase (e.g. Hostinger KVM + Dokploy), the whole
+platform runs from the root `docker-compose.yml` — no external Supabase/Redis.
+The app code is **unchanged**: instead of ripping Supabase out, the Supabase
+*stack* is self-hosted (Postgres + GoTrue auth + PostgREST + Realtime + Storage
++ Kong gateway) alongside Redis, `web`, and `worker`. The app just points
+`NEXT_PUBLIC_SUPABASE_URL` at the Kong gateway.
+
+* **db** uses the `supabase/postgres` image (ships roles `anon`/`authenticated`/
+  `service_role`, the `auth`/`storage` schemas, and `auth.uid()`), so RLS +
+  migrations work untouched.
+* **migrator** (one-shot, `docker/migrate/migrate.sh`) waits for GoTrue +
+  storage-api to create their schemas, then applies `supabase/migrations/*.sql`
+  in order, tracked in `public.schema_migrations`. `0001` FKs to `auth.users`
+  and `0003` touches `storage.*`, so it must run after those services migrate.
+* Routing = two domains: `SITE_URL` → `web:3000`, `SUPABASE_PUBLIC_URL` →
+  `kong:8000`. `NEXT_PUBLIC_*` are build args (inlined) — rebuild `web` when a
+  domain or the anon key changes. The `worker` talks to `http://kong:8000`
+  internally.
+* Auth is **email + password only** (the Google OAuth button was removed from
+  `components/auth-form.jsx`). `next.config.mjs` uses `output: "standalone"` +
+  `outputFileTracingRoot` (repo root) for the web image.
+* Studio admin UI is optional behind the `studio` compose profile (off by
+  default to save RAM).
+* Secrets: `scripts/gen-secrets.mjs` mints `JWT_SECRET` + the HS256
+  `ANON_KEY`/`SERVICE_ROLE_KEY` JWTs. Data migration off Supabase cloud:
+  `scripts/migrate-from-supabase.sh` (DB rows incl. users/passwords) +
+  `scripts/migrate-storage.mjs` (bucket files). Full guide in `DEPLOY.md`.

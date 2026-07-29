@@ -16,6 +16,13 @@ build/
 .env*.local
 .env.local
 
+# secrets / keys — never commit
+keys/
+*.key
+*.pem
+*_rsa
+*_ed25519
+
 # logs
 *.log
 npm-debug.log*

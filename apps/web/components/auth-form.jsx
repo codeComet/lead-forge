@@ -57,18 +57,6 @@ export function AuthForm({ mode }) {
     }
   }
 
-  async function onGoogle() {
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=${next}` },
-    });
-    if (error) {
-      toast.error(error.message);
-      setLoading(false);
-    }
-  }
-
   return (
     <div className="w-full max-w-sm">
       <div className="mb-8 flex flex-col items-center text-center">
@@ -126,16 +114,6 @@ export function AuthForm({ mode }) {
           {isSignup ? "Create account" : "Log in"}
         </Button>
       </form>
-
-      <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
-        <div className="h-px flex-1 bg-border" />
-        OR
-        <div className="h-px flex-1 bg-border" />
-      </div>
-
-      <Button variant="outline" className="w-full" onClick={onGoogle} disabled={loading}>
-        Continue with Google
-      </Button>
 
       <p className="mt-6 text-center text-sm text-muted-foreground">
         {isSignup ? "Already have an account? " : "Don't have an account? "}
