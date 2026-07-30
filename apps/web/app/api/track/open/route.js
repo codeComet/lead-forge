@@ -28,11 +28,17 @@ export async function GET(request) {
     const supabase = createServiceClient();
     const { data: email } = await supabase
       .from("emails")
-      .select("id, org_id, lead_id")
+      .select("id, org_id, lead_id, sent_at")
       .eq("tracking_id", id)
       .maybeSingle();
 
-    if (email) {
+    // Suppress the sender's own open: pixel hits within 15s of send are almost
+    // always the sender peeking at their Sent folder, not the recipient.
+    const OPEN_GRACE_MS = 15_000;
+    const tooSoon =
+      email?.sent_at && Date.now() - new Date(email.sent_at).getTime() < OPEN_GRACE_MS;
+
+    if (email && !tooSoon) {
       // Record one 'opened' event per email (dedupe repeated pixel loads).
       const { data: existing } = await supabase
         .from("email_events")

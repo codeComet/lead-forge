@@ -53,6 +53,32 @@ function AuditCell({ audit, isPending, onRun }) {
   );
 }
 
+const STATUS_STYLES = {
+  new: "bg-muted text-muted-foreground",
+  contacted: "bg-primary/10 text-primary",
+  opened: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
+  replied: "bg-success/10 text-success",
+  meeting: "bg-warning/10 text-warning",
+  won: "bg-success/15 text-success",
+  lost: "bg-destructive/10 text-destructive",
+};
+
+function StatusCell({ status }) {
+  if (!status) {
+    return <span className="text-xs text-muted-foreground">Not contacted</span>;
+  }
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium capitalize",
+        STATUS_STYLES[status] ?? "bg-muted text-muted-foreground",
+      )}
+    >
+      {status}
+    </span>
+  );
+}
+
 export function ResultsTable({
   businesses,
   selectedId,
@@ -86,6 +112,7 @@ export function ResultsTable({
             <th className="px-4 py-3 font-medium">Website</th>
             <th className="px-4 py-3 font-medium">Audit</th>
             <th className="px-4 py-3 font-medium">Score</th>
+            <th className="px-4 py-3 font-medium">Status</th>
             <th className="px-4 py-3" />
           </tr>
         </thead>
@@ -148,6 +175,9 @@ export function ResultsTable({
                 </td>
                 <td className="px-4 py-3">
                   <ScoreBadge score={lead?.lead_score ?? null} color={lead?.color} />
+                </td>
+                <td className="px-4 py-3">
+                  <StatusCell status={lead?.status} />
                 </td>
                 <td className="px-4 py-3 text-right">
                   <Link

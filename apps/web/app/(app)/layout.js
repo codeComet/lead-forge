@@ -14,7 +14,7 @@ export default async function AppLayout({ children }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar user={session.user} orgName={session.orgName} />
         <main className="flex-1 overflow-y-auto">
-          <div className="mx-auto max-w-7xl px-4 py-6 lg:px-8">{children}</div>
+          <div className="mx-auto max-w-[90rem] px-4 py-6 lg:px-8">{children}</div>
         </main>
       </div>
       <CommandPalette />
