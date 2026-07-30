@@ -39,6 +39,7 @@ export async function updateSession(request) {
     pathname.startsWith("/api/track") || // tracking pixel must stay public
     pathname.startsWith("/api/unsubscribe") ||
     pathname.startsWith("/preview") || // public demo-site previews (shared in emails)
+    pathname.startsWith("/p/") || // public demo-site previews (short slug links)
     pathname === "/";
 
   // Not logged in and hitting a protected route → login.
