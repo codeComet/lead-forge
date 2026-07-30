@@ -140,7 +140,9 @@ export function LeadActions({ lead, business }) {
         </select>
       </div>
 
-      {demos.length > 0 && <DemoCard demo={demos[0]} business={business} lead={lead} />}
+      {demos.length > 0 && (
+        <DemoCard key={demos[0].id} demo={demos[0]} business={business} lead={lead} />
+      )}
 
       {proposals.length === 0 ? (
         <Card>
@@ -170,51 +172,102 @@ function previewUrl(demo) {
   return demo.slug ? `${origin}/p/${demo.slug}` : `${origin}/preview/${demo.id}`;
 }
 
+// Time-estimated build progress. The worker emits no real percentage, so we
+// model the ~30s build as an asymptotic curve that fills toward ~95% and never
+// quite reaches 100 — completion is detected separately (the 3s poll flips
+// status to "done"), and we snap to 100 then. `key`-remounting on demo.id
+// resets the clock for each new build/rebuild.
+function useBuildProgress(demo) {
+  const building = demo.status === "pending" || demo.status === "running";
+  const startedAt = React.useMemo(
+    () => new Date(demo.created_at || Date.now()).getTime(),
+    [demo.created_at],
+  );
+  const [pct, setPct] = React.useState(0);
+
+  React.useEffect(() => {
+    if (!building) {
+      // Snap to full on done; leave wherever it was on failure.
+      if (demo.status === "done") setPct(100);
+      return;
+    }
+    const tick = () => {
+      const elapsed = (Date.now() - startedAt) / 1000;
+      // 1 - e^(-t/14) → ~63% at 14s, ~86% at 28s, capped at 95%.
+      const next = Math.min(95, 100 * (1 - Math.exp(-elapsed / 14)));
+      setPct((p) => Math.max(p, next));
+    };
+    tick();
+    const id = setInterval(tick, 400);
+    return () => clearInterval(id);
+  }, [building, demo.status, startedAt]);
+
+  return { building, pct };
+}
+
 function DemoCard({ demo, business, lead }) {
   const url = previewUrl(demo);
-  const building = demo.status === "pending" || demo.status === "running";
+  const { building, pct } = useBuildProgress(demo);
 
   return (
     <Card>
-      <CardContent className="flex flex-wrap items-center justify-between gap-3 p-5">
-        <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-lg bg-primary/10 text-primary">
-            <Globe className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2 font-medium">
-              Demo website
-              {demo.status === "done" && <CheckCircle2 className="h-4 w-4 text-success" />}
-              {demo.status === "failed" && <AlertCircle className="h-4 w-4 text-destructive" />}
+      <CardContent className="flex flex-col gap-3 p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="grid h-10 w-10 place-items-center rounded-lg bg-primary/10 text-primary">
+              <Globe className="h-5 w-5" />
             </div>
-            <div className="text-xs text-muted-foreground">
-              {building && "Building… (~30s, refreshes automatically)"}
-              {demo.status === "done" && `Ready · ${demo.views ?? 0} view${demo.views === 1 ? "" : "s"}`}
-              {demo.status === "failed" && (demo.error || "Generation failed")}
+            <div>
+              <div className="flex items-center gap-2 font-medium">
+                Demo website
+                {demo.status === "done" && <CheckCircle2 className="h-4 w-4 text-success" />}
+                {demo.status === "failed" && <AlertCircle className="h-4 w-4 text-destructive" />}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {building && `Building… ${Math.round(pct)}% · refreshes automatically`}
+                {demo.status === "done" && `Ready · ${demo.views ?? 0} view${demo.views === 1 ? "" : "s"}`}
+                {demo.status === "failed" && (demo.error || "Generation failed")}
+              </div>
             </div>
           </div>
+
+          {demo.status === "done" && (
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" variant="outline" asChild>
+                <a href={url} target="_blank" rel="noreferrer">
+                  <ExternalLink className="h-4 w-4" /> Preview
+                </a>
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  navigator.clipboard.writeText(url);
+                  toast.success("Preview link copied");
+                }}
+              >
+                <Link2 className="h-4 w-4" /> Copy link
+              </Button>
+            </div>
+          )}
+          {building && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
         </div>
 
-        {demo.status === "done" && (
-          <div className="flex flex-wrap gap-2">
-            <Button size="sm" variant="outline" asChild>
-              <a href={url} target="_blank" rel="noreferrer">
-                <ExternalLink className="h-4 w-4" /> Preview
-              </a>
-            </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => {
-                navigator.clipboard.writeText(url);
-                toast.success("Preview link copied");
-              }}
-            >
-              <Link2 className="h-4 w-4" /> Copy link
-            </Button>
+        {building && (
+          <div
+            className="h-1.5 w-full overflow-hidden rounded-full bg-primary/10"
+            role="progressbar"
+            aria-valuenow={Math.round(pct)}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="Building demo website"
+          >
+            <div
+              className="h-full rounded-full bg-primary transition-[width] duration-500 ease-out"
+              style={{ width: `${pct}%` }}
+            />
           </div>
         )}
-        {building && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
       </CardContent>
     </Card>
   );
