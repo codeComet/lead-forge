@@ -70,14 +70,23 @@ export async function processGenerateWebsite(job) {
   // Pin this business to one of the N variant slots for its industry.
   const variant = hash(businessId) % VARIANTS;
 
-  // 1. Reuse this industry+variant template if it already exists (no model call).
-  const { data: tpl } = await supabase
-    .from("website_templates")
-    .select("html")
-    .eq("org_id", orgId)
-    .eq("industry", key)
-    .eq("variant", variant)
-    .maybeSingle();
+  // A deliberate rebuild with a chosen provider = force a fresh generation with
+  // that model and overwrite the cached template. Without this, the cache below
+  // would return the old HTML and ignore the picked model (build finishes
+  // instantly, so no new site and no visible progress).
+  const forceProvider = job.data.provider || null;
+
+  // 1. Reuse this industry+variant template if it already exists (no model call)
+  //    — unless a provider was explicitly chosen for this build.
+  const { data: tpl } = forceProvider
+    ? { data: null }
+    : await supabase
+        .from("website_templates")
+        .select("html")
+        .eq("org_id", orgId)
+        .eq("industry", key)
+        .eq("variant", variant)
+        .maybeSingle();
 
   let templateHtml;
   let model;
