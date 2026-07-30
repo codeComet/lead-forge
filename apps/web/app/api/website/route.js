@@ -1,9 +1,20 @@
+import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getUserAndOrg } from "@/lib/org";
 import { enqueueWebsite } from "@/lib/queue";
 import { availableProviders } from "@leadforge/shared/providers";
 
 export const runtime = "nodejs";
+
+// Short, URL-safe public preview code (base62). 8 chars ≈ 218 trillion values —
+// collisions are negligible, and the unique index would reject one anyway.
+const B62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+function shortCode(len = 8) {
+  const bytes = randomBytes(len);
+  let out = "";
+  for (let i = 0; i < len; i++) out += B62[bytes[i] % 62];
+  return out;
+}
 
 // Kick off (or re-generate) an AI demo website for a business. Creates a
 // website_demos row in `pending` and enqueues the worker job.
@@ -36,7 +47,13 @@ export async function POST(request) {
 
   const { data: demo, error } = await supabase
     .from("website_demos")
-    .insert({ org_id: orgId, business_id: businessId, status: "pending", created_by: user.id })
+    .insert({
+      org_id: orgId,
+      business_id: businessId,
+      status: "pending",
+      created_by: user.id,
+      slug: shortCode(),
+    })
     .select()
     .single();
   if (error) {

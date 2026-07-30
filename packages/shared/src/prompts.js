@@ -130,20 +130,42 @@ export function buildProposalRequest(business, audit, lead, demoUrl = null) {
   return { system, user };
 }
 
+// Distinct aesthetic directions so the N variants per industry each look
+// different (not the same layout recoloured). Indexed by variant slot; cycles
+// if there are more slots than directions.
+const VARIANT_DIRECTIONS = [
+  "EDITORIAL LUXURY: warm, refined, magazine-like. A serif display face for " +
+    "headings, airy generous whitespace, large elegant photography, subtle motion. " +
+    "Understated premium — think a high-end brand's flagship site.",
+  "BOLD & VIBRANT: high-energy and modern. Saturated colour blocks, oversized " +
+    "sans-serif type, strong asymmetry, punchy CTAs, playful micro-interactions. " +
+    "Confident and eye-catching without looking cheap.",
+  "DARK PREMIUM: a deep dark theme with glassmorphism, luminous gradient or " +
+    "neon/gold accents, moody full-bleed imagery, and layered depth. Sleek, " +
+    "cinematic, high-contrast — a boutique agency feel.",
+];
+
+export function variantDirection(variant = 0) {
+  return VARIANT_DIRECTIONS[((variant % VARIANT_DIRECTIONS.length) + VARIANT_DIRECTIONS.length) % VARIANT_DIRECTIONS.length];
+}
+
 // ─── Demo website generator (TEMPLATE mode) ──────────────────
 // Produces a complete, single-file HTML document themed to the business's
 // INDUSTRY — but reusable across every business in that industry. Instead of
 // baking in one business's name/city/phone/colour, the output uses placeholder
-// tokens and a fixed CSS-variable palette. The worker generates this once per
-// industry, then fills it per business in code (see shared/template.js). That
-// makes every same-industry demo after the first free (no model call).
-export function buildWebsiteRequest(business) {
+// tokens and a fixed CSS-variable palette. The worker generates a few distinct
+// VARIANTS per industry (see `variant`), then fills each per business in code
+// (shared/template.js). Same-industry demos reuse a variant → no model call.
+export function buildWebsiteRequest(business, variant = 0) {
   const industry = business?.business_type || "local business";
+  const direction = variantDirection(variant);
 
   const system =
     "You are an award-winning web designer + front-end engineer. You output a " +
     "COMPLETE, production-quality, single-file HTML document: a reusable TEMPLATE " +
-    "for a modern small-business marketing website in a given industry. Hard requirements:\n" +
+    "for a STRIKINGLY MODERN, eye-catching small-business marketing website in a " +
+    "given industry. This must look like a bespoke award-winning agency build, NOT " +
+    "a generic template — bold, memorable, and premium. Hard requirements:\n" +
     "- One file: <!doctype html> … </html>. Inline everything. No build step.\n" +
     "- Tailwind via <script src=\"https://cdn.tailwindcss.com\"></script> in <head>.\n" +
     "- Google Fonts via <link> is allowed. Pick a distinctive type pairing (a display " +
@@ -222,10 +244,14 @@ export function buildWebsiteRequest(business) {
 
   const user =
     `Design and build a complete, reusable demo marketing website TEMPLATE for a ` +
-    `"${industry}" business. Make the imagery, sections, palette, and copy all read as a real ` +
-    `${industry} site — bespoke, not generic. Use the {{BUSINESS_NAME}}, {{CITY}}, {{PHONE}}, ` +
-    `and {{RATING}} placeholder tokens for the business-specific values (do not invent a real ` +
-    `name), and define the six-variable :root colour palette exactly as specified.`;
+    `"${industry}" business. It must look strikingly modern and eye-catching — bespoke, ` +
+    `not a generic template.\n\n` +
+    `AESTHETIC DIRECTION for this variant — commit to it fully so it looks clearly ` +
+    `different from other variants:\n${direction}\n\n` +
+    `Make the imagery, sections, palette, and copy all read as a real ${industry} site. ` +
+    `Use the {{BUSINESS_NAME}}, {{CITY}}, {{PHONE}}, and {{RATING}} placeholder tokens for the ` +
+    `business-specific values (do not invent a real name), and define the six-variable :root ` +
+    `colour palette exactly as specified — themed to both the industry and this aesthetic direction.`;
 
   return { system, user };
 }

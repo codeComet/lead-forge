@@ -329,6 +329,8 @@ services:
       DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
       DEEPSEEK_MODEL: ${DEEPSEEK_MODEL:-}
       DEEPSEEK_MAX_TOKENS: ${DEEPSEEK_MAX_TOKENS:-}
+      # Distinct website-template variants generated per industry (default 3).
+      WEBSITE_VARIANTS: ${WEBSITE_VARIANTS:-}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
       PAGESPEED_API_KEY: ${PAGESPEED_API_KEY:-}
       # Public app URL for links embedded in generated proposals/emails.

@@ -17,7 +17,7 @@ export async function processProposal(job) {
     // Newest ready demo site for this business, if one has been generated.
     supabase
       .from("website_demos")
-      .select("id")
+      .select("id, slug")
       .eq("business_id", lead.business_id)
       .eq("status", "done")
       .order("created_at", { ascending: false })
@@ -30,7 +30,12 @@ export async function processProposal(job) {
     : {};
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-  const demoUrl = demo?.id ? `${appUrl}/preview/${demo.id}` : null;
+  // Short /p/<slug> link (falls back to the uuid path for pre-slug demos).
+  const demoUrl = demo?.slug
+    ? `${appUrl}/p/${demo.slug}`
+    : demo?.id
+      ? `${appUrl}/preview/${demo.id}`
+      : null;
 
   const { system, user } = buildProposalRequest(business, auditObj, lead, demoUrl);
   let { text: body, usage } = await textCall({

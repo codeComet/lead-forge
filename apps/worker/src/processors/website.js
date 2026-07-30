@@ -22,6 +22,17 @@ const isHtml = (s) => !!s && /<html|<!doctype/i.test(s);
 const industryKey = (business) =>
   (business?.business_type || "local business").trim().toLowerCase();
 
+// Number of distinct template variants to build per industry before reusing.
+const VARIANTS = Math.max(1, parseInt(process.env.WEBSITE_VARIANTS || "3", 10));
+
+// Stable string hash → pins a business to a variant slot (same business always
+// lands on the same variant; different businesses spread across the slots).
+function hash(str) {
+  let h = 0;
+  for (let i = 0; i < String(str).length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+  return h;
+}
+
 async function markFailed(demoId, message) {
   await supabase.from("website_demos").update({ status: "failed", error: message }).eq("id", demoId);
 }
@@ -56,13 +67,16 @@ export async function processGenerateWebsite(job) {
   if (error || !business) throw new Error(`business ${businessId} not found`);
 
   const key = industryKey(business);
+  // Pin this business to one of the N variant slots for its industry.
+  const variant = hash(businessId) % VARIANTS;
 
-  // 1. Reuse a cached industry template if one exists (no model call).
+  // 1. Reuse this industry+variant template if it already exists (no model call).
   const { data: tpl } = await supabase
     .from("website_templates")
     .select("html")
     .eq("org_id", orgId)
     .eq("industry", key)
+    .eq("variant", variant)
     .maybeSingle();
 
   let templateHtml;
@@ -72,15 +86,16 @@ export async function processGenerateWebsite(job) {
 
   if (tpl?.html) {
     templateHtml = tpl.html;
-    model = `template:${key}`;
+    model = `template:${key}#${variant}`;
     tokens = 0;
     reused = true;
   } else {
-    // 2. First business of this industry: generate + cache the template.
+    // 2. This variant slot is empty: generate + cache it. Each variant uses a
+    //    distinct aesthetic direction so the industry gets 2-3 different looks.
     //    Provider = the org's saved choice (job.data.provider override wins),
     //    falling back to whichever API key is configured.
     const requested = job.data.provider || (await orgProvider(orgId));
-    const { system, user } = buildWebsiteRequest(business);
+    const { system, user } = buildWebsiteRequest(business, variant);
     let res;
     try {
       res = await generateWebsiteHtml({ requested, system, user });
@@ -96,11 +111,11 @@ export async function processGenerateWebsite(job) {
     model = res.model;
     tokens = (res.usage?.input_tokens ?? 0) + (res.usage?.output_tokens ?? 0);
 
-    // Cache for every later same-industry business in this org. onConflict
-    // dedups if two same-industry jobs raced (last write wins — harmless).
+    // Cache this variant for later same-industry businesses. onConflict dedups
+    // if two jobs raced on the same slot (last write wins — harmless).
     const { error: upErr } = await supabase.from("website_templates").upsert(
-      { org_id: orgId, industry: key, html: templateHtml, model, tokens },
-      { onConflict: "org_id,industry" },
+      { org_id: orgId, industry: key, variant, html: templateHtml, model, tokens },
+      { onConflict: "org_id,industry,variant" },
     );
     if (upErr) console.error(`[website] template cache write failed: ${upErr.message}`);
   }

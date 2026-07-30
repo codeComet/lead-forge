@@ -61,7 +61,7 @@ export function LeadActions({ lead, business }) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("website_demos")
-        .select("id, status, views, error, created_at")
+        .select("id, slug, status, views, error, created_at")
         .eq("business_id", lead.business_id)
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -166,7 +166,8 @@ export function LeadActions({ lead, business }) {
 
 function previewUrl(demo) {
   const origin = typeof window !== "undefined" ? window.location.origin : "";
-  return `${origin}/preview/${demo.id}`;
+  // Short /p/<slug> link; fall back to the uuid path for pre-slug demos.
+  return demo.slug ? `${origin}/p/${demo.slug}` : `${origin}/preview/${demo.id}`;
 }
 
 function DemoCard({ demo, business, lead }) {
