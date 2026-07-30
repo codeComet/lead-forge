@@ -24,7 +24,7 @@ register(QUEUE_NAMES.audit, processAudit, 3); // Playwright-heavy → keep low
 register(QUEUE_NAMES.insight, processInsight, 5);
 register(QUEUE_NAMES.proposal, processProposal, 5);
 register(QUEUE_NAMES.email, processEmail, 5);
-register(QUEUE_NAMES.website, processGenerateWebsite, 2); // Opus + large output → keep low
+register(QUEUE_NAMES.website, processGenerateWebsite, 2); // Gemini + large output → keep low (respects free-tier RPM)
 console.log("[worker] ready — listening on:", Object.values(QUEUE_NAMES).join(", "));
 
 async function shutdown() {

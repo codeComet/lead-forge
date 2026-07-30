@@ -9,6 +9,8 @@ allowBuilds:
   sharp: true
   msgpackr-extract: false
   unrs-resolver: false
+  '@google/genai': false
+  protobufjs: false
 
 onlyBuiltDependencies:
   - sharp

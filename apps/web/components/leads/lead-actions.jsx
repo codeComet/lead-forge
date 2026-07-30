@@ -19,6 +19,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { LEAD_STATUSES, LEAD_STATUS_LABELS } from "@leadforge/shared/constants";
+import { ProviderSelect } from "@/components/providers/provider-select";
 
 export function LeadActions({ lead, business }) {
   const supabase = React.useMemo(() => createClient(), []);
@@ -26,6 +27,7 @@ export function LeadActions({ lead, business }) {
   const [generating, setGenerating] = React.useState(false);
   const [buildingDemo, setBuildingDemo] = React.useState(false);
   const [status, setStatus] = React.useState(lead.status);
+  const [provider, setProvider] = React.useState("");
 
   const { data: proposals = [] } = useQuery({
     queryKey: ["proposals", lead.id],
@@ -76,7 +78,7 @@ export function LeadActions({ lead, business }) {
       const res = await fetch("/api/website", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ businessId: lead.business_id }),
+        body: JSON.stringify({ businessId: lead.business_id, provider: provider || undefined }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed");
@@ -126,6 +128,7 @@ export function LeadActions({ lead, business }) {
           {buildingDemo ? <Loader2 className="h-4 w-4 animate-spin" /> : <Globe className="h-4 w-4" />}
           {demos.length ? "Rebuild demo site" : "Generate demo site"}
         </Button>
+        <ProviderSelect onChange={setProvider} />
         <select
           value={status}
           onChange={(e) => updateStatus(e.target.value)}

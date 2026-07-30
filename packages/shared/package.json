@@ -9,6 +9,8 @@
     "./scoring": "./src/scoring.js",
     "./constants": "./src/constants.js",
     "./prompts": "./src/prompts.js",
-    "./images": "./src/images.js"
+    "./images": "./src/images.js",
+    "./template": "./src/template.js",
+    "./providers": "./src/providers.js"
   }
 }

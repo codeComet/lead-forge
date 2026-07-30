@@ -130,72 +130,82 @@ export function buildProposalRequest(business, audit, lead, demoUrl = null) {
   return { system, user };
 }
 
-// ─── Demo website generator ──────────────────────────────────
-// Produces a complete, single-file, self-contained HTML document themed to the
-// business's industry. Served publicly and linked from outreach emails.
+// ─── Demo website generator (TEMPLATE mode) ──────────────────
+// Produces a complete, single-file HTML document themed to the business's
+// INDUSTRY — but reusable across every business in that industry. Instead of
+// baking in one business's name/city/phone/colour, the output uses placeholder
+// tokens and a fixed CSS-variable palette. The worker generates this once per
+// industry, then fills it per business in code (see shared/template.js). That
+// makes every same-industry demo after the first free (no model call).
 export function buildWebsiteRequest(business) {
-  const name = business?.name || "The Business";
   const industry = business?.business_type || "local business";
-  const city = business?.city || business?.address || "";
-  const rating = business?.rating != null ? `${business.rating}★` : null;
-  const phone = business?.phone || "";
 
   const system =
     "You are an award-winning web designer + front-end engineer. You output a " +
-    "COMPLETE, production-quality, single-file HTML document for a modern small-" +
-    "business marketing website. Hard requirements:\n" +
+    "COMPLETE, production-quality, single-file HTML document: a reusable TEMPLATE " +
+    "for a modern small-business marketing website in a given industry. Hard requirements:\n" +
     "- One file: <!doctype html> … </html>. Inline everything. No build step.\n" +
     "- Tailwind via <script src=\"https://cdn.tailwindcss.com\"></script> in <head>.\n" +
     "- Google Fonts via <link> is allowed. Pick a distinctive type pairing (a display " +
     "font for headings + a clean body font) that matches the industry mood.\n" +
     "\n" +
-    "TAILWIND CONFIG — MANDATORY, do this or the site breaks:\n" +
-    "- Any custom colour you use as a utility class (text-brand, bg-brand, border-brand, " +
-    "etc.) MUST be registered first. Immediately AFTER the CDN <script>, add:\n" +
-    "  <script>tailwind.config={theme:{extend:{colors:{ /* your palette here */ }}}}</script>\n" +
-    "  Only then do classes like text-cream / bg-forest actually produce a colour. If you " +
-    "skip this, those classes do NOTHING and the text falls back to default BLACK — the #1 " +
-    "bug to avoid. Do NOT reference a Tailwind colour class you did not register.\n" +
-    "- Alternatively use arbitrary values with a CSS var, e.g. text-[color:var(--gold)] or " +
-    "bg-[var(--forest)] — those work without config. Pick ONE approach and be consistent.\n" +
+    "PLACEHOLDER TOKENS — MANDATORY. This is a template, so DO NOT invent or hard-code a " +
+    "specific business name, city, phone number, or rating anywhere. Use these EXACT literal " +
+    "tokens instead, and use them everywhere that value would appear (nav/logo, hero, about, " +
+    "footer, contact, <title>, alt text, tel: links):\n" +
+    "  {{BUSINESS_NAME}}  — the business name\n" +
+    "  {{CITY}}           — the city / area it serves\n" +
+    "  {{PHONE}}          — phone number (also usable in href=\"tel:{{PHONE}}\")\n" +
+    "  {{RATING}}         — Google rating number, e.g. shown as \"{{RATING}}★ on Google\"\n" +
+    "Write the tokens verbatim with the double braces. Everything else (menu items, service " +
+    "names, testimonials, copy) should be realistic, industry-specific placeholder content.\n" +
+    "\n" +
+    "COLOUR PALETTE — MANDATORY, define it as CSS variables so colours are swappable:\n" +
+    "- In a <style> in <head>, define EXACTLY these six variables on :root, each as a #RRGGBB " +
+    "hex value (no rgb(), hsl(), or colour names — hex only):\n" +
+    "    :root{--brand:#______;--brand-2:#______;--accent:#______;--ink:#______;--bg:#______;--surface:#______;}\n" +
+    "  --brand = primary brand colour; --brand-2 = a darker brand shade; --accent = CTA/highlight; " +
+    "--ink = dark body-text colour (for light backgrounds); --bg = light page background; " +
+    "--surface = card/section background.\n" +
+    "- Theme these to the industry mood (restaurant = warm/appetising; law firm = navy/trustworthy; " +
+    "gym = bold/energetic; salon = soft/elegant). Pick colours with strong contrast.\n" +
+    "- Reference brand colours ONLY through these variables, via Tailwind arbitrary values, e.g. " +
+    "bg-[var(--brand)], text-[color:var(--ink)], border-[color:var(--accent)]. Do NOT hard-code " +
+    "brand hex anywhere else and do NOT rely on unregistered Tailwind colour classes (they render " +
+    "BLACK). white/black text over dark brand backgrounds or scrims is fine.\n" +
     "\n" +
     "CONTRAST & READABILITY — non-negotiable, WCAG AA (≥4.5:1 for body text):\n" +
-    "- Every text colour must contrast strongly with its actual background. Light text ONLY " +
-    "on dark backgrounds; dark text ONLY on light backgrounds. Never leave default black " +
-    "text sitting on a dark or mid-tone section.\n" +
-    "- Any text placed over a photo/hero image MUST sit on a dark scrim: put an absolute " +
-    "gradient/solid overlay (e.g. bg-black/50 or a linear-gradient) between the image and the " +
-    "text, and make the text white/light. Text over images is never allowed without an overlay.\n" +
-    "- Set an explicit body text colour and an explicit colour on every heading/paragraph in " +
-    "a coloured section — do not rely on inheritance or defaults.\n" +
+    "- Light text ONLY on dark backgrounds; dark text (var(--ink)) ONLY on light backgrounds. " +
+    "Never leave default black text on a dark or mid-tone section.\n" +
+    "- Any text over a photo/hero image MUST sit on a dark scrim: an absolute gradient/solid " +
+    "overlay (e.g. bg-black/50) between the image and white/light text. No text over images " +
+    "without an overlay.\n" +
+    "- Set an explicit colour on every heading/paragraph in a coloured section — never rely on " +
+    "inheritance or defaults.\n" +
     "\n" +
-    "IMAGERY — this is critical. Every image MUST visually match THIS business's industry.\n" +
-    "- First, silently decide 6-10 concrete subject keywords that depict this exact " +
-    "industry (e.g. restaurant → 'restaurant,food,pasta,plating,chef,dining,wine'; " +
-    "gym → 'gym,fitness,workout,dumbbell,training'; salon → 'salon,haircut,hairstyle,beauty'; " +
-    "law firm → 'lawyer,office,courthouse,handshake,justice'; dentist → 'dentist,dental,teeth,clinic').\n" +
+    "IMAGERY — critical. Every image MUST visually match THIS industry.\n" +
+    "- Silently decide 6-10 concrete subject keywords for this industry (e.g. restaurant → " +
+    "'restaurant,food,pasta,plating,chef,dining,wine'; gym → 'gym,fitness,workout,dumbbell,training'; " +
+    "salon → 'salon,haircut,hairstyle,beauty'; law firm → 'lawyer,office,courthouse,handshake,justice'; " +
+    "dentist → 'dentist,dental,teeth,clinic').\n" +
     "- Use loremflickr for real, subject-matched photos:\n" +
     "  https://loremflickr.com/<w>/<h>/<comma-separated-keywords>?lock=<uniqueInt>\n" +
-    "  Use only 1-3 STRONG keywords per image (too many tags returns weak/no matches). " +
-    "Vary <uniqueInt> per image so each is different but deterministic.\n" +
-    "- The HERO image must show the industry's single most recognisable subject: a restaurant " +
-    "hero shows FOOD/a plated dish (e.g. 'food,dish' or 'pasta'), a gym shows people training, " +
-    "a salon shows hair/styling. Not an empty room or abstract shot.\n" +
+    "  Use only 1-3 STRONG keywords per image. Vary <uniqueInt> per image so each is different " +
+    "but deterministic.\n" +
+    "- The HERO image must show the industry's single most recognisable subject (restaurant → " +
+    "FOOD/a plated dish; gym → people training; salon → hair/styling). Not an empty room.\n" +
     "- NEVER use picsum.photos or generic random images. NEVER leave a broken/empty <img>. " +
     "Every <img> needs width/height and a descriptive alt.\n" +
     "\n" +
     "LAYOUT & DESIGN — must look bespoke, NOT a generic template:\n" +
-    "- Theme palette + vibe to the industry (restaurant = warm, appetising; law firm = " +
-    "navy/serif/trustworthy; gym = bold/energetic; salon = soft/elegant). Commit to a real " +
-    "colour system (define CSS custom properties), not default Tailwind blue/gray.\n" +
-    "- Use a modern editorial layout: a bold asymmetric hero with a large image, generous " +
-    "whitespace, oversized headings, and at least one bento-grid or offset two-column section. " +
-    "Avoid the stacked-identical-centered-cards look.\n" +
-    "- Sections tailored to the industry, not just 'services'. A restaurant gets a real MENU " +
-    "with named dishes + prices and a reservation CTA; a gym gets class schedule + membership " +
-    "tiers + trainers; a salon gets a price list + booking CTA. Also include: sticky nav (working " +
-    "mobile hamburger), hero, about/story, the industry-specific section, gallery grid, " +
-    "testimonials, contact with a (non-functional) form + map placeholder + hours + phone, footer.\n" +
+    "- Modern editorial layout: a bold asymmetric hero with a large image, generous whitespace, " +
+    "oversized headings, and at least one bento-grid or offset two-column section. Avoid the " +
+    "stacked-identical-centered-cards look.\n" +
+    "- Sections tailored to the industry, not just 'services'. A restaurant gets a real MENU with " +
+    "named dishes + prices and a reservation CTA; a gym gets class schedule + membership tiers + " +
+    "trainers; a salon gets a price list + booking CTA. Also include: sticky nav (working mobile " +
+    "hamburger), hero, about/story, the industry-specific section, gallery grid, testimonials, " +
+    "contact with a (non-functional) form + map placeholder + hours + phone, footer.\n" +
     "- Glassmorphism accents, soft shadows, rounded cards, layered depth, tasteful gradients.\n" +
     "\n" +
     "RESPONSIVE — mobile-first, non-negotiable:\n" +
@@ -208,24 +218,14 @@ export function buildWebsiteRequest(business) {
     "- Smooth scroll, scroll-reveal animations (IntersectionObserver), hover states, working " +
     "mobile menu toggle, a testimonial slider or gallery lightbox.\n" +
     "\n" +
-    "COPY — realistic, specific to the industry and business name (clearly placeholder but not " +
-    "lorem ipsum). Reference the city where natural.\n" +
     "Output ONLY the raw HTML. No markdown, no code fences, no commentary before or after.";
 
-  const details = [
-    `Business name: ${name}`,
-    `Industry / type: ${industry}`,
-    city && `Location: ${city}`,
-    rating && `Google rating: ${rating}`,
-    phone && `Phone: ${phone}`,
-  ]
-    .filter(Boolean)
-    .join("\n");
-
   const user =
-    `Design and build a complete demo marketing website for this business. ` +
-    `Make it look bespoke to their industry and name — the imagery, sections, palette, and copy ` +
-    `must all read as a real ${industry} site, not a generic template.\n\n${details}`;
+    `Design and build a complete, reusable demo marketing website TEMPLATE for a ` +
+    `"${industry}" business. Make the imagery, sections, palette, and copy all read as a real ` +
+    `${industry} site — bespoke, not generic. Use the {{BUSINESS_NAME}}, {{CITY}}, {{PHONE}}, ` +
+    `and {{RATING}} placeholder tokens for the business-specific values (do not invent a real ` +
+    `name), and define the six-variable :root colour palette exactly as specified.`;
 
   return { system, user };
 }

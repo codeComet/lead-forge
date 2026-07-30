@@ -78,13 +78,13 @@ export async function enqueueEmail(emailId, orgId) {
   return true;
 }
 
-export async function enqueueWebsite(demoId, businessId, orgId) {
+export async function enqueueWebsite(demoId, businessId, orgId, provider) {
   const q = getQueue(QUEUE_NAMES.website);
   if (!q) return false;
   // One retry only — generation is expensive, don't burn tokens on repeats.
   await q.add(
     JOB_NAMES.generateWebsite,
-    { demoId, businessId, orgId },
+    { demoId, businessId, orgId, provider },
     { attempts: 2, backoff: { type: "fixed", delay: 4000 }, removeOnComplete: 200, removeOnFail: 100 },
   );
   return true;

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getUserAndOrg } from "@/lib/org";
 import { enqueueWebsite } from "@/lib/queue";
+import { availableProviders } from "@leadforge/shared/providers";
 
 export const runtime = "nodejs";
 
@@ -13,10 +14,14 @@ export async function POST(request) {
   }
   const { supabase, orgId, user } = session;
 
-  const { businessId } = await request.json().catch(() => ({}));
+  const { businessId, provider } = await request.json().catch(() => ({}));
   if (!businessId) {
     return NextResponse.json({ error: "businessId is required" }, { status: 400 });
   }
+  // Optional per-build provider override. Ignore anything without a key set —
+  // the worker falls back to the org's saved choice / first available.
+  const providerOverride =
+    provider && availableProviders().includes(provider) ? provider : undefined;
 
   // Ownership check.
   const { data: business } = await supabase
@@ -40,7 +45,7 @@ export async function POST(request) {
 
   let queued = false;
   try {
-    queued = await enqueueWebsite(demo.id, businessId, orgId);
+    queued = await enqueueWebsite(demo.id, businessId, orgId, providerOverride);
   } catch (e) {
     console.error("[website] enqueue failed:", e.message);
   }
