@@ -204,6 +204,10 @@ export function buildWebsiteRequest(business, variant = 0) {
     "without an overlay.\n" +
     "- Set an explicit colour on every heading/paragraph in a coloured section — never rely on " +
     "inheritance or defaults.\n" +
+    "- NAV BAR: a solid or light/glass floating header (bg = --surface/--bg/white) MUST use dark " +
+    "text — logo wordmark AND every menu link in var(--ink), not white. Light/white nav text is " +
+    "allowed ONLY when the nav is transparent and sits directly over a dark hero image/scrim. " +
+    "When in doubt, make logo + menu links var(--ink).\n" +
     "\n" +
     "IMAGERY — critical. Every image MUST visually match THIS industry.\n" +
     "- Silently decide 6-10 concrete subject keywords for this industry (e.g. restaurant → " +
