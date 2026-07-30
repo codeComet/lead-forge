@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Sparkles, Loader2, Mail, Copy, FileText, Globe, ExternalLink, Link2, CheckCircle2, AlertCircle } from "lucide-react";
+import { Sparkles, Loader2, Mail, Copy, FileText, Globe, ExternalLink, Link2, CheckCircle2, AlertCircle, Code2, Save } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -238,6 +238,7 @@ function DemoCard({ demo, business, lead }) {
                   <ExternalLink className="h-4 w-4" /> Preview
                 </a>
               </Button>
+              <EditHtmlDialog demo={demo} businessId={lead.business_id} />
               <Button
                 size="sm"
                 variant="ghost"
@@ -270,6 +271,90 @@ function DemoCard({ demo, business, lead }) {
         )}
       </CardContent>
     </Card>
+  );
+}
+
+// View + hand-edit a demo's raw HTML. Saving writes website_demos.html, which
+// the preview URL serves live (no caching) — changes show on next refresh.
+function EditHtmlDialog({ demo, businessId }) {
+  const queryClient = useQueryClient();
+  const [open, setOpen] = React.useState(false);
+  const [html, setHtml] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [saving, setSaving] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!open) return;
+    setLoading(true);
+    fetch(`/api/website/${demo.id}`)
+      .then((r) => r.json())
+      .then((j) => {
+        if (j.error) throw new Error(j.error);
+        setHtml(j.html || "");
+      })
+      .catch((e) => toast.error(e.message))
+      .finally(() => setLoading(false));
+  }, [open, demo.id]);
+
+  async function save() {
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/website/${demo.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ html }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed to save");
+      await queryClient.invalidateQueries({ queryKey: ["demos", businessId] });
+      toast.success("Saved. Refresh the preview to see changes.");
+      setOpen(false);
+    } catch (e) {
+      toast.error(e.message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size="sm" variant="outline">
+          <Code2 className="h-4 w-4" /> Edit HTML
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-4xl">
+        <DialogHeader>
+          <DialogTitle>Edit demo HTML</DialogTitle>
+          <DialogDescription>
+            Edit the raw HTML directly. Saving updates the live preview URL.
+          </DialogDescription>
+        </DialogHeader>
+        {loading ? (
+          <div className="flex items-center justify-center py-16 text-muted-foreground">
+            <Loader2 className="h-5 w-5 animate-spin" />
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <Textarea
+              value={html}
+              onChange={(e) => setHtml(e.target.value)}
+              spellCheck={false}
+              className="h-[60vh] resize-none font-mono text-xs"
+            />
+            <div className="flex justify-end gap-2">
+              <Button variant="ghost" onClick={() => setOpen(false)} disabled={saving}>
+                Cancel
+              </Button>
+              <Button onClick={save} disabled={saving}>
+                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                Save
+              </Button>
+            </div>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
 
