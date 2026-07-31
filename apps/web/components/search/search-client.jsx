@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Building2, Play, X, Lightbulb } from "lucide-react";
+import { Building2, Play, X, Lightbulb, Trash2, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { one } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,7 @@ export function SearchClient({ orgId }) {
   const [filters, setFilters] = React.useState(DEFAULT_FILTERS);
   const [checkedIds, setCheckedIds] = React.useState(() => new Set());
   const [pendingIds, setPendingIds] = React.useState(() => new Set());
+  const [deleting, setDeleting] = React.useState(false);
 
   const { data: businesses = [], isLoading } = useQuery({
     queryKey: ["businesses", orgId],
@@ -155,6 +156,27 @@ export function SearchClient({ orgId }) {
     }
   }
 
+  // Bulk-delete businesses (leads/audits/demos cascade via FK). RLS restricts
+  // the delete to this org. Removes the rows from the cache immediately.
+  async function deleteBusinesses(ids) {
+    if (!ids.length) return;
+    const noun = ids.length === 1 ? "lead" : "leads";
+    if (!window.confirm(`Delete ${ids.length} ${noun}? This also removes their audit, score, and any generated demos. This cannot be undone.`)) return;
+    setDeleting(true);
+    try {
+      const { error } = await supabase.from("businesses").delete().in("id", ids).eq("org_id", orgId);
+      if (error) throw error;
+      queryClient.setQueryData(["businesses", orgId], (old = []) => old.filter((b) => !ids.includes(b.id)));
+      setCheckedIds(new Set());
+      if (selectedId && ids.includes(selectedId)) setSelectedId(null);
+      toast.success(`Deleted ${ids.length} ${noun}.`);
+    } catch (e) {
+      toast.error(e.message);
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   const checkedCount = filtered.filter((b) => checkedIds.has(b.id)).length;
 
   return (
@@ -197,6 +219,15 @@ export function SearchClient({ orgId }) {
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="sm" onClick={() => toggleAll(false)}>
                   <X className="mr-1 h-3.5 w-3.5" /> Clear
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-destructive hover:text-destructive"
+                  disabled={deleting}
+                  onClick={() => deleteBusinesses(filtered.filter((b) => checkedIds.has(b.id)).map((b) => b.id))}
+                >
+                  {deleting ? <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" /> : <Trash2 className="mr-1 h-3.5 w-3.5" />} Delete
                 </Button>
                 <Button
                   size="sm"

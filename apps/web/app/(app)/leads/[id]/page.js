@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Globe, MapPin, Phone, Star, ExternalLink, Lightbulb, TrendingDown, Users } from "lucide-react";
+import { ArrowLeft, Globe, MapPin, Phone, Mail, Star, ExternalLink, Lightbulb, TrendingDown, Users } from "lucide-react";
 import { getUserAndOrg } from "@/lib/org";
 import { PageHeader } from "@/components/page-header";
 import { ScoreRing } from "@/components/audit/score-ring";
@@ -128,6 +128,17 @@ export default async function LeadDetailPage({ params }) {
               )}
               {business.phone && (
                 <div className="flex items-center gap-2"><Phone className="h-4 w-4 text-muted-foreground" /> {business.phone}</div>
+              )}
+              {lead?.contact_email && (
+                <div className="flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-muted-foreground" />
+                  <a href={`mailto:${lead.contact_email}`} className="text-primary hover:underline">{lead.contact_email}</a>
+                  {lead.email_confidence && (
+                    <Badge variant={lead.email_confidence === "verified" ? "green" : "outline"} className="ml-auto capitalize">
+                      {lead.email_confidence}
+                    </Badge>
+                  )}
+                </div>
               )}
               {business.address && (
                 <div className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" /> {business.address}</div>
