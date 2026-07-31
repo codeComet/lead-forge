@@ -11,16 +11,53 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { formatCurrency, formatNumber, one } from "@/lib/utils";
 
+// Scan a string for a balanced, top-level JSON array and return its parsed
+// value, ignoring any trailing junk after the closing bracket. Bracket depth is
+// tracked outside of quoted strings so item text containing "]" is safe. Some
+// legacy insight rows stored the raw model text — a JSON array followed by
+// `</problems><parameter …>` XML garbage — instead of a real array.
+function extractJsonArray(str) {
+  const start = str.indexOf("[");
+  if (start === -1) return null;
+  let depth = 0, inStr = false, esc = false;
+  for (let i = start; i < str.length; i++) {
+    const c = str[i];
+    if (inStr) {
+      if (esc) esc = false;
+      else if (c === "\\") esc = true;
+      else if (c === '"') inStr = false;
+      continue;
+    }
+    if (c === '"') inStr = true;
+    else if (c === "[") depth++;
+    else if (c === "]" && --depth === 0) {
+      try {
+        const arr = JSON.parse(str.slice(start, i + 1));
+        return Array.isArray(arr) ? arr : null;
+      } catch {
+        return null;
+      }
+    }
+  }
+  return null;
+}
+
 // Insight JSON is model-generated, so `problems`/`improvements` aren't always a
-// clean string[] — a row may hold a single string, or objects like
-// { problem: "…" }. Coerce to a string[] so the list render never crashes.
+// clean string[] — a row may hold a single string, an object like
+// { problem: "…" }, or a string that's really a JSON array + trailing garbage.
+// Coerce to a string[] so the list render is readable and never crashes.
 function asStringList(value) {
   if (Array.isArray(value)) {
     return value
       .map((v) => (typeof v === "string" ? v : v?.problem ?? v?.improvement ?? v?.text ?? v?.title))
-      .filter((v) => typeof v === "string" && v.trim());
+      .filter((v) => typeof v === "string" && v.trim())
+      .map((v) => v.trim());
   }
-  if (typeof value === "string" && value.trim()) return [value];
+  if (typeof value === "string" && value.trim()) {
+    const parsed = extractJsonArray(value);
+    if (parsed) return asStringList(parsed);
+    return [value.trim()];
+  }
   return [];
 }
 
