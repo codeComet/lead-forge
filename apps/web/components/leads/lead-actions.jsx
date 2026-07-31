@@ -79,7 +79,13 @@ export function LeadActions({ lead, business }) {
       const res = await fetch("/api/website", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ businessId: lead.business_id, provider: provider || undefined }),
+        // Rebuild = force a fresh generation that overwrites this variant's
+        // cached template, even when no provider override is picked.
+        body: JSON.stringify({
+          businessId: lead.business_id,
+          provider: provider || undefined,
+          force: demos.length > 0,
+        }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed");

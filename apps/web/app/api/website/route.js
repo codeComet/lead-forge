@@ -25,7 +25,7 @@ export async function POST(request) {
   }
   const { supabase, orgId, user } = session;
 
-  const { businessId, provider } = await request.json().catch(() => ({}));
+  const { businessId, provider, force } = await request.json().catch(() => ({}));
   if (!businessId) {
     return NextResponse.json({ error: "businessId is required" }, { status: 400 });
   }
@@ -62,7 +62,7 @@ export async function POST(request) {
 
   let queued = false;
   try {
-    queued = await enqueueWebsite(demo.id, businessId, orgId, providerOverride);
+    queued = await enqueueWebsite(demo.id, businessId, orgId, providerOverride, force);
   } catch (e) {
     console.error("[website] enqueue failed:", e.message);
   }

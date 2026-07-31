@@ -260,6 +260,18 @@ export function buildWebsiteRequest(business, variant = 0) {
     "allowed ONLY when the nav is transparent and sits directly over a dark hero image/scrim. " +
     "When in doubt, make logo + menu links var(--ink).\n" +
     "\n" +
+    "GLASS HEADER — MANDATORY, build it exactly like this:\n" +
+    "- A fixed floating header: position:fixed; top:0; width:100%; z-50. NOT a plain static bar.\n" +
+    "- Frosted glass: backdrop-blur-lg (backdrop-filter: blur), a SEMI-transparent background " +
+    "(e.g. bg-white/70 or rgba of --surface at ~0.7 alpha), a hairline bottom border " +
+    "(border-b border-white/20 or 1px of --ink at low alpha), and a soft shadow.\n" +
+    "- On scroll (JS): add a class that increases opacity/blur + shadow and SHRINKS the header " +
+    "padding (e.g. py-5 → py-3) with a CSS transition. Header state must visibly change once the " +
+    "user scrolls past ~40px.\n" +
+    "- Add smooth padding/background/shadow transitions (transition-all duration-300) so the shrink " +
+    "animates. Menu links get an animated underline on hover (a pseudo-element or span that scales " +
+    "from 0→100% width). Nav must clear the hero (add top padding/margin so content isn't hidden).\n" +
+    "\n" +
     "IMAGERY — critical. Every image MUST visually match THIS industry.\n" +
     "- Silently decide 6-10 concrete subject keywords for this industry (e.g. restaurant → " +
     "'restaurant,food,pasta,plating,chef,dining,wine'; gym → 'gym,fitness,workout,dumbbell,training'; " +
@@ -274,16 +286,25 @@ export function buildWebsiteRequest(business, variant = 0) {
     "- NEVER use picsum.photos or generic random images. NEVER leave a broken/empty <img>. " +
     "Every <img> needs width/height and a descriptive alt.\n" +
     "\n" +
-    "LAYOUT & DESIGN — must look bespoke, NOT a generic template:\n" +
-    "- Modern editorial layout: a bold asymmetric hero with a large image, generous whitespace, " +
-    "oversized headings, and at least one bento-grid or offset two-column section. Avoid the " +
-    "stacked-identical-centered-cards look.\n" +
+    "LAYOUT & DESIGN — must look bespoke, NOT a generic template. A plain stack of centered " +
+    "white cards with a heading and three columns is an AUTOMATIC FAIL. Every section must have a " +
+    "distinct visual treatment:\n" +
+    "- HERO: full-height (min-h-screen) bold ASYMMETRIC hero — large image on one side / oversized " +
+    "headline on the other, or full-bleed image with a dark scrim and a huge display headline. Add " +
+    "at least two soft blurred gradient blobs (absolute, rounded-full, blur-3xl, low opacity, from " +
+    "--brand/--accent) as background depth. Include a scroll-cue at the bottom.\n" +
+    "- Oversized display headings (text-5xl→text-7xl), generous whitespace, at least one bento-grid " +
+    "AND one offset/overlapping two-column section. Vary section backgrounds (alternate --bg / " +
+    "--surface / one dark brand section) so the page has rhythm — never all-white.\n" +
     "- Sections tailored to the industry, not just 'services'. A restaurant gets a real MENU with " +
     "named dishes + prices and a reservation CTA; a gym gets class schedule + membership tiers + " +
-    "trainers; a salon gets a price list + booking CTA. Also include: sticky nav (working mobile " +
-    "hamburger), hero, about/story, the industry-specific section, gallery grid, testimonials, " +
-    "contact with a (non-functional) form + map placeholder + hours + phone, footer.\n" +
-    "- Glassmorphism accents, soft shadows, rounded cards, layered depth, tasteful gradients.\n" +
+    "trainers; a salon gets a price list + booking CTA. Also include: glass sticky nav (working " +
+    "mobile hamburger), hero, a stats/number strip (animated count-up), about/story, the " +
+    "industry-specific section, gallery grid, testimonials, contact with a (non-functional) form + " +
+    "map placeholder + hours + phone, footer.\n" +
+    "- Cards: rounded-2xl/3xl, layered soft shadows, subtle borders, glassmorphism accents where it " +
+    "fits, gradient or image accents — with hover states (see INTERACTION). Add tasteful depth: " +
+    "gradients, blurred blobs, and overlapping elements, not flat blocks.\n" +
     "\n" +
     "RESPONSIVE — mobile-first, non-negotiable:\n" +
     "- Design for 375px first, then scale up with sm/md/lg breakpoints. Test mentally at " +
@@ -291,9 +312,24 @@ export function buildWebsiteRequest(business, variant = 0) {
     "- Nav collapses to a working hamburger on mobile. Grids reflow to 1 column. No horizontal " +
     "scroll. Tap targets ≥44px. Images use max-w-full and never overflow.\n" +
     "\n" +
-    "INTERACTION — polished, vanilla JS only, inline in one <script> before </body>:\n" +
-    "- Smooth scroll, scroll-reveal animations (IntersectionObserver), hover states, working " +
-    "mobile menu toggle, a testimonial slider or gallery lightbox.\n" +
+    "INTERACTION & MOTION — MANDATORY, polished, vanilla JS only, inline in one <script> before " +
+    "</body>. A static page with no motion is a FAIL. Implement ALL of these:\n" +
+    "- Scroll-reveal: EVERY major section fades + slides up (opacity 0→1, translateY 24px→0) as it " +
+    "enters the viewport via IntersectionObserver. STAGGER children (cards/list items) with " +
+    "incremental transition-delays so they cascade in, not all at once.\n" +
+    "- Sticky glass header that shrinks + gains shadow on scroll (see GLASS HEADER).\n" +
+    "- Working mobile hamburger that toggles an animated menu (slide/fade), and animated underline " +
+    "on nav links.\n" +
+    "- Count-up animation on the stats/number strip (numbers tick up from 0 when scrolled into view).\n" +
+    "- Card hover: lift (translateY -6px) + stronger shadow + slight scale on the image, all with " +
+    "CSS transitions. Buttons: hover scale/glow/gradient shift. Everything transitions smoothly " +
+    "(no instant jumps).\n" +
+    "- A testimonial slider (auto-advance + dots/arrows) OR a gallery lightbox — real, working JS.\n" +
+    "- Smooth in-page scrolling for nav anchor links.\n" +
+    "- Optional tasteful extras: subtle hero parallax, gradient-animated headline, marquee logo " +
+    "strip. Keep it smooth and performant, never janky.\n" +
+    "- Respect prefers-reduced-motion: wrap non-essential motion so it's disabled when the user " +
+    "prefers reduced motion.\n" +
     "\n" +
     "Output ONLY the raw HTML. No markdown, no code fences, no commentary before or after.";
 
@@ -306,7 +342,11 @@ export function buildWebsiteRequest(business, variant = 0) {
     `Make the imagery, sections, palette, and copy all read as a real ${industry} site. ` +
     `Use the {{BUSINESS_NAME}}, {{CITY}}, {{PHONE}}, and {{RATING}} placeholder tokens for the ` +
     `business-specific values (do not invent a real name), and define the six-variable :root ` +
-    `colour palette exactly as specified — themed to both the industry and this aesthetic direction.`;
+    `colour palette exactly as specified — themed to both the industry and this aesthetic direction.\n\n` +
+    `NON-NEGOTIABLE: a fixed frosted-GLASS header that shrinks on scroll, a full-height asymmetric ` +
+    `hero with blurred gradient blobs, alternating section backgrounds, and real motion on EVERY ` +
+    `section (staggered scroll-reveal, count-up stats, card hover-lift, a working testimonial ` +
+    `slider/lightbox). A flat page of centered white cards with no animation is a rejection.`;
 
   return { system, user };
 }
