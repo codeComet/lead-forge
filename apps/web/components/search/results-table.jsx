@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Star, Globe, ExternalLink, Loader2, CircleAlert, CircleCheck, Play, RotateCw, ChevronDown, ChevronRight } from "lucide-react";
+import { Star, Globe, ExternalLink, Loader2, CircleAlert, CircleCheck, Play, RotateCw, ChevronDown, ChevronRight, Trash2 } from "lucide-react";
 import { ScoreBadge } from "@/components/score-badge";
 import { cn, one } from "@/lib/utils";
 
@@ -178,13 +178,16 @@ export function ResultsTable({
   checkedIds = new Set(),
   onToggleCheck,
   onToggleAll,
+  onSetChecked,
+  onDelete,
+  deleting = false,
   pendingIds = new Set(),
   onRunOne,
 }) {
   const allChecked = businesses.length > 0 && businesses.every((b) => checkedIds.has(b.id));
   const someChecked = businesses.some((b) => checkedIds.has(b.id));
 
-  const [grouped, setGrouped] = React.useState(false);
+  const [grouped, setGrouped] = React.useState(true);
   const [collapsed, setCollapsed] = React.useState(() => new Set());
   const toggleGroup = (key) =>
     setCollapsed((prev) => {
@@ -240,25 +243,51 @@ export function ResultsTable({
               ? businesses.map((b) => <BusinessRow key={b.id} b={b} {...rowProps} />)
               : groups.map((g) => {
                   const isCollapsed = collapsed.has(g.key);
+                  const ids = g.items.map((b) => b.id);
+                  const groupChecked = g.items.every((b) => checkedIds.has(b.id));
+                  const groupSome = g.items.some((b) => checkedIds.has(b.id));
                   return (
                     <React.Fragment key={g.key}>
-                      <tr className="border-b border-border/60 bg-muted/30">
-                        <td colSpan={8} className="px-3 py-2">
-                          <button
-                            type="button"
-                            onClick={() => toggleGroup(g.key)}
-                            className="flex w-full items-center gap-1.5 text-left text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-                          >
-                            {isCollapsed ? (
-                              <ChevronRight className="h-3.5 w-3.5 shrink-0" />
-                            ) : (
-                              <ChevronDown className="h-3.5 w-3.5 shrink-0" />
+                      <tr className="group border-b border-border/60 bg-muted/30">
+                        <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
+                          <input
+                            type="checkbox"
+                            aria-label={`Select group ${g.label}`}
+                            checked={groupChecked}
+                            ref={(el) => el && (el.indeterminate = groupSome && !groupChecked)}
+                            onChange={() => onSetChecked?.(ids, !groupChecked)}
+                            className="h-3.5 w-3.5 cursor-pointer accent-primary"
+                          />
+                        </td>
+                        <td colSpan={7} className="py-2 pr-3">
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => toggleGroup(g.key)}
+                              className="flex min-w-0 flex-1 items-center gap-1.5 text-left text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+                            >
+                              {isCollapsed ? (
+                                <ChevronRight className="h-3.5 w-3.5 shrink-0" />
+                              ) : (
+                                <ChevronDown className="h-3.5 w-3.5 shrink-0" />
+                              )}
+                              <span className="truncate" title={g.label}>{g.label}</span>
+                              <span className="ml-2 shrink-0 rounded-full bg-muted px-1.5 text-[11px]">
+                                {g.items.length}
+                              </span>
+                            </button>
+                            {onDelete && (
+                              <button
+                                type="button"
+                                disabled={deleting}
+                                onClick={() => onDelete(ids)}
+                                title={`Delete all ${g.items.length} in this group`}
+                                className="shrink-0 rounded-md p-1 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive focus:opacity-100 group-hover:opacity-100 disabled:opacity-50"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
                             )}
-                            <span className="truncate" title={g.label}>{g.label}</span>
-                            <span className="ml-2 shrink-0 rounded-full bg-muted px-1.5 text-[11px]">
-                              {g.items.length}
-                            </span>
-                          </button>
+                          </div>
                         </td>
                       </tr>
                       {!isCollapsed && g.items.map((b) => <BusinessRow key={b.id} b={b} {...rowProps} />)}

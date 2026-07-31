@@ -127,6 +127,15 @@ export function SearchClient({ orgId }) {
     setCheckedIds(on ? new Set(filtered.map((b) => b.id)) : new Set());
   }
 
+  // Add/remove a specific set of ids (used to select a whole group at once).
+  function setChecked(ids, on) {
+    setCheckedIds((prev) => {
+      const next = new Set(prev);
+      ids.forEach((id) => (on ? next.add(id) : next.delete(id)));
+      return next;
+    });
+  }
+
   async function runAudits(ids) {
     if (!ids.length) return;
     setPendingIds((prev) => new Set([...prev, ...ids]));
@@ -247,6 +256,9 @@ export function SearchClient({ orgId }) {
                 checkedIds={checkedIds}
                 onToggleCheck={toggleCheck}
                 onToggleAll={toggleAll}
+                onSetChecked={setChecked}
+                onDelete={deleteBusinesses}
+                deleting={deleting}
                 pendingIds={pendingIds}
                 onRunOne={(id) => runAudits([id])}
               />
