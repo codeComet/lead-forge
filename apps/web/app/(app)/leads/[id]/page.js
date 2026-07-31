@@ -11,6 +11,19 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { formatCurrency, formatNumber, one } from "@/lib/utils";
 
+// Insight JSON is model-generated, so `problems`/`improvements` aren't always a
+// clean string[] — a row may hold a single string, or objects like
+// { problem: "…" }. Coerce to a string[] so the list render never crashes.
+function asStringList(value) {
+  if (Array.isArray(value)) {
+    return value
+      .map((v) => (typeof v === "string" ? v : v?.problem ?? v?.improvement ?? v?.text ?? v?.title))
+      .filter((v) => typeof v === "string" && v.trim());
+  }
+  if (typeof value === "string" && value.trim()) return [value];
+  return [];
+}
+
 export default async function LeadDetailPage({ params }) {
   const { id } = await params;
   const { supabase, orgId } = await getUserAndOrg();
@@ -139,22 +152,22 @@ export default async function LeadDetailPage({ params }) {
                     </Card>
                   </div>
 
-                  {insight.problems?.length > 0 && (
+                  {asStringList(insight.problems).length > 0 && (
                     <Card>
                       <CardHeader className="pb-2"><CardTitle className="text-base">Problems found</CardTitle></CardHeader>
                       <CardContent className="pt-0">
                         <ul className="space-y-1.5 text-sm text-muted-foreground">
-                          {insight.problems.map((p, i) => <li key={i} className="flex gap-2"><span className="text-destructive">•</span> {p}</li>)}
+                          {asStringList(insight.problems).map((p, i) => <li key={i} className="flex gap-2"><span className="text-destructive">•</span> {p}</li>)}
                         </ul>
                       </CardContent>
                     </Card>
                   )}
-                  {insight.improvements?.length > 0 && (
+                  {asStringList(insight.improvements).length > 0 && (
                     <Card>
                       <CardHeader className="pb-2"><CardTitle className="text-base">Suggested improvements</CardTitle></CardHeader>
                       <CardContent className="pt-0">
                         <ul className="space-y-1.5 text-sm text-muted-foreground">
-                          {insight.improvements.map((p, i) => <li key={i} className="flex gap-2"><span className="text-success">→</span> {p}</li>)}
+                          {asStringList(insight.improvements).map((p, i) => <li key={i} className="flex gap-2"><span className="text-success">→</span> {p}</li>)}
                         </ul>
                       </CardContent>
                     </Card>
