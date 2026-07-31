@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Sparkles, Loader2, Mail, Copy, FileText, Globe, ExternalLink, Link2, CheckCircle2, AlertCircle, Code2, Save } from "lucide-react";
+import { Sparkles, Loader2, Mail, Copy, FileText, Globe, ExternalLink, Link2, CheckCircle2, AlertCircle, Code2, Save, Instagram } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,7 +24,8 @@ import { ProviderSelect } from "@/components/providers/provider-select";
 export function LeadActions({ lead, business }) {
   const supabase = React.useMemo(() => createClient(), []);
   const queryClient = useQueryClient();
-  const [generating, setGenerating] = React.useState(false);
+  // Which channel is currently generating ("email" | "instagram" | null).
+  const [generating, setGenerating] = React.useState(null);
   const [buildingDemo, setBuildingDemo] = React.useState(false);
   const [status, setStatus] = React.useState(lead.status);
   const [provider, setProvider] = React.useState("");
@@ -91,22 +92,22 @@ export function LeadActions({ lead, business }) {
     }
   }
 
-  async function generateProposal() {
-    setGenerating(true);
+  async function generateProposal(channel = "email") {
+    setGenerating(channel);
     try {
       const res = await fetch("/api/proposals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ leadId: lead.id }),
+        body: JSON.stringify({ leadId: lead.id, channel }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed");
       await queryClient.invalidateQueries({ queryKey: ["proposals", lead.id] });
-      toast.success("Proposal generated.");
+      toast.success(channel === "instagram" ? "Instagram DM generated." : "Proposal generated.");
     } catch (e) {
       toast.error(e.message);
     } finally {
-      setGenerating(false);
+      setGenerating(null);
     }
   }
 
@@ -120,9 +121,13 @@ export function LeadActions({ lead, business }) {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
-        <Button onClick={generateProposal} disabled={generating}>
-          {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+        <Button onClick={() => generateProposal("email")} disabled={!!generating}>
+          {generating === "email" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
           Generate proposal
+        </Button>
+        <Button variant="outline" onClick={() => generateProposal("instagram")} disabled={!!generating}>
+          {generating === "instagram" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Instagram className="h-4 w-4" />}
+          Instagram DM
         </Button>
         <Button variant="outline" onClick={generateDemo} disabled={buildingDemo}>
           {buildingDemo ? <Loader2 className="h-4 w-4 animate-spin" /> : <Globe className="h-4 w-4" />}
@@ -359,6 +364,7 @@ function EditHtmlDialog({ demo, businessId }) {
 }
 
 function ProposalCard({ proposal, business, lead, demo }) {
+  const isInstagram = proposal.channel === "instagram";
   const [sending, setSending] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [to, setTo] = React.useState(lead.contact_email || "");
@@ -377,9 +383,10 @@ function ProposalCard({ proposal, business, lead, demo }) {
     toast.success("Preview link added to the email");
   }
 
-  // Offer the link automatically the first time the dialog opens.
+  // Offer the link automatically the first time the dialog opens. Instagram DMs
+  // already have the link baked into the body, so skip it there.
   React.useEffect(() => {
-    if (open && demoLink && !linkIncluded) addPreviewLink();
+    if (open && !isInstagram && demoLink && !linkIncluded) addPreviewLink();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
@@ -410,8 +417,27 @@ function ProposalCard({ proposal, business, lead, demo }) {
     <Card>
       <CardContent className="space-y-3 p-5">
         <div className="flex items-start justify-between gap-3">
-          <div className="font-medium">{proposal.subject}</div>
+          <div className="flex items-center gap-2 font-medium">
+            {isInstagram && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-pink-500/10 px-2 py-0.5 text-xs font-medium text-pink-600 dark:text-pink-400">
+                <Instagram className="h-3 w-3" /> Instagram DM
+              </span>
+            )}
+            <span>{proposal.subject}</span>
+          </div>
           <div className="flex gap-1">
+            {isInstagram ? (
+              <Button
+                size="sm"
+                onClick={() => {
+                  navigator.clipboard.writeText(proposal.body);
+                  toast.success("DM copied — paste it into Instagram");
+                }}
+              >
+                <Copy className="h-4 w-4" /> Copy DM
+              </Button>
+            ) : (
+              <>
             <Button
               size="sm"
               variant="ghost"
@@ -469,6 +495,8 @@ function ProposalCard({ proposal, business, lead, demo }) {
                 </div>
               </DialogContent>
             </Dialog>
+              </>
+            )}
           </div>
         </div>
         <p className="whitespace-pre-wrap text-sm text-muted-foreground">{proposal.body}</p>

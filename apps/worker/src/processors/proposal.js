@@ -7,6 +7,7 @@ import { textCall } from "../lib/anthropic.js";
 // second Opus pass to tighten the copy.
 export async function processProposal(job) {
   const { leadId, orgId, refine = true, createdBy = null } = job.data;
+  const channel = job.data.channel === "instagram" ? "instagram" : "email";
 
   const { data: lead } = await supabase.from("leads").select("*").eq("id", leadId).single();
   if (!lead) throw new Error(`lead ${leadId} not found`);
@@ -37,7 +38,7 @@ export async function processProposal(job) {
       ? `${appUrl}/preview/${demo.id}`
       : null;
 
-  const { system, user } = buildProposalRequest(business, auditObj, lead, demoUrl);
+  const { system, user } = buildProposalRequest(business, auditObj, lead, demoUrl, channel);
   let { text: body, usage } = await textCall({
     model: MODELS.default,
     system,
@@ -46,7 +47,9 @@ export async function processProposal(job) {
   });
 
   let model = MODELS.default;
-  if (refine && body) {
+  // The refine pass rewrites toward a long email voice — skip it for Instagram
+  // DMs so they stay short and DM-native.
+  if (refine && body && channel !== "instagram") {
     try {
       const refined = await textCall({
         ...buildProposalRefineRequest(body, business),
@@ -64,7 +67,10 @@ export async function processProposal(job) {
     }
   }
 
-  const subject = `A quick idea for ${business?.name ?? "your business"}`;
+  const subject =
+    channel === "instagram"
+      ? `Instagram DM for ${business?.name ?? "your business"}`
+      : `A quick idea for ${business?.name ?? "your business"}`;
   const tokens = (usage?.input_tokens ?? 0) + (usage?.output_tokens ?? 0);
 
   // Regenerating replaces the lead's existing proposal instead of stacking a new
@@ -76,7 +82,7 @@ export async function processProposal(job) {
     .eq("lead_id", leadId)
     .order("created_at", { ascending: false });
 
-  const fields = { org_id: orgId, lead_id: leadId, subject, body, model, tokens, created_by: createdBy };
+  const fields = { org_id: orgId, lead_id: leadId, channel, subject, body, model, tokens, created_by: createdBy };
 
   let proposal;
   if (existing?.length) {
