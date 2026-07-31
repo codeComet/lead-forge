@@ -144,22 +144,35 @@ export function buildInstagramProposalRequest(business, audit, lead, demoUrl = n
   const reasons = (lead?.reasons ?? []).map((r) => r.reason || r).join(", ");
   const linkRules = demoUrl
     ? "The whole message is built around a free demo website I ALREADY made for them. " +
-      "Hook them, then tell them I built a quick free demo of how their site could look, " +
+      "After the 'why', tell them I built a quick free demo of how their site could look, " +
       "and invite them to tap the link. Put the link on its own line, verbatim, exactly as " +
-      "given — no markdown, no shortening. Keep it near the end, before the sign-off."
-    : "Tell them I can build a free demo of how their site could look and ask if they " +
-      "want me to send it over.";
+      "given — no markdown, no shortening. Keep it near the end, before the meeting nudge."
+    : "After the 'why', tell them I can build a free demo of how their site could look and " +
+      "ask if they want me to send it over.";
   const system =
     "You write short, punchy Instagram DMs for a solo web designer reaching out to local " +
     "businesses. First person singular — always 'I', never 'we'. Tone: friendly, warm, " +
     "casual and genuinely engaging, like a real DM from one person — sales-focused but " +
     "never spammy or pushy. Instagram-native voice: 1-2 tasteful emoji max, short lines. " +
     "Open with a genuine, specific compliment about their business or their page. Use easy, " +
-    "simple English a non-native speaker understands. " +
+    "simple English a non-native speaker understands.\n\n" +
+    "STRUCTURE, in order — tell it like a little story:\n" +
+    "1. A short, specific compliment.\n" +
+    "2. THE DISCOVERY — say I went looking for their website to check it out, but couldn't " +
+    "find one (or found only an old/broken page — match the real problems found). Say it " +
+    "naturally and kindly, like I was genuinely trying to find them online.\n" +
+    "3. THE 'WHY' — one or two short lines on why that matters: most customers check online " +
+    "before they visit, so people searching for them right now find nothing and go to a " +
+    "competitor; a good site brings in more bookings/calls and builds trust. Make them feel " +
+    "the missed customers, but stay warm and helpful, never scary.\n" +
+    "4. THE DEMO — so instead of just telling them, I went ahead and built a free demo of " +
+    "how their site could look, myself (see link rules below).\n" +
+    "5. A light meeting nudge — ask if they're open to a quick 10-min call or chat this week " +
+    "to walk them through it. Soft and optional, not pushy.\n\n" +
     linkRules +
-    " CRITICAL — must fit an Instagram DM: keep it SHORT, 40-80 words total, a few short " +
-    `lines. No subject line. End with a light sign-off like 'Best, ${SENDER_NAME}' on its ` +
-    "own line. Never use any other name. Do not fabricate specifics not in the data.";
+    " CRITICAL — must fit an Instagram DM: keep it SHORT and skimmable, 60-100 words total, " +
+    `short lines. No subject line. End with a light sign-off like 'Best, ${SENDER_NAME}' on ` +
+    "its own line. Never use any other name. Do not fabricate specifics not in the data.";
   const user =
     `Write a short Instagram DM to this business.\n\n` +
     `Key problems found: ${reasons || "room to modernise their online presence"}.\n\n` +
