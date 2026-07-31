@@ -129,9 +129,19 @@ export function detectSocial($) {
   };
 }
 
+// Third-party form / booking widgets are embedded via <iframe> or <script>, so
+// a native <form> is often absent even though the page clearly has a way to get
+// in touch. Treat any of these as a contact mechanism.
+const EMBED_FORM_RE =
+  /(typeform|hubspot|jotform|wufoo|formstack|docs\.google\.com\/forms|forms\.gle|tally\.so|calendly|acuityscheduling|squarespace-cdn\.com\/.*form|gravity|contact-form-7|wpcf7|elementor-form)/i;
+
 export function detectFeatures($, html) {
   const h = html.toLowerCase();
-  const hasForm = $("form").length > 0 || /mailto:/i.test(html);
+  const hasNativeForm = $("form").length > 0;
+  const hasEmbed =
+    EMBED_FORM_RE.test(html) ||
+    $("iframe[src]").toArray().some((el) => EMBED_FORM_RE.test($(el).attr("src") || ""));
+  const hasForm = hasNativeForm || hasEmbed || /mailto:/i.test(html);
   const ctaWords = ["contact", "book", "get a quote", "call now", "sign up", "get started", "buy", "order", "schedule"];
   const cta =
     ctaWords.some((w) => h.includes(w)) &&
@@ -139,7 +149,51 @@ export function detectFeatures($, html) {
   const trustWords = ["testimonial", "review", "certified", "guarantee", "trusted", "award", "accredited", "5 star"];
   const trustIndicators = trustWords.some((w) => h.includes(w));
   const hasViewport = $('meta[name="viewport"]').length > 0;
-  return { contactForm: hasForm, cta, trustIndicators, hasViewport };
+  return { contactForm: hasForm, cta, trustIndicators, hasViewport, email: extractEmail($, html) };
+}
+
+// First real contact email on the page — prefer an explicit mailto: link, then
+// fall back to a plain-text address. Skips obvious noise (asset filenames,
+// sentry/wix/example placeholders).
+export function extractEmail($, html) {
+  const clean = (e) => e?.trim().toLowerCase().replace(/[.,;:)]+$/, "");
+  const bad = /(sentry|wixpress|example\.|\.png|\.jpg|\.gif|\.svg|@2x|domain\.com|email\.com|yourdomain)/i;
+  for (const el of $('a[href^="mailto:"]').toArray()) {
+    const raw = clean(($(el).attr("href") || "").replace(/^mailto:/i, "").split("?")[0]);
+    if (raw && /^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(raw) && !bad.test(raw)) return raw;
+  }
+  const m = html.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi) || [];
+  for (const cand of m) {
+    const e = clean(cand);
+    if (e && !bad.test(e)) return e;
+  }
+  return null;
+}
+
+// Find a same-origin "contact us" page so a form living off the homepage still
+// counts. Returns an absolute URL or null.
+export function findContactUrl($, baseUrl) {
+  const re = /(contact|kontakt|get in touch|reach us|enquir|inquir|book now|booking)/i;
+  let origin;
+  try {
+    origin = new URL(baseUrl).origin;
+  } catch {
+    return null;
+  }
+  for (const el of $("a[href]").toArray()) {
+    const href = $(el).attr("href") || "";
+    const text = $(el).text() || "";
+    if (!re.test(href) && !re.test(text)) continue;
+    try {
+      const abs = new URL(href, baseUrl);
+      if (abs.origin === origin && abs.href.replace(/#.*$/, "") !== baseUrl.replace(/#.*$/, "")) {
+        return abs.href;
+      }
+    } catch {
+      /* skip malformed href */
+    }
+  }
+  return null;
 }
 
 // Check robots.txt + sitemap.xml existence off the site origin.
@@ -193,8 +247,27 @@ export async function analyzeWebsite(rawUrl) {
   const features = detectFeatures($, site.html);
   const aux = await checkAuxFiles(site.finalUrl);
 
+  // The homepage often has no form because "Contact us" is its own page (or the
+  // form/email lives there). If we didn't see a contact mechanism or email up
+  // front, follow the contact link once and re-check before concluding "none".
+  let contactForm = features.contactForm;
+  let contactEmail = features.email;
+  if (!contactForm || !contactEmail) {
+    const contactUrl = findContactUrl($, site.finalUrl);
+    if (contactUrl) {
+      const sub = await fetchSite(contactUrl);
+      if (sub.ok && sub.html) {
+        const $$ = cheerio.load(sub.html);
+        const subFeat = detectFeatures($$, sub.html);
+        contactForm = contactForm || subFeat.contactForm;
+        contactEmail = contactEmail || subFeat.email;
+      }
+    }
+  }
+
   return {
     finalUrl: site.finalUrl,
+    contactEmail: contactEmail || null,
     website: {
       exists: true,
       reachable: true,
@@ -205,9 +278,10 @@ export async function analyzeWebsite(rawUrl) {
       modern: tech.modern,
       responsive: features.hasViewport, // refined by PageSpeed later
       mobileFriendly: features.hasViewport, // refined by PageSpeed later
-      contactForm: features.contactForm,
+      contactForm,
       cta: features.cta,
       trustIndicators: features.trustIndicators,
+      contactEmail: contactEmail || null,
       brokenPages: false,
     },
     seo: { ...seo, ...aux },

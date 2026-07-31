@@ -29,6 +29,11 @@ export async function runPageSpeed(url) {
     const lcp = audits["largest-contentful-paint"]?.numericValue ?? null;
     const tti = audits["interactive"]?.numericValue ?? null;
 
+    // Mobile-friendliness is about layout, NOT speed. Lighthouse's `viewport`
+    // audit (has a configured <meta viewport>) is the real signal; a slow but
+    // responsive site is still mobile-friendly. Only fall back to null (not a
+    // perf guess) when the audit is absent.
+    const viewportScore = audits["viewport"]?.score;
     return {
       performance: pct("performance"),
       seo: pct("seo"),
@@ -36,8 +41,7 @@ export async function runPageSpeed(url) {
       bestPractices: pct("best-practices"),
       lcpMs: lcp != null ? Math.round(lcp) : null,
       ttiMs: tti != null ? Math.round(tti) : null,
-      // Lighthouse runs a mobile viewport; a decent perf+SEO implies mobile-ready.
-      mobileFriendly: pct("performance") != null ? pct("performance") >= 50 : null,
+      mobileFriendly: viewportScore != null ? viewportScore === 1 : null,
     };
   } catch {
     return null;

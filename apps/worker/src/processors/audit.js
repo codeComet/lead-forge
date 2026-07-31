@@ -111,11 +111,22 @@ export async function processAudit(job) {
     })
     .eq("business_id", businessId);
 
-  // 6. Update the lead.
-  await supabase
-    .from("leads")
-    .update({ lead_score: score, color, reasons })
-    .eq("business_id", businessId);
+  // 6. Update the lead. If we scraped a contact email off the site and the lead
+  // has no manually-verified address yet, attach it (confidence "likely") so the
+  // compose box prefills the recipient. Never overwrite a "verified" email.
+  const leadUpdate = { lead_score: score, color, reasons };
+  if (analysis.contactEmail) {
+    const { data: existing } = await supabase
+      .from("leads")
+      .select("email_confidence")
+      .eq("business_id", businessId)
+      .maybeSingle();
+    if (existing?.email_confidence !== "verified") {
+      leadUpdate.contact_email = analysis.contactEmail;
+      leadUpdate.email_confidence = "likely";
+    }
+  }
+  await supabase.from("leads").update(leadUpdate).eq("business_id", businessId);
 
   // 7. Queue the AI insight (P3). Best-effort — imported lazily to avoid a hard
   // dependency during earlier phases.
