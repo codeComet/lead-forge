@@ -98,7 +98,13 @@ export function buildInsightRequest(business, audit) {
 // When `demoUrl` is provided, we've already built a free demo site for the
 // business — the email should invite them to view it and frame next steps as
 // "if you like it, we take it from there".
-export function buildProposalRequest(business, audit, lead, demoUrl = null) {
+// The human sending outreach. Every proposal signs off as this person — never
+// a name the model invents.
+export const SENDER_NAME = "Redwan";
+
+export function buildProposalRequest(business, audit, lead, demoUrl = null, channel = "email") {
+  if (channel === "instagram") return buildInstagramProposalRequest(business, audit, lead, demoUrl);
+
   const reasons = (lead?.reasons ?? []).map((r) => r.reason || r).join(", ");
   const demoRules = demoUrl
     ? " I have ALREADY built them a free demo of how their new website could look. " +
@@ -120,11 +126,43 @@ export function buildProposalRequest(business, audit, lead, demoUrl = null) {
     "site helps them get more customers." +
     demoRules +
     " 120-180 words. Plain text, no subject " +
-    "line, sign off as an individual (e.g. 'Best,' on its own line). Do not " +
-    "fabricate specifics not in the data.";
+    `line. Sign off as an individual named ${SENDER_NAME} — end with 'Best,' on its ` +
+    `own line, then '${SENDER_NAME}' on the next line. Never use any other name in the ` +
+    "sign-off. Do not fabricate specifics not in the data.";
   const user =
     `Write a personalised outreach email to this business.\n\n` +
     `Key problems found: ${reasons || "general online presence gaps"}.\n\n` +
+    (demoUrl ? `Demo site link (include verbatim): ${demoUrl}\n\n` : "") +
+    `DATA:\n${digest(business, audit)}`;
+  return { system, user };
+}
+
+// Instagram DM variant. Businesses with no email/website are only reachable via
+// Instagram, and the full email proposal is far too long for a DM. This writes a
+// tight, punchy DM built around the free demo preview link.
+export function buildInstagramProposalRequest(business, audit, lead, demoUrl = null) {
+  const reasons = (lead?.reasons ?? []).map((r) => r.reason || r).join(", ");
+  const linkRules = demoUrl
+    ? "The whole message is built around a free demo website I ALREADY made for them. " +
+      "Hook them, then tell them I built a quick free demo of how their site could look, " +
+      "and invite them to tap the link. Put the link on its own line, verbatim, exactly as " +
+      "given — no markdown, no shortening. Keep it near the end, before the sign-off."
+    : "Tell them I can build a free demo of how their site could look and ask if they " +
+      "want me to send it over.";
+  const system =
+    "You write short, punchy Instagram DMs for a solo web designer reaching out to local " +
+    "businesses. First person singular — always 'I', never 'we'. Tone: friendly, warm, " +
+    "casual and genuinely engaging, like a real DM from one person — sales-focused but " +
+    "never spammy or pushy. Instagram-native voice: 1-2 tasteful emoji max, short lines. " +
+    "Open with a genuine, specific compliment about their business or their page. Use easy, " +
+    "simple English a non-native speaker understands. " +
+    linkRules +
+    " CRITICAL — must fit an Instagram DM: keep it SHORT, 40-80 words total, a few short " +
+    `lines. No subject line. End with a light sign-off like 'Best, ${SENDER_NAME}' on its ` +
+    "own line. Never use any other name. Do not fabricate specifics not in the data.";
+  const user =
+    `Write a short Instagram DM to this business.\n\n` +
+    `Key problems found: ${reasons || "room to modernise their online presence"}.\n\n` +
     (demoUrl ? `Demo site link (include verbatim): ${demoUrl}\n\n` : "") +
     `DATA:\n${digest(business, audit)}`;
   return { system, user };

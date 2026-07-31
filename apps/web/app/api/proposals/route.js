@@ -12,22 +12,43 @@ export async function POST(request) {
   if (!session?.orgId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { supabase, orgId, user } = session;
 
-  const { leadId } = await request.json().catch(() => ({}));
+  const { leadId, channel: rawChannel } = await request.json().catch(() => ({}));
   if (!leadId) return NextResponse.json({ error: "leadId required" }, { status: 400 });
+  const channel = rawChannel === "instagram" ? "instagram" : "email";
 
   const { data: lead } = await supabase.from("leads").select("*").eq("id", leadId).eq("org_id", orgId).maybeSingle();
   if (!lead) return NextResponse.json({ error: "Lead not found" }, { status: 404 });
 
-  const [{ data: business }, { data: audit }] = await Promise.all([
+  const [{ data: business }, { data: audit }, { data: demo }] = await Promise.all([
     supabase.from("businesses").select("*").eq("id", lead.business_id).single(),
     supabase.from("audits").select("*").eq("business_id", lead.business_id).maybeSingle(),
+    // Newest ready demo for this business — the Instagram DM is built around its
+    // preview link, so we fetch it up front.
+    supabase
+      .from("website_demos")
+      .select("id, slug")
+      .eq("business_id", lead.business_id)
+      .eq("status", "done")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
   ]);
 
   const auditObj = audit
     ? { website: audit.website, seo: audit.seo, tech: audit.tech, gbp: audit.gbp, social: audit.social }
     : {};
 
-  const { system, user: userPrompt } = buildProposalRequest(business, auditObj, lead);
+  // Instagram DMs revolve around the demo preview link; the email flow adds the
+  // link separately in the UI, so only pass it here for the Instagram channel.
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin;
+  const demoUrl =
+    channel === "instagram" && demo
+      ? demo.slug
+        ? `${appUrl}/p/${demo.slug}`
+        : `${appUrl}/preview/${demo.id}`
+      : null;
+
+  const { system, user: userPrompt } = buildProposalRequest(business, auditObj, lead, demoUrl, channel);
 
   let body;
   let usage;
@@ -44,7 +65,11 @@ export async function POST(request) {
     .insert({
       org_id: orgId,
       lead_id: leadId,
-      subject: `A quick idea for ${business?.name ?? "your business"}`,
+      channel,
+      subject:
+        channel === "instagram"
+          ? `Instagram DM for ${business?.name ?? "your business"}`
+          : `A quick idea for ${business?.name ?? "your business"}`,
       body,
       model: MODELS.default,
       tokens: (usage?.input_tokens ?? 0) + (usage?.output_tokens ?? 0),
