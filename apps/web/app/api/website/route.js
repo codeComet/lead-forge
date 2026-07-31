@@ -45,19 +45,46 @@ export async function POST(request) {
     return NextResponse.json({ error: "Business not found" }, { status: 404 });
   }
 
-  const { data: demo, error } = await supabase
+  // Reuse this business's existing demo row so a rebuild overwrites the same
+  // preview URL (slug) + HTML instead of piling up a new row every time. Only
+  // insert when the business has no demo yet.
+  const { data: existing } = await supabase
     .from("website_demos")
-    .insert({
-      org_id: orgId,
-      business_id: businessId,
-      status: "pending",
-      created_by: user.id,
-      slug: shortCode(),
-    })
-    .select()
-    .single();
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    .select("id, slug")
+    .eq("business_id", businessId)
+    .eq("org_id", orgId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  let demo;
+  if (existing) {
+    const { data, error } = await supabase
+      .from("website_demos")
+      .update({ status: "pending", error: null, created_by: user.id })
+      .eq("id", existing.id)
+      .select()
+      .single();
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    demo = data;
+  } else {
+    const { data, error } = await supabase
+      .from("website_demos")
+      .insert({
+        org_id: orgId,
+        business_id: businessId,
+        status: "pending",
+        created_by: user.id,
+        slug: shortCode(),
+      })
+      .select()
+      .single();
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    demo = data;
   }
 
   let queued = false;
