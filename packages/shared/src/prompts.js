@@ -297,6 +297,64 @@ export function variantDirection(variant = 0) {
   return VARIANT_DIRECTIONS[((variant % VARIANT_DIRECTIONS.length) + VARIANT_DIRECTIONS.length) % VARIANT_DIRECTIONS.length];
 }
 
+// ─── Modern-frontend-design skill (2026 elevation layer) ─────
+// Distilled from the installed `modern-frontend-design` skill
+// (.claude/skills/modern-frontend-design — github.com/deveshpunjabi/
+// modern-frontend-skill). The skill itself is a Claude Code harness construct;
+// the demo generator runs in the worker (plain Node + Anthropic SDK) and can't
+// invoke it, so we fold its design system into the generation prompt instead.
+//
+// COMPATIBILITY — the demo pipeline hard-constrains what we can adopt:
+//   • Output stays a single self-contained HTML file on the Tailwind CDN — no
+//     build step, no React/Next, no external CSS/JS beyond fonts + Tailwind.
+//   • The six :root palette vars (--brand/--brand-2/--accent/--ink/--bg/
+//     --surface) MUST remain #RRGGBB hex — template.js rotateBrandHues()
+//     regex-parses them per business. OKLCH is allowed ONLY for shades DERIVED
+//     from those hex vars (color-mix / oklch(from …)), never for the six roots.
+//   • JS IntersectionObserver reveal stays the baseline (fires in Playwright
+//     screenshots + all browsers); native scroll-driven timelines are layered
+//     on top as progressive enhancement, never the sole mechanism.
+const MODERN_FRONTEND_SKILL =
+  "\n\nMODERN-FRONTEND-DESIGN SKILL (2026) — apply this premium design system on " +
+  "top of everything above. The bar: it must look like a well-funded startup's " +
+  "design team built it, next to Linear / Vercel / Stripe / a top Awwwards site — " +
+  "never an AI template.\n" +
+  "- DERIVED COLOUR in OKLCH: keep the six :root vars as hex (required), but build " +
+  "every tint/shade/hover/border/scrim FROM them in OKLCH for perceptual uniformity " +
+  "— e.g. color-mix(in oklch, var(--brand) 12%, var(--surface)) for soft fills, " +
+  "oklch(from var(--brand) calc(l + 0.12) c h) for hover lifts. No hue shifts in " +
+  "gradients. Never introduce unrelated raw hex in components.\n" +
+  "- LIQUID GLASS as the standard floating surface (nav, hero info card, pricing/" +
+  "feature cards, badges, logo pills): a 135deg near-white gradient at ~0.08→0.02 " +
+  "alpha, backdrop-filter: blur(20px) saturate(180%), a 1px hairline top-highlight " +
+  "border (inset 0 1px 0 rgba(255,255,255,.15)) + a soft outer shadow. Consistent " +
+  "recipe everywhere, not ad-hoc.\n" +
+  "- TYPOGRAPHY: a variable display font + clean body font. Oversized display via " +
+  "clamp() (clamp(2.5rem, 1rem + 5vw, 5.5rem)), tight negative letter-spacing on " +
+  "every heading (tracking ~-0.03em), leading-[0.95] on the hero. Body measure " +
+  "≤65ch. One kinetic/gradient-text headline moment (a --brand→--accent OKLCH " +
+  "gradient clip, or scroll/cursor-responsive), used ONCE — not on everything.\n" +
+  "- SPACING on a 4px scale (4 8 12 16 24 32 48 64 80 96 128); section padding " +
+  "128→80→48 down the breakpoints. Aggressive, confident whitespace.\n" +
+  "- FLASH-FREE ENTERS: give hero/nav/modal/menu enter animations an " +
+  "@starting-style start state so they animate in without a flash of the final " +
+  "frame. Layer native scroll-driven timelines (animation-timeline: view()) as an " +
+  "ENHANCEMENT over the JS IntersectionObserver reveal — the JS path must still " +
+  "work alone.\n" +
+  "- GRAIN: one subtle grain/noise layer (SVG feTurbulence data-URI or a repeating " +
+  "gradient) at opacity ~0.03 on a ::after over the page/hero, for warmth and depth.\n" +
+  "- MOTION BUDGET: GPU-only (transform/opacity), max ~3 animations moving in view " +
+  "at once, honour prefers-reduced-motion on ALL of it. Purposeful, never busy.\n" +
+  "- ANTI-SLOP: no identical-card walls (bento, varied weights — already required), " +
+  "no lorem ipsum (realistic industry copy + plausible numbers), no pure-black " +
+  "backgrounds (tint the dark), no generic purple-glow-on-everything 'AI look' — " +
+  "commit to the variant's aesthetic direction.";
+
+/** The distilled skill guidance, exported so it can be reused/tested. */
+export function modernFrontendGuidance() {
+  return MODERN_FRONTEND_SKILL;
+}
+
 // ─── Demo website generator (TEMPLATE mode) ──────────────────
 // Produces a complete, single-file HTML document themed to the business's
 // INDUSTRY — but reusable across every business in that industry. Instead of
@@ -450,8 +508,8 @@ export function buildWebsiteRequest(business, variant = 0) {
     "strip. Keep it smooth and performant, never janky.\n" +
     "- Respect prefers-reduced-motion: wrap non-essential motion so it's disabled when the user " +
     "prefers reduced motion.\n" +
-    "\n" +
-    "Output ONLY the raw HTML. No markdown, no code fences, no commentary before or after.";
+    MODERN_FRONTEND_SKILL +
+    "\n\nOutput ONLY the raw HTML. No markdown, no code fences, no commentary before or after.";
 
   const user =
     `Design and build a complete, reusable demo marketing website TEMPLATE for a ` +
