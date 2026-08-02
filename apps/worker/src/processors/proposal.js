@@ -1,4 +1,4 @@
-import { buildProposalRequest, buildProposalRefineRequest } from "@leadforge/shared/prompts";
+import { buildProposalRequest, buildProposalRefineRequest, parseLocalizedProposal } from "@leadforge/shared/prompts";
 import { MODELS } from "@leadforge/shared/constants";
 import { supabase } from "../lib/supabase.js";
 import { textCall } from "../lib/anthropic.js";
@@ -39,17 +39,21 @@ export async function processProposal(job) {
       : null;
 
   const { system, user } = buildProposalRequest(business, auditObj, lead, demoUrl, channel, instructions);
-  let { text: body, usage } = await textCall({
+  const { text: raw, usage: rawUsage } = await textCall({
     model: MODELS.default,
     system,
     user,
-    maxTokens: 1024,
+    // Room for the local-language message + its English translation.
+    maxTokens: 2048,
   });
+  // Split local-language body from its English translation.
+  let { language, body, translation } = parseLocalizedProposal(raw);
+  let usage = rawUsage;
 
   let model = MODELS.default;
-  // The refine pass rewrites toward a long email voice — skip it for Instagram
-  // DMs so they stay short and DM-native.
-  if (refine && body && channel !== "instagram") {
+  // The refine pass rewrites in English, so it would translate a localised
+  // message — only run it when the draft is already English (no translation).
+  if (refine && body && !translation && channel !== "instagram") {
     try {
       const refined = await textCall({
         ...buildProposalRefineRequest(body, business),
@@ -82,7 +86,7 @@ export async function processProposal(job) {
     .eq("lead_id", leadId)
     .order("created_at", { ascending: false });
 
-  const fields = { org_id: orgId, lead_id: leadId, channel, subject, body, model, tokens, created_by: createdBy };
+  const fields = { org_id: orgId, lead_id: leadId, channel, subject, body, body_translation: translation, language, model, tokens, created_by: createdBy };
 
   let proposal;
   if (existing?.length) {

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Sparkles, Loader2, Mail, Copy, FileText, Globe, ExternalLink, Link2, CheckCircle2, AlertCircle, Code2, Save, Instagram } from "lucide-react";
+import { Sparkles, Loader2, Mail, Copy, FileText, Globe, ExternalLink, Link2, CheckCircle2, AlertCircle, Code2, Save, Instagram, Languages } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -406,6 +406,7 @@ function ProposalCard({ proposal, business, lead, demo }) {
   const isInstagram = proposal.channel === "instagram";
   const [sending, setSending] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const [showTranslation, setShowTranslation] = React.useState(false);
   const [to, setTo] = React.useState(lead.contact_email || "");
   const [subject, setSubject] = React.useState(proposal.subject || "");
   const [body, setBody] = React.useState(proposal.body || "");
@@ -463,6 +464,11 @@ function ProposalCard({ proposal, business, lead, demo }) {
               </span>
             )}
             <span>{proposal.subject}</span>
+            {proposal.language && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                <Languages className="h-3 w-3" /> {proposal.language}
+              </span>
+            )}
           </div>
           <div className="flex gap-1">
             {isInstagram ? (
@@ -539,6 +545,25 @@ function ProposalCard({ proposal, business, lead, demo }) {
           </div>
         </div>
         <p className="whitespace-pre-wrap text-sm text-muted-foreground">{proposal.body}</p>
+
+        {proposal.body_translation && (
+          <div className="rounded-lg border border-border bg-muted/30">
+            <button
+              type="button"
+              onClick={() => setShowTranslation((v) => !v)}
+              className="flex w-full items-center gap-1.5 px-3 py-2 text-left text-xs font-medium text-muted-foreground hover:text-foreground"
+            >
+              <Languages className="h-3.5 w-3.5" />
+              {showTranslation ? "Hide" : "Show"} English translation
+              <span className="ml-auto text-[10px] uppercase tracking-wide">verify</span>
+            </button>
+            {showTranslation && (
+              <p className="whitespace-pre-wrap border-t border-border px-3 py-2 text-sm text-muted-foreground">
+                {proposal.body_translation}
+              </p>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

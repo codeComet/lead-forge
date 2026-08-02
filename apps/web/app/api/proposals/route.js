@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { buildProposalRequest } from "@leadforge/shared/prompts";
+import { buildProposalRequest, parseLocalizedProposal } from "@leadforge/shared/prompts";
 import { MODELS } from "@leadforge/shared/constants";
 import { getUserAndOrg } from "@/lib/org";
 import { textCall } from "@/lib/ai";
@@ -52,15 +52,22 @@ export async function POST(request) {
 
   const { system, user: userPrompt } = buildProposalRequest(business, auditObj, lead, demoUrl, channel, extraPoints);
 
-  let body;
+  let raw;
   let usage;
   try {
-    const r = await textCall({ model: MODELS.default, system, user: userPrompt, maxTokens: 1024 });
-    body = r.text;
+    // Larger cap: the model returns the local-language message AND an English
+    // translation, so the response is roughly twice a single-language draft.
+    const r = await textCall({ model: MODELS.default, system, user: userPrompt, maxTokens: 2048 });
+    raw = r.text;
     usage = r.usage;
   } catch (e) {
     return NextResponse.json({ error: e.message }, { status: 502 });
   }
+
+  // Split the local-language body from its English translation. `body` (local
+  // language) is what actually gets sent; the translation is for the sender to
+  // verify the wording.
+  const { language, body, translation } = parseLocalizedProposal(raw);
 
   const { data: proposal, error } = await supabase
     .from("proposals")
@@ -73,6 +80,8 @@ export async function POST(request) {
           ? `Instagram DM for ${business?.name ?? "your business"}`
           : `A quick idea for ${business?.name ?? "your business"}`,
       body,
+      body_translation: translation,
+      language,
       model: MODELS.default,
       tokens: (usage?.input_tokens ?? 0) + (usage?.output_tokens ?? 0),
       created_by: user.id,

@@ -14,6 +14,7 @@ function digest(business, audit) {
       name: business?.name,
       industry: business?.business_type,
       city: business?.city,
+      address: business?.address,
       rating: gbp.rating ?? business?.rating,
       reviews: gbp.reviews ?? business?.reviews,
       website: business?.website || null,
@@ -102,6 +103,60 @@ export function buildInsightRequest(business, audit) {
 // a name the model invents.
 export const SENDER_NAME = "Redwan";
 
+// Sentinel markers the model wraps its output in so we can split the local-
+// language message from its English translation deterministically.
+const LANG_MARK = "<<<LANG>>>";
+const MSG_MARK = "<<<MESSAGE>>>";
+const TRANS_MARK = "<<<TRANSLATION>>>";
+
+// Shared instruction: write the outreach in the location's local language, then
+// give an English translation, in a strict machine-parseable format. Appended
+// to both the email and Instagram system prompts.
+const LOCALIZE_RULES =
+  "\n\nLANGUAGE — CRITICAL: work out the primary local language the owner and " +
+  "customers at this location actually speak, from the city/address/country in " +
+  "the DATA (e.g. Linz, Austria → German as spoken in Austria; Paris → French; " +
+  "Milan → Italian; Zürich → Swiss-style German). Write the ENTIRE message in " +
+  "that local language, sounding native and natural to that specific region — a " +
+  "real local person's phrasing and greetings, never a stiff textbook " +
+  "translation. Localise the sign-off too (e.g. 'Beste Grüße' in German), still " +
+  "signing as " + SENDER_NAME + ". If the local language is English, just write " +
+  "in English.\n\n" +
+  "OUTPUT FORMAT — return EXACTLY this and nothing else, no preamble:\n" +
+  LANG_MARK + " <the language you wrote in, named in English, e.g. Austrian German>\n" +
+  MSG_MARK + "\n" +
+  "<the full message in the local language>\n" +
+  TRANS_MARK + "\n" +
+  "<a faithful, natural English translation of that message; if it's already " +
+  "English, repeat it here>";
+
+/**
+ * Parse a localized proposal response into its parts. Tolerant of a model that
+ * ignored the format: falls back to treating the whole text as the message with
+ * no translation. Returns { language, body, translation }.
+ */
+export function parseLocalizedProposal(raw) {
+  const text = (raw || "").trim();
+  const li = text.indexOf(LANG_MARK);
+  const mi = text.indexOf(MSG_MARK);
+  const ti = text.indexOf(TRANS_MARK);
+
+  if (mi === -1 || ti === -1 || ti < mi) {
+    // Model didn't follow the format — keep the whole thing as the body.
+    return { language: null, body: text.replace(LANG_MARK, "").trim() || text, translation: null };
+  }
+
+  const language =
+    li !== -1 && li < mi
+      ? text.slice(li + LANG_MARK.length, mi).trim() || null
+      : null;
+  const body = text.slice(mi + MSG_MARK.length, ti).trim();
+  let translation = text.slice(ti + TRANS_MARK.length).trim() || null;
+  // Drop a redundant translation when the message was already English.
+  if (translation && translation === body) translation = null;
+  return { language, body: body || text, translation };
+}
+
 // Turn user-supplied "extra points" into a prompt instruction. These are the
 // sender's own asks (pricing, a promo, a specific service to pitch) — they must
 // be woven in naturally, never dumped verbatim or allowed to break the tone.
@@ -140,9 +195,10 @@ export function buildProposalRequest(business, audit, lead, demoUrl = null, chan
     "site helps them get more customers." +
     demoRules +
     " 120-180 words. Plain text, no subject " +
-    `line. Sign off as an individual named ${SENDER_NAME} — end with 'Best,' on its ` +
-    `own line, then '${SENDER_NAME}' on the next line. Never use any other name in the ` +
-    "sign-off. Do not fabricate specifics not in the data.";
+    `line. Sign off warmly as an individual named ${SENDER_NAME}, with a closing ` +
+    `line then '${SENDER_NAME}' on the next line. Never use any other name in the ` +
+    "sign-off. Do not fabricate specifics not in the data." +
+    LOCALIZE_RULES;
   const user =
     `Write a personalised outreach email to this business.\n\n` +
     `Key problems found: ${reasons || "general online presence gaps"}.\n\n` +
@@ -186,8 +242,9 @@ export function buildInstagramProposalRequest(business, audit, lead, demoUrl = n
     "to walk them through it. Soft and optional, not pushy.\n\n" +
     linkRules +
     " CRITICAL — must fit an Instagram DM: keep it SHORT and skimmable, 60-100 words total, " +
-    `short lines. No subject line. End with a light sign-off like 'Best, ${SENDER_NAME}' on ` +
-    "its own line. Never use any other name. Do not fabricate specifics not in the data.";
+    `short lines. No subject line. End with a light sign-off signing as ${SENDER_NAME} on ` +
+    "its own line. Never use any other name. Do not fabricate specifics not in the data." +
+    LOCALIZE_RULES;
   const user =
     `Write a short Instagram DM to this business.\n\n` +
     `Key problems found: ${reasons || "room to modernise their online presence"}.\n\n` +
