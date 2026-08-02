@@ -41,3 +41,11 @@ playwright-report/
 
 # supabase local CLI state (linked project ref, versions)
 supabase/.temp/
+
+# frontend-design-skills — per-agent rules files (installer output; not project source)
+.cursorrules
+.windsurfrules
+.lovable
+AGENTS.md
+.aider/
+skills-src

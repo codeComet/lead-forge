@@ -297,58 +297,77 @@ export function variantDirection(variant = 0) {
   return VARIANT_DIRECTIONS[((variant % VARIANT_DIRECTIONS.length) + VARIANT_DIRECTIONS.length) % VARIANT_DIRECTIONS.length];
 }
 
-// ─── Modern-frontend-design skill (2026 elevation layer) ─────
-// Distilled from the installed `modern-frontend-design` skill
-// (.claude/skills/modern-frontend-design — github.com/deveshpunjabi/
-// modern-frontend-skill). The skill itself is a Claude Code harness construct;
-// the demo generator runs in the worker (plain Node + Anthropic SDK) and can't
-// invoke it, so we fold its design system into the generation prompt instead.
+// ─── Frontend-design-skills (Awwwards / 21st.dev elevation layer) ─────
+// Distilled from the installed `@flitzrrr/frontend-design-skills` pack
+// (skills-src/* — design-trends, visual-direction, ui-patterns, landing-pages,
+// web-typography, color-theory), whose rules are derived from Awwwards / CSSDA /
+// Godly / SiteInspire winners and 21st.dev component quality. The skills are a
+// Claude Code harness construct; the demo generator runs in the worker (plain
+// Node + Anthropic SDK) and can't invoke them, so we fold their design system
+// into the generation prompt instead.
 //
 // COMPATIBILITY — the demo pipeline hard-constrains what we can adopt:
 //   • Output stays a single self-contained HTML file on the Tailwind CDN — no
 //     build step, no React/Next, no external CSS/JS beyond fonts + Tailwind.
 //   • The six :root palette vars (--brand/--brand-2/--accent/--ink/--bg/
 //     --surface) MUST remain #RRGGBB hex — template.js rotateBrandHues()
-//     regex-parses them per business. OKLCH is allowed ONLY for shades DERIVED
-//     from those hex vars (color-mix / oklch(from …)), never for the six roots.
+//     regex-parses them per business. Derived tints (color-mix / oklch(from …))
+//     that reference those hex vars are fine; the six roots stay hex.
 //   • JS IntersectionObserver reveal stays the baseline (fires in Playwright
 //     screenshots + all browsers); native scroll-driven timelines are layered
 //     on top as progressive enhancement, never the sole mechanism.
 const MODERN_FRONTEND_SKILL =
-  "\n\nMODERN-FRONTEND-DESIGN SKILL (2026) — apply this premium design system on " +
-  "top of everything above. The bar: it must look like a well-funded startup's " +
-  "design team built it, next to Linear / Vercel / Stripe / a top Awwwards site — " +
-  "never an AI template.\n" +
-  "- DERIVED COLOUR in OKLCH: keep the six :root vars as hex (required), but build " +
-  "every tint/shade/hover/border/scrim FROM them in OKLCH for perceptual uniformity " +
-  "— e.g. color-mix(in oklch, var(--brand) 12%, var(--surface)) for soft fills, " +
-  "oklch(from var(--brand) calc(l + 0.12) c h) for hover lifts. No hue shifts in " +
-  "gradients. Never introduce unrelated raw hex in components.\n" +
-  "- LIQUID GLASS as the standard floating surface (nav, hero info card, pricing/" +
-  "feature cards, badges, logo pills): a 135deg near-white gradient at ~0.08→0.02 " +
-  "alpha, backdrop-filter: blur(20px) saturate(180%), a 1px hairline top-highlight " +
-  "border (inset 0 1px 0 rgba(255,255,255,.15)) + a soft outer shadow. Consistent " +
-  "recipe everywhere, not ad-hoc.\n" +
-  "- TYPOGRAPHY: a variable display font + clean body font. Oversized display via " +
-  "clamp() (clamp(2.5rem, 1rem + 5vw, 5.5rem)), tight negative letter-spacing on " +
-  "every heading (tracking ~-0.03em), leading-[0.95] on the hero. Body measure " +
-  "≤65ch. One kinetic/gradient-text headline moment (a --brand→--accent OKLCH " +
-  "gradient clip, or scroll/cursor-responsive), used ONCE — not on everything.\n" +
-  "- SPACING on a 4px scale (4 8 12 16 24 32 48 64 80 96 128); section padding " +
-  "128→80→48 down the breakpoints. Aggressive, confident whitespace.\n" +
-  "- FLASH-FREE ENTERS: give hero/nav/modal/menu enter animations an " +
-  "@starting-style start state so they animate in without a flash of the final " +
-  "frame. Layer native scroll-driven timelines (animation-timeline: view()) as an " +
-  "ENHANCEMENT over the JS IntersectionObserver reveal — the JS path must still " +
-  "work alone.\n" +
-  "- GRAIN: one subtle grain/noise layer (SVG feTurbulence data-URI or a repeating " +
-  "gradient) at opacity ~0.03 on a ::after over the page/hero, for warmth and depth.\n" +
-  "- MOTION BUDGET: GPU-only (transform/opacity), max ~3 animations moving in view " +
-  "at once, honour prefers-reduced-motion on ALL of it. Purposeful, never busy.\n" +
-  "- ANTI-SLOP: no identical-card walls (bento, varied weights — already required), " +
-  "no lorem ipsum (realistic industry copy + plausible numbers), no pure-black " +
-  "backgrounds (tint the dark), no generic purple-glow-on-everything 'AI look' — " +
-  "commit to the variant's aesthetic direction.";
+  "\n\nAWARD-WINNING DESIGN SYSTEM (2026, ref: Awwwards / CSSDA / Godly winners + " +
+  "21st.dev component quality) — apply this on top of everything above. The bar: it " +
+  "must look worthy of an Awwwards feature, like a real agency shipped it — NEVER a " +
+  "generic AI template. Where this section sharpens an earlier rule, THIS wins.\n" +
+  "- MOTION AS MEANING: every animation must direct attention, show state, or carry " +
+  "narrative — never decoration. Interactions ≤400ms (only long scroll sequences may " +
+  "exceed). Micro-interaction (hover/focus/active) on EVERY interactive element: " +
+  "buttons, links, cards, form fields. A brand-flavoured touch, never a generic " +
+  "spinner. 60fps, GPU-only (transform/opacity), honour prefers-reduced-motion on all " +
+  "of it. Subtle parallax only — no scroll-hijacking.\n" +
+  "- TYPOGRAPHY AS HERO: type IS the layout. Exactly TWO families — one expressive " +
+  "(variable) display + one neutral body; ≤3 weights total; no system fonts in the " +
+  "hero. Display is oversized and high-contrast: ~80px+ desktop, at least 3× body, via " +
+  "clamp() (e.g. clamp(2.75rem,1rem+6vw,6rem)); tight negative tracking (~-0.03em) and " +
+  "leading-[0.95] on the hero headline. Body ≥16px, text measure 65-75ch. One kinetic / " +
+  "gradient-text headline moment, used ONCE.\n" +
+  "- COLOUR — REDUCED + ACCENT: a restrained palette, monochrome/neutral base + ONE " +
+  "strong accent = the primary action; ≤2 chromatic colours on large areas, saturation " +
+  "only in small accents. Deep tinted darks (#0A0A0A–#1A1A1A), never pure #000; off-" +
+  "white/warm neutrals, never pure #FFF flatness. Derive every tint/hover/border/scrim " +
+  "FROM the six hex :root vars (color-mix(in oklch, var(--brand) 12%, var(--surface)), " +
+  "oklch(from var(--brand) calc(l + .12) c h)) — no unrelated raw hex, no hue drift in " +
+  "gradients. Alternate section temperature (dark → light → dark) for rhythm. All text " +
+  "≥ WCAG AA 4.5:1.\n" +
+  "- LAYOUT — REDUCTION WITH DEPTH: deliberately break the grid (asymmetric balance, " +
+  "not everything centered); bento grids of varied visual weight for feature/service " +
+  "sections; alternate full-bleed media with constrained text (≤720px, 65-75ch); " +
+  "generous vertical rhythm (section spacing ~120-160px desktop → ~64px mobile). Depth " +
+  "via a restrained shadow system (3-5 levels) + subtle blur/texture, not flat blocks. " +
+  "Commit to ONE visual style per variant — no style collage.\n" +
+  "- HERO (pick the variant that fits the aesthetic direction): STATEMENT (huge type + " +
+  "subline + CTA, minimal imagery), SPLIT (copy one side / industry photo the other), or " +
+  "IMMERSIVE (full-bleed photo/scrim + overlay type). Headline ≤15 words, primary CTA " +
+  "above the fold. NEVER a slider/carousel in the hero.\n" +
+  "- UI PATTERNS (21st.dev-grade): ONE primary CTA per viewport — filled, high-contrast, " +
+  "action+benefit label ('Book a table', 'Call now', 'Get a quote'), never 'Submit'/" +
+  "'Click here'; ≤2 CTAs side by side, repeat the primary after major sections. Cards: " +
+  "image→title→short benefit→meta→CTA, the WHOLE card clickable, hover = lift + " +
+  "shadow-deepen + scale ~1.02 + image zoom. Sticky top nav (logo left, links, CTA " +
+  "right), ≤7 items, auto-hide on scroll-down / reveal on scroll-up, active state marked. " +
+  "Forms single-column, labels ABOVE fields. Pricing/tiers = 3 options with ONE " +
+  "highlighted. Testimonials with real-sounding name + role (+ photo). A marquee logo/" +
+  "social-proof strip and a mega-footer CTA block.\n" +
+  "- ABOVE THE FOLD earns the scroll: clear benefit headline + subline + hero visual + " +
+  "primary CTA + one trust signal (rating/{{RATING}}★, review count, or guarantee). " +
+  "Realistic industry copy and plausible numbers — zero lorem ipsum.\n" +
+  "- ANTI-SLOP (Awwwards judges reject these): no generic purple-blue / purple-pink-" +
+  "orange gradient; no trend collage (glass + brutalism + neumorphism together — one " +
+  "style); no identical-card walls; no stock-photo mush or mismatched image treatment; " +
+  "no fake 3D/WebGL for its own sake; never copy an Awwwards winner verbatim — adapt. " +
+  "Commit fully to this variant's aesthetic direction.";
 
 /** The distilled skill guidance, exported so it can be reused/tested. */
 export function modernFrontendGuidance() {
