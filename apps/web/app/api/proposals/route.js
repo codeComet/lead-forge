@@ -12,9 +12,11 @@ export async function POST(request) {
   if (!session?.orgId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { supabase, orgId, user } = session;
 
-  const { leadId, channel: rawChannel } = await request.json().catch(() => ({}));
+  const { leadId, channel: rawChannel, instructions } = await request.json().catch(() => ({}));
   if (!leadId) return NextResponse.json({ error: "leadId required" }, { status: 400 });
   const channel = rawChannel === "instagram" ? "instagram" : "email";
+  // Optional sender-supplied extra points to weave into the proposal.
+  const extraPoints = typeof instructions === "string" ? instructions.slice(0, 2000) : "";
 
   const { data: lead } = await supabase.from("leads").select("*").eq("id", leadId).eq("org_id", orgId).maybeSingle();
   if (!lead) return NextResponse.json({ error: "Lead not found" }, { status: 404 });
@@ -48,7 +50,7 @@ export async function POST(request) {
         : `${appUrl}/preview/${demo.id}`
       : null;
 
-  const { system, user: userPrompt } = buildProposalRequest(business, auditObj, lead, demoUrl, channel);
+  const { system, user: userPrompt } = buildProposalRequest(business, auditObj, lead, demoUrl, channel, extraPoints);
 
   let body;
   let usage;

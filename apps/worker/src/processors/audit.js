@@ -2,8 +2,19 @@ import { computeLeadScore } from "@leadforge/shared/scoring";
 import { QUEUE_NAMES, JOB_NAMES } from "@leadforge/shared/constants";
 import { supabase } from "../lib/supabase.js";
 import { analyzeWebsite } from "../audit/website.js";
+import { discoverBusiness } from "../audit/discover.js";
 import { runPageSpeed } from "../audit/pagespeed.js";
 import { captureScreenshots } from "../audit/screenshot.js";
+
+// Merge discovered social links into the parsed set without clobbering real
+// hits found on the site itself.
+function mergeSocial(parsed, discovered) {
+  const out = { ...(parsed || {}) };
+  for (const [k, v] of Object.entries(discovered || {})) {
+    if (v && !out[k]) out[k] = v;
+  }
+  return out;
+}
 
 // Quality score for the site itself (HIGH = good site). Distinct from the lead
 // score (HIGH = good opportunity).
@@ -51,6 +62,25 @@ export async function processAudit(job) {
     .single();
   if (error || !business) throw new Error(`business ${businessId} not found`);
 
+  // 0. Discovery. Places often omits the website even when the business has one,
+  // producing a false "no website". If we have no URL on file, search the web
+  // for the business first and adopt the best official-looking domain (plus any
+  // social profiles found) before auditing. Best-effort — never blocks a run.
+  let discoveredSocial = null;
+  if (!business.website) {
+    try {
+      const found = await discoverBusiness(business);
+      discoveredSocial = found.social || null;
+      if (found.website) {
+        business.website = found.website;
+        // Persist so the lead page / future audits keep the discovered URL.
+        await supabase.from("businesses").update({ website: found.website }).eq("id", businessId);
+      }
+    } catch (e) {
+      console.error("[audit] discovery failed:", e.message);
+    }
+  }
+
   // 1. HTML analysis.
   const analysis = await analyzeWebsite(business.website);
 
@@ -87,7 +117,10 @@ export async function processAudit(job) {
   const seoScore = seoQuality(seo, pagespeed);
   seo.seoScore = seoScore;
 
-  const auditObj = { website, seo, tech: analysis.tech, gbp, social: analysis.social };
+  // Social: profiles parsed off the site, backfilled with any found in search.
+  const social = mergeSocial(analysis.social, discoveredSocial);
+
+  const auditObj = { website, seo, tech: analysis.tech, gbp, social };
 
   // 4. Lead score (deterministic, shared with the web app).
   const { score, color, reasons } = computeLeadScore(auditObj);
@@ -101,7 +134,7 @@ export async function processAudit(job) {
       seo,
       tech: analysis.tech,
       gbp,
-      social: analysis.social,
+      social,
       website_score: websiteScore,
       seo_score: seoScore,
       overall_score: score,

@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/page-header";
 import { ScoreRing } from "@/components/audit/score-ring";
 import { AuditDetail } from "@/components/audit/audit-detail";
 import { LeadActions } from "@/components/leads/lead-actions";
+import { BusinessTools } from "@/components/leads/business-tools";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -155,6 +156,9 @@ export default async function LeadDetailPage({ params }) {
                   <ExternalLink className="h-4 w-4" /> Google Maps
                 </a>
               )}
+              <div className="border-t border-border pt-3">
+                <BusinessTools business={business} lead={lead} />
+              </div>
             </CardContent>
           </Card>
         </div>

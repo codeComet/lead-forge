@@ -29,6 +29,9 @@ export function LeadActions({ lead, business }) {
   const [buildingDemo, setBuildingDemo] = React.useState(false);
   const [status, setStatus] = React.useState(lead.status);
   const [provider, setProvider] = React.useState("");
+  // Optional extra points the sender wants woven into the generated proposal.
+  const [extraPoints, setExtraPoints] = React.useState("");
+  const [showExtra, setShowExtra] = React.useState(false);
 
   const { data: proposals = [] } = useQuery({
     queryKey: ["proposals", lead.id],
@@ -104,7 +107,7 @@ export function LeadActions({ lead, business }) {
       const res = await fetch("/api/proposals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ leadId: lead.id, channel }),
+        body: JSON.stringify({ leadId: lead.id, channel, instructions: extraPoints.trim() || undefined }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed");
@@ -149,6 +152,36 @@ export function LeadActions({ lead, business }) {
             <option key={s} value={s}>{LEAD_STATUS_LABELS[s]}</option>
           ))}
         </select>
+      </div>
+
+      {/* Optional custom points to steer the next proposal generation. */}
+      <div className="rounded-lg border border-border bg-muted/30 p-3">
+        {!showExtra ? (
+          <button
+            type="button"
+            onClick={() => setShowExtra(true)}
+            className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+          >
+            <Sparkles className="h-3.5 w-3.5" />
+            {extraPoints.trim() ? "Edit custom points" : "Add custom points to the proposal"}
+          </button>
+        ) : (
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">
+              Extra points to include (optional) — mention pricing, a promo, a specific service to
+              pitch, etc. Applied the next time you generate a proposal or DM.
+            </Label>
+            <Textarea
+              rows={3}
+              value={extraPoints}
+              onChange={(e) => setExtraPoints(e.target.value)}
+              placeholder="e.g. Offer a free logo redesign. Mention I'm local to their area. Pricing starts at $499."
+            />
+          </div>
+        )}
+        {extraPoints.trim() && !showExtra && (
+          <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">“{extraPoints.trim()}”</p>
+        )}
       </div>
 
       {demos.length > 0 && (

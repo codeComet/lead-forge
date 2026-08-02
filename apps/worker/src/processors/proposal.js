@@ -6,7 +6,7 @@ import { textCall } from "../lib/anthropic.js";
 // Generate a personalised outreach proposal for a lead. `refine: true` runs a
 // second Opus pass to tighten the copy.
 export async function processProposal(job) {
-  const { leadId, orgId, refine = true, createdBy = null } = job.data;
+  const { leadId, orgId, refine = true, createdBy = null, instructions = "" } = job.data;
   const channel = job.data.channel === "instagram" ? "instagram" : "email";
 
   const { data: lead } = await supabase.from("leads").select("*").eq("id", leadId).single();
@@ -38,7 +38,7 @@ export async function processProposal(job) {
       ? `${appUrl}/preview/${demo.id}`
       : null;
 
-  const { system, user } = buildProposalRequest(business, auditObj, lead, demoUrl, channel);
+  const { system, user } = buildProposalRequest(business, auditObj, lead, demoUrl, channel, instructions);
   let { text: body, usage } = await textCall({
     model: MODELS.default,
     system,

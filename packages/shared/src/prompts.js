@@ -102,8 +102,22 @@ export function buildInsightRequest(business, audit) {
 // a name the model invents.
 export const SENDER_NAME = "Redwan";
 
-export function buildProposalRequest(business, audit, lead, demoUrl = null, channel = "email") {
-  if (channel === "instagram") return buildInstagramProposalRequest(business, audit, lead, demoUrl);
+// Turn user-supplied "extra points" into a prompt instruction. These are the
+// sender's own asks (pricing, a promo, a specific service to pitch) — they must
+// be woven in naturally, never dumped verbatim or allowed to break the tone.
+function extraPointsBlock(instructions) {
+  const t = (instructions || "").trim();
+  if (!t) return "";
+  return (
+    "\n\nADDITIONAL POINTS the sender explicitly wants included — weave each one " +
+    "in naturally, in the same first-person voice and warm tone, without making " +
+    "them sound bolted-on or salesy, and without inventing facts around them:\n" +
+    t
+  );
+}
+
+export function buildProposalRequest(business, audit, lead, demoUrl = null, channel = "email", instructions = "") {
+  if (channel === "instagram") return buildInstagramProposalRequest(business, audit, lead, demoUrl, instructions);
 
   const reasons = (lead?.reasons ?? []).map((r) => r.reason || r).join(", ");
   const demoRules = demoUrl
@@ -133,14 +147,15 @@ export function buildProposalRequest(business, audit, lead, demoUrl = null, chan
     `Write a personalised outreach email to this business.\n\n` +
     `Key problems found: ${reasons || "general online presence gaps"}.\n\n` +
     (demoUrl ? `Demo site link (include verbatim): ${demoUrl}\n\n` : "") +
-    `DATA:\n${digest(business, audit)}`;
+    `DATA:\n${digest(business, audit)}` +
+    extraPointsBlock(instructions);
   return { system, user };
 }
 
 // Instagram DM variant. Businesses with no email/website are only reachable via
 // Instagram, and the full email proposal is far too long for a DM. This writes a
 // tight, punchy DM built around the free demo preview link.
-export function buildInstagramProposalRequest(business, audit, lead, demoUrl = null) {
+export function buildInstagramProposalRequest(business, audit, lead, demoUrl = null, instructions = "") {
   const reasons = (lead?.reasons ?? []).map((r) => r.reason || r).join(", ");
   const linkRules = demoUrl
     ? "The whole message is built around a free demo website I ALREADY made for them. " +
@@ -177,7 +192,8 @@ export function buildInstagramProposalRequest(business, audit, lead, demoUrl = n
     `Write a short Instagram DM to this business.\n\n` +
     `Key problems found: ${reasons || "room to modernise their online presence"}.\n\n` +
     (demoUrl ? `Demo site link (include verbatim): ${demoUrl}\n\n` : "") +
-    `DATA:\n${digest(business, audit)}`;
+    `DATA:\n${digest(business, audit)}` +
+    extraPointsBlock(instructions);
   return { system, user };
 }
 
@@ -230,6 +246,11 @@ export function buildWebsiteRequest(business, variant = 0) {
     "  {{CITY}}           — the city / area it serves\n" +
     "  {{PHONE}}          — phone number (also usable in href=\"tel:{{PHONE}}\")\n" +
     "  {{RATING}}         — Google rating number, e.g. shown as \"{{RATING}}★ on Google\"\n" +
+    "  {{ADDRESS}}        — full street address (use in the contact/footer/map area)\n" +
+    "  {{HOURS}}          — opening hours. Put this token ALONE inside a single container " +
+    "(e.g. <div class=\"hours\">{{HOURS}}</div>); it is replaced with pre-formatted " +
+    "day/time lines separated by <br>. Do NOT write your own weekday list around it — style " +
+    "the wrapper only (padding, font, a leading clock icon), and let the token supply the lines.\n" +
     "Write the tokens verbatim with the double braces. Everything else (menu items, service " +
     "names, testimonials, copy) should be realistic, industry-specific placeholder content.\n" +
     "\n" +
@@ -289,10 +310,28 @@ export function buildWebsiteRequest(business, variant = 0) {
     "LAYOUT & DESIGN — must look bespoke, NOT a generic template. A plain stack of centered " +
     "white cards with a heading and three columns is an AUTOMATIC FAIL. Every section must have a " +
     "distinct visual treatment:\n" +
-    "- HERO: full-height (min-h-screen) bold ASYMMETRIC hero — large image on one side / oversized " +
-    "headline on the other, or full-bleed image with a dark scrim and a huge display headline. Add " +
-    "at least two soft blurred gradient blobs (absolute, rounded-full, blur-3xl, low opacity, from " +
-    "--brand/--accent) as background depth. Include a scroll-cue at the bottom.\n" +
+    "- HERO — the make-or-break section; it must feel ANIMATED, modern and premium the instant the " +
+    "page loads: full-height (min-h-screen) bold ASYMMETRIC layout — a large industry photo on one " +
+    "side / oversized headline on the other, or a full-bleed hero image under a dark scrim with a huge " +
+    "display headline. The hero image MUST be this industry's single most recognisable subject/service " +
+    "(restaurant → a plated dish, gym → people training, salon → a fresh cut) — never an empty room or " +
+    "generic stock. Layer real depth: at least two soft blurred gradient blobs (absolute, rounded-full, " +
+    "blur-3xl, low opacity, from --brand/--accent), a subtle glassmorphism card floating over the image " +
+    "(rating pill / quick-info / primary CTA on frosted glass), and on-load entrance motion (headline " +
+    "words or the glass card fade + slide/scale in via CSS keyframes, staggered). Add a gentle looping " +
+    "ambient touch (slow gradient shift, floating blob drift, or hero-image parallax on scroll) and a " +
+    "scroll-cue at the bottom. Include TWO hero CTAs: a solid primary (--accent) 'Book/Call/Order' and a " +
+    "glass/outline secondary.\n" +
+    "- SERVICES — a dedicated, richly-designed section (not a plain 3-column card row): a bento or " +
+    "offset asymmetric grid of the industry's real services, each card with its own matching photo, an " +
+    "icon or number, a short benefit line, and a hover-lift + image-zoom. Give at least one card a " +
+    "larger feature span. Glassmorphism / gradient accents welcome.\n" +
+    "- BUSINESS HOURS — a clear, well-designed opening-hours block using the {{HOURS}} token (see tokens): " +
+    "a frosted-glass or --surface card with a clock/heading, placed in or beside the contact section, " +
+    "styled so the day/time lines read cleanly.\n" +
+    "- CTA — besides the hero, include at least one bold full-width CTA band (dark brand or gradient " +
+    "background) with a big headline + a prominent 'tel:{{PHONE}}' call button and a book/contact button, " +
+    "and repeat a clear CTA in the sticky nav.\n" +
     "- Oversized display headings (text-5xl→text-7xl), generous whitespace, at least one bento-grid " +
     "AND one offset/overlapping two-column section. Vary section backgrounds (alternate --bg / " +
     "--surface / one dark brand section) so the page has rhythm — never all-white.\n" +

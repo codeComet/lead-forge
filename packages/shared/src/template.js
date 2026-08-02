@@ -104,6 +104,18 @@ function rotateBrandHues(html, deg) {
   }
 }
 
+// Build the {{HOURS}} replacement: Places gives opening_hours as an array of
+// weekday strings ("Monday: 9 AM – 5 PM"). Escape each line (external data) and
+// join with <br> so the template's single wrapper renders one line per day.
+// Falls back to a neutral prompt when a business has no published hours.
+function formatHours(openingHours) {
+  const lines = Array.isArray(openingHours)
+    ? openingHours.map((l) => String(l).trim()).filter(Boolean)
+    : [];
+  if (lines.length === 0) return "Open by appointment — call for hours";
+  return lines.map(esc).join("<br>");
+}
+
 /**
  * Turn an industry template into a concrete demo site for one business.
  * Pure function — no side effects, no model calls.
@@ -114,12 +126,17 @@ export function fillTemplate(templateHtml, business) {
   const city = business?.city || business?.address || "your area";
   const phone = business?.phone || "";
   const rating = business?.rating != null ? String(business.rating) : "5.0";
+  const address = business?.address || city;
 
   let html = templateHtml
     .replaceAll("{{BUSINESS_NAME}}", esc(name))
     .replaceAll("{{CITY}}", esc(city))
     .replaceAll("{{PHONE}}", esc(phone))
-    .replaceAll("{{RATING}}", esc(rating));
+    .replaceAll("{{RATING}}", esc(rating))
+    .replaceAll("{{ADDRESS}}", esc(address))
+    // HOURS is intentionally NOT esc()'d here — formatHours already escapes each
+    // day line and injects the <br> separators the layout needs.
+    .replaceAll("{{HOURS}}", formatHours(business?.opening_hours));
 
   return rotateBrandHues(html, offsetFor(business?.id || name));
 }
