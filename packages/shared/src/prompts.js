@@ -548,6 +548,135 @@ export function buildWebsiteRequest(business, variant = 0) {
   return { system, user };
 }
 
+// ─── Custom / redesign website generator (PER-BUSINESS mode) ─────────
+// Unlike buildWebsiteRequest (a cached, reusable industry TEMPLATE with
+// placeholder tokens), this builds a ONE-OFF site for a single business from the
+// user's own instructions — and, when they paste a URL, a redesign of that
+// site's homepage. The output bakes the REAL business values in directly (no
+// {{TOKENS}}, no fillTemplate step, no template cache): every custom build is a
+// fresh model call. It reuses the same award-winning design system so the result
+// still looks bespoke and premium.
+
+// Real business facts, formatted for the prompt. These are baked straight into
+// the HTML (no placeholder tokens), so the model must use them verbatim.
+function businessFacts(business) {
+  const b = business || {};
+  const lines = [
+    ["Business name", b.name],
+    ["Industry", b.business_type],
+    ["City / area", b.city],
+    ["Address", b.address],
+    ["Phone", b.phone],
+    ["Rating", b.rating != null ? `${b.rating}★ on Google` : null],
+    ["Reviews", b.reviews],
+    ["Existing website", b.website],
+  ].filter(([, v]) => v != null && v !== "");
+  return lines.map(([k, v]) => `- ${k}: ${v}`).join("\n");
+}
+
+/**
+ * Build a custom / redesign website request.
+ *   business     — the businesses row (real values are baked into the HTML)
+ *   instructions — the user's free-text prompt (may contain a pasted URL)
+ *   sourceSite   — optional homepage digest scraped from a pasted URL:
+ *                  { finalUrl, title, description, nav, headings, sections,
+ *                    ctas, images, footer }. When present, PRESERVE its sections.
+ * Returns { system, user }. Output is final, business-specific HTML.
+ */
+export function buildCustomWebsiteRequest(business, instructions, sourceSite = null) {
+  const industry = business?.business_type || "local business";
+  const redesign = !!sourceSite;
+
+  const modeRules = redesign
+    ? "MODE — REDESIGN. The user pasted a link to their EXISTING homepage; the " +
+      "scraped content is in SOURCE_SITE below. Rebuild THAT homepage: keep the SAME " +
+      "sections, in the same order, with the same information architecture and the same " +
+      "real copy/content (headings, paragraphs, nav items, menu/service lists, contact " +
+      "details, links). Do NOT drop sections the original has, and do NOT invent whole new " +
+      "sections unless the user's instructions ask for one. Your job is to make it look " +
+      "strikingly modern and premium — new layout, typography, colour, spacing, motion — " +
+      "while preserving what the page actually says. Reuse the original image URLs from " +
+      "SOURCE_SITE where they fit; only fall back to loremflickr (rules below) for images " +
+      "the source lacks. Only the homepage / front page — do not build other pages."
+    : "MODE — FROM SCRATCH. Build a complete one-page marketing homepage for this business " +
+      "following the user's instructions and the industry conventions. Invent realistic, " +
+      "industry-specific sections and copy.";
+
+  const system =
+    "You are an award-winning web designer + front-end engineer. You output a COMPLETE, " +
+    "production-quality, single-file HTML homepage for ONE specific real business. It must " +
+    "look like a bespoke award-winning agency build, NOT a generic AI template. Hard " +
+    "requirements:\n" +
+    "- One file: <!doctype html> … </html>. Inline everything. No build step.\n" +
+    "- Tailwind via <script src=\"https://cdn.tailwindcss.com\"></script> in <head>.\n" +
+    "- Google Fonts via <link> allowed. Pick a distinctive display + body pairing.\n" +
+    "\n" +
+    "REAL VALUES — this is a live site for a real business, NOT a template. Use the actual " +
+    "business facts from BUSINESS below (name, city, phone, address, rating) verbatim " +
+    "everywhere they belong (nav/logo, hero, about, footer, contact, <title>, alt text, " +
+    "tel: links). Do NOT emit {{PLACEHOLDER}} tokens and do NOT invent a different business " +
+    "name. If a fact is missing, omit it gracefully — never write a fake phone/address.\n" +
+    "\n" +
+    modeRules +
+    "\n\n" +
+    "COLOUR PALETTE — define CSS variables on :root as #RRGGBB hex: " +
+    ":root{--brand:#______;--brand-2:#______;--accent:#______;--ink:#______;--bg:#______;--surface:#______;} " +
+    "(--brand primary, --brand-2 darker shade, --accent CTA/highlight, --ink dark body text, " +
+    "--bg light page bg, --surface card bg). Theme them to the business/industry mood" +
+    (redesign ? " — take cues from the original site's brand colours where they read as intentional" : "") +
+    ". Reference brand colour ONLY through these vars via Tailwind arbitrary values " +
+    "(bg-[var(--brand)], text-[color:var(--ink)]). Never rely on unregistered Tailwind colour " +
+    "classes (they render BLACK).\n" +
+    "\n" +
+    "CONTRAST & READABILITY — WCAG AA (≥4.5:1 body text): light text ONLY on dark backgrounds, " +
+    "dark text (var(--ink)) ONLY on light backgrounds; any text over a photo sits on a dark " +
+    "scrim overlay; set an explicit colour on every heading/paragraph in a coloured section; " +
+    "a light/glass nav uses dark var(--ink) links, white nav links only over a dark hero.\n" +
+    "\n" +
+    "GLASS HEADER — a fixed floating frosted-glass header (backdrop-blur, semi-transparent " +
+    "bg, hairline border, soft shadow) that SHRINKS + gains shadow on scroll past ~40px via a " +
+    "JS class toggle + CSS transition. Working mobile hamburger. Animated underline on nav " +
+    "links. Nav clears the hero.\n" +
+    "\n" +
+    "IMAGERY — every image must visually match this industry. For any image the source doesn't " +
+    "already provide, use loremflickr with 1-3 strong subject keywords: " +
+    "https://loremflickr.com/<w>/<h>/<keywords>?lock=<uniqueInt> (vary uniqueInt per image). " +
+    "Never picsum.photos, never a broken/empty <img>; every <img> needs width/height + a " +
+    "descriptive alt.\n" +
+    "\n" +
+    "LAYOUT & MOTION — must look bespoke: a full-height asymmetric HERO with an industry photo " +
+    "+ oversized display headline, blurred gradient blobs, a floating glass info/CTA card, and " +
+    "on-load entrance motion; richly-designed sections (bento / offset grids, not a flat stack " +
+    "of centered white cards — that's an automatic FAIL); alternating section backgrounds for " +
+    "rhythm; oversized display headings; layered soft shadows + glassmorphism accents. " +
+    "Mobile-first responsive (375 → 768 → 1280), grids reflow to one column, no horizontal " +
+    "scroll, tap targets ≥44px. Motion (vanilla JS, one <script> before </body>): staggered " +
+    "IntersectionObserver scroll-reveal on every section, the shrinking glass header, working " +
+    "hamburger, count-up stats, card hover-lift + image-zoom, a working testimonial slider or " +
+    "gallery lightbox, smooth anchor scrolling. Respect prefers-reduced-motion. A static page " +
+    "with no motion is a FAIL.\n" +
+    MODERN_FRONTEND_SKILL +
+    "\n\nThe user's OWN INSTRUCTIONS below are the top priority — follow them exactly where " +
+    "they conflict with the generic guidance above.\n" +
+    "\n\nOutput ONLY the raw HTML. No markdown, no code fences, no commentary before or after.";
+
+  const sourceBlock = redesign
+    ? `\n\nSOURCE_SITE (scraped homepage to redesign — preserve its sections & content):\n${JSON.stringify(sourceSite, null, 0)}`
+    : "";
+
+  const user =
+    `Build a complete, single-file homepage for this real "${industry}" business. It must ` +
+    `look strikingly modern and bespoke — never a generic template.\n\n` +
+    `BUSINESS:\n${businessFacts(business)}\n\n` +
+    `USER INSTRUCTIONS (highest priority):\n${(instructions || "").trim() || "(none — use your best judgement for a premium " + industry + " homepage)"}` +
+    sourceBlock +
+    `\n\nNON-NEGOTIABLE: a fixed frosted-GLASS header that shrinks on scroll, a full-height ` +
+    `asymmetric hero with blurred gradient blobs, alternating section backgrounds, and real ` +
+    `motion on every section. Bake in the real business values above — no placeholder tokens.`;
+
+  return { system, user };
+}
+
 /** Optional Opus refinement pass over a draft proposal. */
 export function buildProposalRefineRequest(draft, business) {
   const system =

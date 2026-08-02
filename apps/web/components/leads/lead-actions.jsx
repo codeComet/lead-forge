@@ -32,6 +32,11 @@ export function LeadActions({ lead, business }) {
   // Optional extra points the sender wants woven into the generated proposal.
   const [extraPoints, setExtraPoints] = React.useState("");
   const [showExtra, setShowExtra] = React.useState(false);
+  // Optional custom prompt / redesign URL for the demo-site build. When set, the
+  // worker skips the industry template and builds a one-off site for this
+  // business (a redesign of the pasted URL's homepage, or a from-scratch build).
+  const [customPrompt, setCustomPrompt] = React.useState("");
+  const [showCustom, setShowCustom] = React.useState(false);
 
   const { data: proposals = [] } = useQuery({
     queryKey: ["proposals", lead.id],
@@ -88,12 +93,17 @@ export function LeadActions({ lead, business }) {
           businessId: lead.business_id,
           provider: provider || undefined,
           force: demos.length > 0,
+          customPrompt: customPrompt.trim() || undefined,
         }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed");
       await queryClient.invalidateQueries({ queryKey: ["demos", lead.business_id] });
-      toast.success("Building your demo site… (~30s)");
+      toast.success(
+        customPrompt.trim()
+          ? "Building your custom site… (~40s)"
+          : "Building your demo site… (~30s)",
+      );
     } catch (e) {
       toast.error(e.message);
     } finally {
@@ -140,7 +150,11 @@ export function LeadActions({ lead, business }) {
         </Button>
         <Button variant="outline" onClick={generateDemo} disabled={buildingDemo}>
           {buildingDemo ? <Loader2 className="h-4 w-4 animate-spin" /> : <Globe className="h-4 w-4" />}
-          {demos.length ? "Rebuild demo site" : "Generate demo site"}
+          {customPrompt.trim()
+            ? "Build custom site"
+            : demos.length
+              ? "Rebuild demo site"
+              : "Generate demo site"}
         </Button>
         <ProviderSelect onChange={setProvider} />
         <select
@@ -181,6 +195,40 @@ export function LeadActions({ lead, business }) {
         )}
         {extraPoints.trim() && !showExtra && (
           <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">“{extraPoints.trim()}”</p>
+        )}
+      </div>
+
+      {/* Optional custom prompt / redesign URL for the demo-site build. */}
+      <div className="rounded-lg border border-border bg-muted/30 p-3">
+        {!showCustom ? (
+          <button
+            type="button"
+            onClick={() => setShowCustom(true)}
+            className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+          >
+            <Code2 className="h-3.5 w-3.5" />
+            {customPrompt.trim() ? "Edit custom design prompt" : "Custom design / redesign a site"}
+          </button>
+        ) : (
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">
+              Custom demo prompt (optional) — paste a website URL to redesign its homepage
+              (keeping its sections), and/or describe the design you want. Leave empty for the
+              auto-generated industry demo.
+            </Label>
+            <Textarea
+              rows={3}
+              value={customPrompt}
+              onChange={(e) => setCustomPrompt(e.target.value)}
+              placeholder="e.g. https://theirsite.com — redesign this homepage, keep all sections, make it modern and premium with a dark hero and a booking section."
+            />
+            <p className="text-[11px] text-muted-foreground">
+              A custom build is always generated fresh for this business (no template reuse).
+            </p>
+          </div>
+        )}
+        {customPrompt.trim() && !showCustom && (
+          <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">“{customPrompt.trim()}”</p>
         )}
       </div>
 

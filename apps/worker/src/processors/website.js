@@ -1,7 +1,8 @@
-import { buildWebsiteRequest } from "@leadforge/shared/prompts";
+import { buildWebsiteRequest, buildCustomWebsiteRequest } from "@leadforge/shared/prompts";
 import { fillTemplate } from "@leadforge/shared/template";
 import { supabase } from "../lib/supabase.js";
 import { generateWebsiteHtml } from "../lib/website-model.js";
+import { extractUrl, scrapeHomepage } from "../lib/scrape-page.js";
 
 // Strip accidental markdown fences / prose the model may wrap around the HTML.
 function cleanHtml(raw) {
@@ -65,6 +66,15 @@ export async function processGenerateWebsite(job) {
     .eq("id", businessId)
     .single();
   if (error || !business) throw new Error(`business ${businessId} not found`);
+
+  // Custom / redesign mode — the user gave their own prompt (and maybe a URL).
+  // This bypasses the whole industry-template cache: it's a one-off, per-business
+  // build with the real business values baked in, so we never read or write
+  // website_templates and never run fillTemplate.
+  const customPrompt = (job.data.customPrompt || "").trim();
+  if (customPrompt) {
+    return await processCustomWebsite(job, { demoId, businessId, orgId, business, customPrompt });
+  }
 
   const key = industryKey(business);
   // Pin this business to one of the N variant slots for its industry.
@@ -143,4 +153,49 @@ export async function processGenerateWebsite(job) {
     .eq("id", demoId);
 
   return { demoId, businessId, bytes: html.length, reused };
+}
+
+// Custom / redesign build. One-off per business: no template cache, no token
+// fill. If the prompt contains a URL we scrape that homepage and ask the model
+// to preserve its sections while restyling; otherwise it's a from-scratch build
+// driven purely by the user's instructions.
+async function processCustomWebsite(job, { demoId, businessId, orgId, business, customPrompt }) {
+  const url = extractUrl(customPrompt);
+  let sourceSite = null;
+  if (url) {
+    try {
+      sourceSite = await scrapeHomepage(url);
+      if (!sourceSite) console.warn(`[website] redesign source unreachable: ${url}`);
+    } catch (e) {
+      // A failed scrape shouldn't kill the build — fall back to instructions-only.
+      console.warn(`[website] scrape failed for ${url}: ${e.message}`);
+    }
+  }
+
+  const requested = job.data.provider || (await orgProvider(orgId));
+  const { system, user } = buildCustomWebsiteRequest(business, customPrompt, sourceSite);
+
+  let res;
+  try {
+    res = await generateWebsiteHtml({ requested, system, user });
+  } catch (e) {
+    await markFailed(demoId, e.message);
+    throw e;
+  }
+
+  const html = cleanHtml(res.text);
+  if (!isHtml(html)) {
+    await markFailed(demoId, "model did not return valid HTML");
+    throw new Error("invalid HTML output");
+  }
+
+  const model = sourceSite ? `custom:redesign` : `custom:prompt`;
+  const tokens = (res.usage?.input_tokens ?? 0) + (res.usage?.output_tokens ?? 0);
+
+  await supabase
+    .from("website_demos")
+    .update({ status: "done", html, model, tokens, error: null })
+    .eq("id", demoId);
+
+  return { demoId, businessId, bytes: html.length, custom: true, redesign: !!sourceSite };
 }

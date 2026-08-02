@@ -25,10 +25,14 @@ export async function POST(request) {
   }
   const { supabase, orgId, user } = session;
 
-  const { businessId, provider, force } = await request.json().catch(() => ({}));
+  const { businessId, provider, force, customPrompt } = await request.json().catch(() => ({}));
   if (!businessId) {
     return NextResponse.json({ error: "businessId is required" }, { status: 400 });
   }
+  // Optional custom / redesign prompt. When present the worker skips the industry
+  // template cache and builds a one-off site — so a custom build is always fresh.
+  const customText = typeof customPrompt === "string" ? customPrompt.trim().slice(0, 4000) : "";
+  const forceBuild = !!force || !!customText;
   // Optional per-build provider override. Ignore anything without a key set —
   // the worker falls back to the org's saved choice / first available.
   const providerOverride =
@@ -89,7 +93,7 @@ export async function POST(request) {
 
   let queued = false;
   try {
-    queued = await enqueueWebsite(demo.id, businessId, orgId, providerOverride, force);
+    queued = await enqueueWebsite(demo.id, businessId, orgId, providerOverride, forceBuild, customText);
   } catch (e) {
     console.error("[website] enqueue failed:", e.message);
   }
