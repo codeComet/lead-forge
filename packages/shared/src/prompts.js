@@ -3,12 +3,13 @@
 // prompts easy to review and tweak without touching transport code.
 
 /** Compact, token-friendly digest of a business + audit for prompt context. */
-function digest(business, audit) {
+function digest(business, audit, lead) {
   const w = audit?.website ?? {};
   const seo = audit?.seo ?? {};
   const tech = audit?.tech ?? {};
   const gbp = audit?.gbp ?? {};
   const social = audit?.social ?? {};
+  const ins = lead?.insight ?? null;
   return JSON.stringify(
     {
       name: business?.name,
@@ -18,6 +19,16 @@ function digest(business, audit) {
       rating: gbp.rating ?? business?.rating,
       reviews: gbp.reviews ?? business?.reviews,
       website: business?.website || null,
+      // AI insight, when available — concrete problems + the impact estimate.
+      // The proposal may reference these to make the pitch tangible.
+      insight: ins
+        ? {
+            problems: ins.problems,
+            improvements: ins.improvements,
+            estimatedMissedCustomersPerMonth: ins.estimatedMissedCustomersPerMonth,
+            estimatedLostRevenuePerMonth: ins.estimatedLostRevenuePerMonth,
+          }
+        : undefined,
       audit: {
         hasWebsite: w.exists,
         https: w.https,
@@ -109,6 +120,17 @@ const LANG_MARK = "<<<LANG>>>";
 const MSG_MARK = "<<<MESSAGE>>>";
 const TRANS_MARK = "<<<TRANSLATION>>>";
 
+// Optional-facts instruction: the DATA may carry an AI insight (concrete
+// problems + an impact estimate). Let the model use it to make the pitch
+// tangible, but keep it warm — a figure only when it flows, never forced.
+const INSIGHT_HINT =
+  " If the DATA has an `insight` (specific problems, or estimatedMissedCustomers" +
+  "PerMonth / estimatedLostRevenuePerMonth), you MAY weave in ONE concrete point " +
+  "— e.g. gently note the customers or revenue they're likely missing right now — " +
+  "but only when it reads naturally and stays warm and helpful, never alarmist or " +
+  "salesy. Soften and round any number ('maybe around N customers a month'). Use at " +
+  "most one figure. Never invent problems or numbers that aren't in the DATA.";
+
 // Shared instruction: write the outreach in the location's local language, then
 // give an English translation, in a strict machine-parseable format. Appended
 // to both the email and Instagram system prompts.
@@ -198,12 +220,13 @@ export function buildProposalRequest(business, audit, lead, demoUrl = null, chan
     `line. Sign off warmly as an individual named ${SENDER_NAME}, with a closing ` +
     `line then '${SENDER_NAME}' on the next line. Never use any other name in the ` +
     "sign-off. Do not fabricate specifics not in the data." +
+    INSIGHT_HINT +
     LOCALIZE_RULES;
   const user =
     `Write a personalised outreach email to this business.\n\n` +
     `Key problems found: ${reasons || "general online presence gaps"}.\n\n` +
     (demoUrl ? `Demo site link (include verbatim): ${demoUrl}\n\n` : "") +
-    `DATA:\n${digest(business, audit)}` +
+    `DATA:\n${digest(business, audit, lead)}` +
     extraPointsBlock(instructions);
   return { system, user };
 }
@@ -244,12 +267,13 @@ export function buildInstagramProposalRequest(business, audit, lead, demoUrl = n
     " CRITICAL — must fit an Instagram DM: keep it SHORT and skimmable, 60-100 words total, " +
     `short lines. No subject line. End with a light sign-off signing as ${SENDER_NAME} on ` +
     "its own line. Never use any other name. Do not fabricate specifics not in the data." +
+    INSIGHT_HINT +
     LOCALIZE_RULES;
   const user =
     `Write a short Instagram DM to this business.\n\n` +
     `Key problems found: ${reasons || "room to modernise their online presence"}.\n\n` +
     (demoUrl ? `Demo site link (include verbatim): ${demoUrl}\n\n` : "") +
-    `DATA:\n${digest(business, audit)}` +
+    `DATA:\n${digest(business, audit, lead)}` +
     extraPointsBlock(instructions);
   return { system, user };
 }
