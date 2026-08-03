@@ -46,8 +46,8 @@ export async function processProposal(job) {
     // Room for the local-language message + its English translation.
     maxTokens: 2048,
   });
-  // Split local-language body from its English translation.
-  let { language, body, translation } = parseLocalizedProposal(raw);
+  // Split local-language body from its English translation (+ localized subject).
+  let { language, subject: localizedSubject, body, translation } = parseLocalizedProposal(raw);
   let usage = rawUsage;
 
   let model = MODELS.default;
@@ -74,7 +74,7 @@ export async function processProposal(job) {
   const subject =
     channel === "instagram"
       ? `Instagram DM for ${business?.name ?? "your business"}`
-      : `A quick idea for ${business?.name ?? "your business"}`;
+      : localizedSubject || `A quick idea for ${business?.name ?? "your business"}`;
   const tokens = (usage?.input_tokens ?? 0) + (usage?.output_tokens ?? 0);
 
   // Regenerating replaces the lead's existing proposal instead of stacking a new

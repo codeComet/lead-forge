@@ -40,15 +40,15 @@ export async function POST(request) {
     ? { website: audit.website, seo: audit.seo, tech: audit.tech, gbp: audit.gbp, social: audit.social }
     : {};
 
-  // Instagram DMs revolve around the demo preview link; the email flow adds the
-  // link separately in the UI, so only pass it here for the Instagram channel.
+  // Both channels build around the demo preview link. Passing it here lets the
+  // model weave the demo section (and the link) straight into the localized body
+  // — no separate English snippet tacked on afterwards.
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin;
-  const demoUrl =
-    channel === "instagram" && demo
-      ? demo.slug
-        ? `${appUrl}/p/${demo.slug}`
-        : `${appUrl}/preview/${demo.id}`
-      : null;
+  const demoUrl = demo
+    ? demo.slug
+      ? `${appUrl}/p/${demo.slug}`
+      : `${appUrl}/preview/${demo.id}`
+    : null;
 
   const { system, user: userPrompt } = buildProposalRequest(business, auditObj, lead, demoUrl, channel, extraPoints);
 
@@ -66,8 +66,14 @@ export async function POST(request) {
 
   // Split the local-language body from its English translation. `body` (local
   // language) is what actually gets sent; the translation is for the sender to
-  // verify the wording.
-  const { language, body, translation } = parseLocalizedProposal(raw);
+  // verify the wording. `localizedSubject` is the model's local-language subject
+  // (email only — DMs return none).
+  const { language, subject: localizedSubject, body, translation } = parseLocalizedProposal(raw);
+
+  const subject =
+    channel === "instagram"
+      ? `Instagram DM for ${business?.name ?? "your business"}`
+      : localizedSubject || `A quick idea for ${business?.name ?? "your business"}`;
 
   const { data: proposal, error } = await supabase
     .from("proposals")
@@ -75,10 +81,7 @@ export async function POST(request) {
       org_id: orgId,
       lead_id: leadId,
       channel,
-      subject:
-        channel === "instagram"
-          ? `Instagram DM for ${business?.name ?? "your business"}`
-          : `A quick idea for ${business?.name ?? "your business"}`,
+      subject,
       body,
       body_translation: translation,
       language,

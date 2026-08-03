@@ -459,24 +459,12 @@ function ProposalCard({ proposal, business, lead, demo }) {
   const [subject, setSubject] = React.useState(proposal.subject || "");
   const [body, setBody] = React.useState(proposal.body || "");
 
+  // The demo section (and its link) is written straight into the localized body
+  // at generation time, so there's no separate English snippet to append — we
+  // just surface whether the link made it into the body. If a proposal was drafted
+  // before its demo existed and lacks the link, regenerating rebuilds it inline.
   const demoLink = demo ? previewUrl(demo) : null;
   const linkIncluded = demoLink && body.includes(demoLink);
-
-  function addPreviewLink() {
-    if (!demoLink || linkIncluded) return;
-    setBody(
-      (b) =>
-        `${b.trim()}\n\nI've already made a demo for you so you can see how your business could look online:\n${demoLink}\n\nWe can go through it together and see if it fits what you need — no pressure at all.`,
-    );
-    toast.success("Preview link added to the email");
-  }
-
-  // Offer the link automatically the first time the dialog opens. Instagram DMs
-  // already have the link baked into the body, so skip it there.
-  React.useEffect(() => {
-    if (open && !isInstagram && demoLink && !linkIncluded) addPreviewLink();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
 
   async function send() {
     if (!to.trim()) {
@@ -564,20 +552,15 @@ function ProposalCard({ proposal, business, lead, demo }) {
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
                       <Label>Body</Label>
-                      {demoLink && !linkIncluded && (
-                        <button
-                          type="button"
-                          onClick={addPreviewLink}
-                          className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
-                        >
-                          <Globe className="h-3 w-3" /> Add demo preview link
-                        </button>
-                      )}
-                      {linkIncluded && (
+                      {linkIncluded ? (
                         <span className="inline-flex items-center gap-1 text-xs text-success">
                           <CheckCircle2 className="h-3 w-3" /> Preview link included
                         </span>
-                      )}
+                      ) : demoLink ? (
+                        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                          <Globe className="h-3 w-3" /> Regenerate to add the demo link
+                        </span>
+                      ) : null}
                     </div>
                     <Textarea rows={10} value={body} onChange={(e) => setBody(e.target.value)} />
                   </div>

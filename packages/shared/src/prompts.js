@@ -117,6 +117,7 @@ export const SENDER_NAME = "Redwan";
 // Sentinel markers the model wraps its output in so we can split the local-
 // language message from its English translation deterministically.
 const LANG_MARK = "<<<LANG>>>";
+const SUBJECT_MARK = "<<<SUBJECT>>>";
 const MSG_MARK = "<<<MESSAGE>>>";
 const TRANS_MARK = "<<<TRANSLATION>>>";
 
@@ -133,50 +134,74 @@ const INSIGHT_HINT =
 
 // Shared instruction: write the outreach in the location's local language, then
 // give an English translation, in a strict machine-parseable format. Appended
-// to both the email and Instagram system prompts.
-const LOCALIZE_RULES =
-  "\n\nLANGUAGE — CRITICAL: work out the primary local language the owner and " +
-  "customers at this location actually speak, from the city/address/country in " +
-  "the DATA (e.g. Linz, Austria → German as spoken in Austria; Paris → French; " +
-  "Milan → Italian; Zürich → Swiss-style German). Write the ENTIRE message in " +
-  "that local language, sounding native and natural to that specific region — a " +
-  "real local person's phrasing and greetings, never a stiff textbook " +
-  "translation. Localise the sign-off too (e.g. 'Beste Grüße' in German), still " +
-  "signing as " + SENDER_NAME + ". If the local language is English, just write " +
-  "in English.\n\n" +
-  "OUTPUT FORMAT — return EXACTLY this and nothing else, no preamble:\n" +
-  LANG_MARK + " <the language you wrote in, named in English, e.g. Austrian German>\n" +
-  MSG_MARK + "\n" +
-  "<the full message in the local language>\n" +
-  TRANS_MARK + "\n" +
-  "<a faithful, natural English translation of that message; if it's already " +
-  "English, repeat it here>";
+// to both the email and Instagram system prompts. `includeSubject` adds a
+// localized email subject line to the contract (email only — DMs have none).
+function localizeRules(includeSubject = false) {
+  const subjectLine = includeSubject
+    ? SUBJECT_MARK + "\n" +
+      "<a short, specific email subject line in the SAME local language — no " +
+      "\"Subject:\" prefix, one line, not salesy>\n"
+    : "";
+  return (
+    "\n\nLANGUAGE — CRITICAL: work out the primary local language the owner and " +
+    "customers at this location actually speak, from the city/address/country in " +
+    "the DATA (e.g. Linz, Austria → German as spoken in Austria; Paris → French; " +
+    "Milan → Italian; Zürich → Swiss-style German). Write the ENTIRE message in " +
+    "that local language, sounding native and natural to that specific region — a " +
+    "real local person's phrasing and greetings, never a stiff textbook " +
+    "translation. Localise the sign-off too (e.g. 'Beste Grüße' in German), still " +
+    "signing as " + SENDER_NAME + ". If the local language is English, just write " +
+    "in English." +
+    (includeSubject ? " Write the subject line in that same local language too." : "") +
+    "\n\n" +
+    "OUTPUT FORMAT — return EXACTLY this and nothing else, no preamble:\n" +
+    LANG_MARK + " <the language you wrote in, named in English, e.g. Austrian German>\n" +
+    subjectLine +
+    MSG_MARK + "\n" +
+    "<the full message in the local language>\n" +
+    TRANS_MARK + "\n" +
+    "<a faithful, natural English translation of that message; if it's already " +
+    "English, repeat it here>"
+  );
+}
 
 /**
  * Parse a localized proposal response into its parts. Tolerant of a model that
  * ignored the format: falls back to treating the whole text as the message with
- * no translation. Returns { language, body, translation }.
+ * no translation. Returns { language, subject, body, translation }. `subject` is
+ * null unless the model emitted a <<<SUBJECT>>> section (email prompts only).
  */
 export function parseLocalizedProposal(raw) {
   const text = (raw || "").trim();
   const li = text.indexOf(LANG_MARK);
+  const si = text.indexOf(SUBJECT_MARK);
   const mi = text.indexOf(MSG_MARK);
   const ti = text.indexOf(TRANS_MARK);
 
   if (mi === -1 || ti === -1 || ti < mi) {
     // Model didn't follow the format — keep the whole thing as the body.
-    return { language: null, body: text.replace(LANG_MARK, "").trim() || text, translation: null };
+    return {
+      language: null,
+      subject: null,
+      body: text.replace(LANG_MARK, "").trim() || text,
+      translation: null,
+    };
   }
 
+  // The subject section, when present, sits between LANG and MESSAGE.
+  const hasSubject = si !== -1 && si < mi && (li === -1 || si > li);
   const language =
     li !== -1 && li < mi
-      ? text.slice(li + LANG_MARK.length, mi).trim() || null
+      ? text.slice(li + LANG_MARK.length, hasSubject ? si : mi).trim() || null
       : null;
+  const subject = hasSubject
+    ? text.slice(si + SUBJECT_MARK.length, mi).trim() || null
+    : null;
   const body = text.slice(mi + MSG_MARK.length, ti).trim();
   let translation = text.slice(ti + TRANS_MARK.length).trim() || null;
   // Drop a redundant translation when the message was already English.
   if (translation && translation === body) translation = null;
-  return { language, body: body || text, translation };
+  return { language, subject, body: body || text, translation };
 }
 
 // Turn user-supplied "extra points" into a prompt instruction. These are the
@@ -237,11 +262,12 @@ export function buildProposalRequest(business, audit, lead, demoUrl = null, chan
     "9. THE ASK: 'Would you be open to a brief conversation?'\n" +
     "10. SIGN-OFF: 'Kind regards,' then '" + SENDER_NAME + "' on the next line. Never use " +
     "any other name.\n\n" +
-    "Keep it tight — roughly 180-240 words. Plain text, no subject line. Do not fabricate " +
-    "specifics not in the data." +
+    "Keep it tight — roughly 180-240 words. Plain text; put NO subject line inside the " +
+    "body (the subject is returned separately per the output format below). Do not " +
+    "fabricate specifics not in the data." +
     demoRules +
     INSIGHT_HINT +
-    LOCALIZE_RULES;
+    localizeRules(true);
   const user =
     `Write a personalised outreach email to this business.\n\n` +
     `Key problems found: ${reasons || "general online presence gaps"}.\n\n` +
@@ -286,7 +312,7 @@ export function buildInstagramProposalRequest(business, audit, lead, demoUrl = n
     `short lines. No subject line. End with a light sign-off signing as ${SENDER_NAME} on ` +
     "its own line. Never use any other name. Do not fabricate specifics not in the data." +
     INSIGHT_HINT +
-    LOCALIZE_RULES;
+    localizeRules(false);
   const user =
     `Write a short Instagram DM to this business.\n\n` +
     `Key problems found: ${reasons || "room to modernise their online presence"}.\n\n` +
@@ -347,8 +373,11 @@ const MODERN_FRONTEND_SKILL =
   "of it. Subtle parallax only — no scroll-hijacking.\n" +
   "- TYPOGRAPHY AS HERO: type IS the layout. Exactly TWO families — one expressive " +
   "(variable) display + one neutral body; ≤3 weights total; no system fonts in the " +
-  "hero. Display is oversized and high-contrast: ~80px+ desktop, at least 3× body, via " +
-  "clamp() (e.g. clamp(2.75rem,1rem+6vw,6rem)); tight negative tracking (~-0.03em) and " +
+  "hero. Display is MASSIVE and high-contrast: 120-180px desktop, at least 5× body, via " +
+  "clamp() (e.g. clamp(3.25rem,1rem+10vw,10rem)) — the hero headline should feel almost " +
+  "too big. The clamp must actually scale: min ≤3.5rem so it never overflows a 390px " +
+  "phone, max ≥7rem, and max at least 2× min — never a near-fixed clamp like " +
+  "clamp(5.9rem,1rem+9vw,6.2rem). Tight negative tracking (~-0.03em) and " +
   "leading-[0.95] on the hero headline. Body ≥16px, text measure 65-75ch. One kinetic / " +
   "gradient-text headline moment, used ONCE.\n" +
   "- COLOUR — REDUCED + ACCENT: a restrained palette, monochrome/neutral base + ONE " +
