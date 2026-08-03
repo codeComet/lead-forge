@@ -3,6 +3,7 @@ import { fillTemplate } from "@leadforge/shared/template";
 import { supabase } from "../lib/supabase.js";
 import { generateWebsiteHtml } from "../lib/website-model.js";
 import { extractUrl, scrapeHomepage } from "../lib/scrape-page.js";
+import { extractBrandColor } from "../lib/extract-brand-color.js";
 
 // Strip accidental markdown fences / prose the model may wrap around the HTML.
 function cleanHtml(raw) {
@@ -141,7 +142,19 @@ export async function processGenerateWebsite(job) {
   }
 
   // 3. Fill the template for this specific business (name/city/phone/colours).
-  const html = fillTemplate(templateHtml, business);
+  //    If the business already has a website, sniff its brand colour and recolour
+  //    the demo to match; otherwise fillTemplate falls back to a per-business hue
+  //    offset. A failed/empty sniff is non-fatal — the demo still builds.
+  let brandColor = null;
+  if (business.website) {
+    try {
+      brandColor = await extractBrandColor(business.website);
+      if (brandColor) console.log(`[website] brand colour ${brandColor} from ${business.website}`);
+    } catch (e) {
+      console.warn(`[website] brand colour sniff failed for ${business.website}: ${e.message}`);
+    }
+  }
+  const html = fillTemplate(templateHtml, business, { brandColor });
   if (!isHtml(html)) {
     await markFailed(demoId, "template produced invalid HTML");
     throw new Error("invalid HTML output");

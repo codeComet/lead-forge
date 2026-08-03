@@ -86,6 +86,20 @@ function rotateHex(hex, deg) {
   return rgbToHex(nr, ng, nb);
 }
 
+// Hue (degrees) of a #rrggbb colour, or null if unparseable.
+function hueOf(hex) {
+  const m = /^#([0-9a-fA-F]{6})$/.exec(String(hex || "").trim());
+  if (!m) return null;
+  const [r, g, b] = hexToRgb(hex);
+  return rgbToHsl(r, g, b)[0];
+}
+
+// The template's own --brand hue (the origin of the palette we're rotating).
+function currentBrandHue(html) {
+  const m = html.match(/--brand\s*:\s*(#[0-9a-fA-F]{6})\b/i);
+  return m ? hueOf(m[1]) : null;
+}
+
 // Rotate only the brand/accent hues inside :root. Neutral vars (--ink/--bg/
 // --surface) are left alone so contrast against text/overlays is preserved.
 // No-ops safely if the palette can't be parsed (site still renders).
@@ -119,8 +133,16 @@ function formatHours(openingHours) {
 /**
  * Turn an industry template into a concrete demo site for one business.
  * Pure function — no side effects, no model calls.
+ *
+ * @param {object} [opts]
+ * @param {string|null} [opts.brandColor] A #rrggbb brand colour sniffed from the
+ *   business's existing website. When given, the whole brand palette is rotated
+ *   so its --brand lands on this colour's hue (relationships between brand/
+ *   brand-2/accent and all lightness/saturation are preserved, keeping contrast
+ *   safe). When absent, a per-business hue offset is used instead so same-
+ *   industry demos don't look identical.
  */
-export function fillTemplate(templateHtml, business) {
+export function fillTemplate(templateHtml, business, opts = {}) {
   if (!templateHtml) return templateHtml;
   const name = business?.name || "The Business";
   const city = business?.city || business?.address || "your area";
@@ -138,5 +160,15 @@ export function fillTemplate(templateHtml, business) {
     // day line and injects the <br> separators the layout needs.
     .replaceAll("{{HOURS}}", formatHours(business?.opening_hours));
 
-  return rotateBrandHues(html, offsetFor(business?.id || name));
+  // Match the business's real brand hue when we sniffed one; otherwise spread
+  // same-industry demos apart with a deterministic per-business offset.
+  let deg = null;
+  const targetHue = hueOf(opts?.brandColor);
+  if (targetHue != null) {
+    const currentHue = currentBrandHue(html);
+    if (currentHue != null) deg = Math.round(targetHue - currentHue);
+  }
+  if (deg == null) deg = offsetFor(business?.id || name);
+
+  return rotateBrandHues(html, deg);
 }
