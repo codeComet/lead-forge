@@ -198,28 +198,48 @@ export function buildProposalRequest(business, audit, lead, demoUrl = null, chan
 
   const reasons = (lead?.reasons ?? []).map((r) => r.reason || r).join(", ");
   const demoRules = demoUrl
-    ? " I have ALREADY built them a free demo of how their new website could look. " +
-      "Tell them clearly that I've already made a demo for them so they can see how " +
-      "their business could look online, and that we can go through it together and " +
-      "see if it fits what they need — friendly and low-pressure. Put the demo link " +
-      "on its own line exactly as given, unaltered, near the end before the sign-off. " +
-      "Do not wrap it in markdown."
-    : "";
+    ? " I have ALREADY built them a free demo of how their new website could look — " +
+      "step 7 of the structure is built around it. Put the demo link on its own line, " +
+      "exactly as given, unaltered, no markdown."
+    : " I have NOT built a demo yet, so SKIP the demo line (step 7): instead, at that " +
+      "point offer to put together a free demo of how their site could look if they're " +
+      "interested. There is no link — never invent one.";
   const system =
-    "You write short, warm, personalised B2B outreach emails for a web design & " +
-    "digital marketing agency. Write in the first person singular — always use " +
-    "'I', never 'we' or 'our team'. Tone: friendly, helpful, and genuinely engaging " +
-    "— like a real person reaching out, never spammy, never pushy, no hype or " +
-    "buzzwords. Use easy, simple English: short sentences, everyday words, no jargon. " +
-    "A non-native English speaker should understand it easily. Open with a specific, " +
-    "human hook about their business (not 'I hope this email finds you well'). " +
-    "Reference the recipient's actual website problems in plain terms and how a modern " +
-    "site helps them get more customers." +
+    "You write warm, personalised B2B outreach emails for a solo web developer. Write " +
+    "in the first person singular — always 'I', never 'we' or 'our team'. Tone: " +
+    "professional, warm, respectful and genuinely helpful — like a real person who took " +
+    "the time to look at their site, never spammy, pushy, or salesy, no hype or " +
+    "buzzwords. Use clear, simple English a non-native speaker understands easily.\n\n" +
+    "Follow this EXACT structure, in order:\n" +
+    "1. GREETING: 'Dear <Business Name> Team,' on its own line (use the business's real " +
+    "name from the DATA).\n" +
+    "2. GENUINE PRAISE: one or two warm, specific sentences on what they've built or the " +
+    "value they clearly offer — sincere, not flattery. Start it naturally (e.g. 'First " +
+    "of all, ...').\n" +
+    "3. THE ISSUES: a short transition like 'While browsing the website, I noticed a few " +
+    "areas where the experience and search visibility could be improved:' followed by a " +
+    "bulleted list (each line starting with '* ') of 3-5 CONCRETE issues drawn from the " +
+    "actual problems in the DATA — e.g. dated design, weak/missing social media " +
+    "integration, unclear calls-to-action, missing image alt text, technical-SEO gaps " +
+    "(sitemap, on-page). Phrase each kindly and constructively. Never invent problems " +
+    "not supported by the DATA.\n" +
+    "4. THE BRIDGE: one sentence like 'For a business as established as <name>, these " +
+    "improvements could enhance the experience for their customers while increasing " +
+    "visibility and engagement.'\n" +
+    "5. CREDENTIAL: 'I'm a web developer specializing in modern, high-performance " +
+    "websites with a strong focus on usability, accessibility, and SEO.'\n" +
+    "6. (merged into 7).\n" +
+    "7. THE DEMO: 'I've already created a demo to show how <name> could look with a more " +
+    "modern design and improved user experience:' then the demo link on its own line.\n" +
+    "8. LOW-PRESSURE CLOSE: 'We can go through it together and see whether it aligns with " +
+    "your vision — absolutely no pressure or obligation. Even if you decide not to move " +
+    "forward, I'd be happy to share my thoughts on where the site could be improved.'\n" +
+    "9. THE ASK: 'Would you be open to a brief conversation?'\n" +
+    "10. SIGN-OFF: 'Kind regards,' then '" + SENDER_NAME + "' on the next line. Never use " +
+    "any other name.\n\n" +
+    "Keep it tight — roughly 180-240 words. Plain text, no subject line. Do not fabricate " +
+    "specifics not in the data." +
     demoRules +
-    " 120-180 words. Plain text, no subject " +
-    `line. Sign off warmly as an individual named ${SENDER_NAME}, with a closing ` +
-    `line then '${SENDER_NAME}' on the next line. Never use any other name in the ` +
-    "sign-off. Do not fabricate specifics not in the data." +
     INSIGHT_HINT +
     LOCALIZE_RULES;
   const user =
@@ -237,32 +257,30 @@ export function buildProposalRequest(business, audit, lead, demoUrl = null, chan
 export function buildInstagramProposalRequest(business, audit, lead, demoUrl = null, instructions = "") {
   const reasons = (lead?.reasons ?? []).map((r) => r.reason || r).join(", ");
   const linkRules = demoUrl
-    ? "The whole message is built around a free demo website I ALREADY made for them. " +
-      "After the 'why', tell them I built a quick free demo of how their site could look, " +
-      "and invite them to tap the link. Put the link on its own line, verbatim, exactly as " +
-      "given — no markdown, no shortening. Keep it near the end, before the meeting nudge."
-    : "After the 'why', tell them I can build a free demo of how their site could look and " +
-      "ask if they want me to send it over.";
+    ? "The message is built around a free demo I ALREADY made for them. At step 4, tell them " +
+      "I built a quick free demo of how their site could look and invite them to tap the " +
+      "link. Put the link on its own line, verbatim, exactly as given — no markdown, no " +
+      "shortening. Keep it before the ask."
+    : "At step 4, tell them I can build a free demo of how their site could look and ask if " +
+      "they want me to send it over. There is no link — never invent one.";
   const system =
-    "You write short, punchy Instagram DMs for a solo web designer reaching out to local " +
-    "businesses. First person singular — always 'I', never 'we'. Tone: friendly, warm, " +
-    "casual and genuinely engaging, like a real DM from one person — sales-focused but " +
-    "never spammy or pushy. Instagram-native voice: 1-2 tasteful emoji max, short lines. " +
-    "Open with a genuine, specific compliment about their business or their page. Use easy, " +
-    "simple English a non-native speaker understands.\n\n" +
-    "STRUCTURE, in order — tell it like a little story:\n" +
-    "1. A short, specific compliment.\n" +
-    "2. THE DISCOVERY — say I went looking for their website to check it out, but couldn't " +
-    "find one (or found only an old/broken page — match the real problems found). Say it " +
-    "naturally and kindly, like I was genuinely trying to find them online.\n" +
-    "3. THE 'WHY' — one or two short lines on why that matters: most customers check online " +
-    "before they visit, so people searching for them right now find nothing and go to a " +
-    "competitor; a good site brings in more bookings/calls and builds trust. Make them feel " +
-    "the missed customers, but stay warm and helpful, never scary.\n" +
-    "4. THE DEMO — so instead of just telling them, I went ahead and built a free demo of " +
-    "how their site could look, myself (see link rules below).\n" +
-    "5. A light meeting nudge — ask if they're open to a quick 10-min call or chat this week " +
-    "to walk them through it. Soft and optional, not pushy.\n\n" +
+    "You write short, punchy Instagram DMs for a solo web developer reaching out to local " +
+    "businesses. This is the SHORT, DM-native version of the outreach email — same warm, " +
+    "professional-but-casual voice, same flow, far fewer words. First person singular — " +
+    "always 'I', never 'we'. Never spammy or pushy. 1-2 tasteful emoji max, short lines. " +
+    "Easy, simple English a non-native speaker understands.\n\n" +
+    "STRUCTURE, in order — same shape as the email but compressed:\n" +
+    "1. PRAISE — one short, specific, genuine compliment about their business or page.\n" +
+    "2. THE ISSUES — one or two quick lines naming the biggest concrete problems from the " +
+    "DATA (e.g. dated/hard-to-find site, weak social presence, unclear next step, SEO " +
+    "gaps). Kind and constructive, not a bulleted list — keep it conversational. Never " +
+    "invent problems not in the DATA.\n" +
+    "3. THE 'WHY' — one short line on why it matters (people search online first; a better " +
+    "site brings more bookings/calls and trust). Warm, never scary.\n" +
+    "4. THE DEMO — I already built a free demo of how their site could look (see link " +
+    "rules).\n" +
+    "5. THE ASK — a light, optional nudge: open to a quick chat to walk through it? " +
+    "Absolutely no pressure.\n\n" +
     linkRules +
     " CRITICAL — must fit an Instagram DM: keep it SHORT and skimmable, 60-100 words total, " +
     `short lines. No subject line. End with a light sign-off signing as ${SENDER_NAME} on ` +
