@@ -5,9 +5,10 @@
 // fixed CSS-variable palette. This module turns that template into a concrete
 // demo site purely in code — no model call:
 //   1. Replace {{BUSINESS_NAME}} / {{CITY}} / {{PHONE}} / {{RATING}} tokens.
-//   2. Rotate the brand hues in :root by a per-business offset, so two shops in
-//      the same industry don't render in identical colours. Only hue changes —
-//      lightness/saturation are preserved, so text/overlay contrast is safe.
+//   2. Recolour the :root brand vars: match the business's real site colour when
+//      sniffed (hue + saturation), else a per-business hue offset so two shops in
+//      the same industry don't render identically. Lightness is always preserved,
+//      so text/overlay contrast stays safe.
 
 // Minimal HTML-text escape for values injected into markup + attributes.
 function esc(v) {
@@ -79,19 +80,34 @@ function hslToRgb(h, s, l) {
   return [(r + m) * 255, (g + m) * 255, (b + m) * 255];
 }
 
-function rotateHex(hex, deg) {
-  const [r, g, b] = hexToRgb(hex);
-  const [h, s, l] = rgbToHsl(r, g, b);
-  const [nr, ng, nb] = hslToRgb(h + deg, s, l);
-  return rgbToHex(nr, ng, nb);
-}
-
 // Hue (degrees) of a #rrggbb colour, or null if unparseable.
 function hueOf(hex) {
   const m = /^#([0-9a-fA-F]{6})$/.exec(String(hex || "").trim());
   if (!m) return null;
   const [r, g, b] = hexToRgb(hex);
   return rgbToHsl(r, g, b)[0];
+}
+
+// Saturation (0–1) of a #rrggbb colour, or null if unparseable.
+function satOf(hex) {
+  const m = /^#([0-9a-fA-F]{6})$/.exec(String(hex || "").trim());
+  if (!m) return null;
+  const [r, g, b] = hexToRgb(hex);
+  return rgbToHsl(r, g, b)[1];
+}
+
+// Rotate a hue and pull saturation toward a target, KEEPING lightness (so text/
+// overlay contrast, which depends on lightness, is untouched). satTarget null ⇒
+// saturation preserved.
+function recolorHex(hex, deg, satTarget) {
+  const [r, g, b] = hexToRgb(hex);
+  let [h, s, l] = rgbToHsl(r, g, b);
+  h += deg;
+  // Blend toward the real site's vividness but keep some of the template's own
+  // character, so a dull brand doesn't wash the demo out or vice-versa.
+  if (satTarget != null) s = s * 0.35 + satTarget * 0.65;
+  const [nr, ng, nb] = hslToRgb(h, s, l);
+  return rgbToHex(nr, ng, nb);
 }
 
 // The template's own --brand hue (the origin of the palette we're rotating).
@@ -103,13 +119,13 @@ function currentBrandHue(html) {
 // Rotate only the brand/accent hues inside :root. Neutral vars (--ink/--bg/
 // --surface) are left alone so contrast against text/overlays is preserved.
 // No-ops safely if the palette can't be parsed (site still renders).
-function rotateBrandHues(html, deg) {
-  if (!deg) return html;
+function rotateBrandHues(html, deg, satTarget = null) {
+  if (!deg && satTarget == null) return html;
   try {
     return html.replace(/(:root\s*\{)([\s\S]*?)(\})/i, (_m, open, body, close) => {
       const rotated = body.replace(
         /(--(?:brand-2|brand|accent)\s*:\s*)(#[0-9a-fA-F]{6})\b/g,
-        (_mm, prefix, hex) => prefix + rotateHex(hex, deg),
+        (_mm, prefix, hex) => prefix + recolorHex(hex, deg || 0, satTarget),
       );
       return open + rotated + close;
     });
@@ -163,12 +179,17 @@ export function fillTemplate(templateHtml, business, opts = {}) {
   // Match the business's real brand hue when we sniffed one; otherwise spread
   // same-industry demos apart with a deterministic per-business offset.
   let deg = null;
+  let satTarget = null;
   const targetHue = hueOf(opts?.brandColor);
   if (targetHue != null) {
     const currentHue = currentBrandHue(html);
-    if (currentHue != null) deg = Math.round(targetHue - currentHue);
+    if (currentHue != null) {
+      deg = Math.round(targetHue - currentHue);
+      // Also match the real site's vividness (saturation), not just its hue.
+      satTarget = satOf(opts?.brandColor);
+    }
   }
   if (deg == null) deg = offsetFor(business?.id || name);
 
-  return rotateBrandHues(html, deg);
+  return rotateBrandHues(html, deg, satTarget);
 }

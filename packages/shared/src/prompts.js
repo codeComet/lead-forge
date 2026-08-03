@@ -373,11 +373,11 @@ const MODERN_FRONTEND_SKILL =
   "of it. Subtle parallax only — no scroll-hijacking.\n" +
   "- TYPOGRAPHY AS HERO: type IS the layout. Exactly TWO families — one expressive " +
   "(variable) display + one neutral body; ≤3 weights total; no system fonts in the " +
-  "hero. Display is MASSIVE and high-contrast: 120-180px desktop, at least 5× body, via " +
-  "clamp() (e.g. clamp(3.25rem,1rem+10vw,10rem)) — the hero headline should feel almost " +
-  "too big. The clamp must actually scale: min ≤3.5rem so it never overflows a 390px " +
-  "phone, max ≥7rem, and max at least 2× min — never a near-fixed clamp like " +
-  "clamp(5.9rem,1rem+9vw,6.2rem). Tight negative tracking (~-0.03em) and " +
+  "hero. Display is large and confident but NOT wall-filling: ~44-76px desktop, ~2.4-3× body, via " +
+  "clamp() (e.g. clamp(2.25rem,1rem+4vw,4.75rem)) — bold, never oversized or overflowing. " +
+  "The clamp must actually scale: min ≤2.75rem so it never overflows a 390px " +
+  "phone, max ≤5.25rem, and max at least 1.8× min — never a near-fixed clamp like " +
+  "clamp(4.6rem,1rem+2vw,4.9rem). Tight negative tracking (~-0.03em) and " +
   "leading-[0.95] on the hero headline. Body ≥16px, text measure 65-75ch. One kinetic / " +
   "gradient-text headline moment, used ONCE.\n" +
   "- COLOUR — REDUCED + ACCENT: a restrained palette, monochrome/neutral base + ONE " +
@@ -509,6 +509,9 @@ export function buildWebsiteRequest(business, variant = 0) {
     "but deterministic.\n" +
     "- The HERO image must show the industry's single most recognisable subject (restaurant → " +
     "FOOD/a plated dish; gym → people training; salon → hair/styling). Not an empty room.\n" +
+    "- Use AT LEAST 3-4 distinct real photos across the page (hero + gallery + service/section " +
+    "images), each a DIFFERENT subject keyword and uniqueInt so no two repeat. An industry site " +
+    "with only one image is a FAIL.\n" +
     "- NEVER use picsum.photos or generic random images. NEVER leave a broken/empty <img>. " +
     "Every <img> needs width/height and a descriptive alt.\n" +
     "\n" +
@@ -537,7 +540,7 @@ export function buildWebsiteRequest(business, variant = 0) {
     "- CTA — besides the hero, include at least one bold full-width CTA band (dark brand or gradient " +
     "background) with a big headline + a prominent 'tel:{{PHONE}}' call button and a book/contact button, " +
     "and repeat a clear CTA in the sticky nav.\n" +
-    "- Oversized display headings (text-5xl→text-7xl), generous whitespace, at least one bento-grid " +
+    "- Bold section headings (text-4xl→text-6xl, NOT larger), generous whitespace, at least one bento-grid " +
     "AND one offset/overlapping two-column section. Vary section backgrounds (alternate --bg / " +
     "--surface / one dark brand section) so the page has rhythm — never all-white.\n" +
     "- Sections tailored to the industry, not just 'services'. A restaurant gets a real MENU with " +
@@ -546,6 +549,12 @@ export function buildWebsiteRequest(business, variant = 0) {
     "mobile hamburger), hero, a stats/number strip (animated count-up), about/story, the " +
     "industry-specific section, gallery grid, testimonials, contact with a (non-functional) form + " +
     "map placeholder + hours + phone, footer.\n" +
+    "- VARY THE STRUCTURE — do NOT ship the same skeleton every time. Beyond the required " +
+    "nav / hero / contact / footer, pick a DIFFERENT mix, order, and layout of optional sections " +
+    "for this build, chosen from: process/how-it-works steps, FAQ accordion, pricing/membership " +
+    "tiers, awards/press or trust-badge strip, team/staff, before-&-after, booking/reservation " +
+    "widget, tips/blog teaser, guarantee band, feature spotlight. No two demos should read as the " +
+    "same template recoloured.\n" +
     "- Cards: rounded-2xl/3xl, layered soft shadows, subtle borders, glassmorphism accents where it " +
     "fits, gradient or image accents — with hover states (see INTERACTION). Add tasteful depth: " +
     "gradients, blurred blobs, and overlapping elements, not flat blocks.\n" +
@@ -688,8 +697,9 @@ export function buildCustomWebsiteRequest(business, instructions, sourceSite = n
     "IMAGERY — every image must visually match this industry. For any image the source doesn't " +
     "already provide, use loremflickr with 1-3 strong subject keywords: " +
     "https://loremflickr.com/<w>/<h>/<keywords>?lock=<uniqueInt> (vary uniqueInt per image). " +
-    "Never picsum.photos, never a broken/empty <img>; every <img> needs width/height + a " +
-    "descriptive alt.\n" +
+    "Use AT LEAST 3-4 distinct photos across the page (hero + gallery + section images), each a " +
+    "different subject + uniqueInt. Never picsum.photos, never a broken/empty <img>; every <img> " +
+    "needs width/height + a descriptive alt.\n" +
     "\n" +
     "LAYOUT & MOTION — must look bespoke: a full-height asymmetric HERO with an industry photo " +
     "+ oversized display headline, blurred gradient blobs, a floating glass info/CTA card, and " +
