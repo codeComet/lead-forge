@@ -71,14 +71,17 @@ function AuditCell({ audit, isPending, onRun }) {
   );
 }
 
+// One distinct hue per pipeline stage so statuses are told apart at a glance
+// (funnel order: slate → blue → violet → teal → amber → emerald, red for lost).
+// bg + ring + text + a leading dot all share the hue for maximum separation.
 const STATUS_STYLES = {
-  new: "bg-muted text-muted-foreground",
-  contacted: "bg-primary/10 text-primary",
-  opened: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
-  replied: "bg-success/10 text-success",
-  meeting: "bg-warning/10 text-warning",
-  won: "bg-success/15 text-success",
-  lost: "bg-destructive/10 text-destructive",
+  new: "bg-slate-500/10 text-slate-600 ring-slate-500/25 dark:text-slate-300",
+  contacted: "bg-blue-500/10 text-blue-600 ring-blue-500/25 dark:text-blue-400",
+  opened: "bg-violet-500/10 text-violet-600 ring-violet-500/25 dark:text-violet-400",
+  replied: "bg-teal-500/10 text-teal-600 ring-teal-500/25 dark:text-teal-400",
+  meeting: "bg-amber-500/15 text-amber-700 ring-amber-500/30 dark:text-amber-400",
+  won: "bg-emerald-500/15 text-emerald-700 ring-emerald-500/30 dark:text-emerald-400",
+  lost: "bg-rose-500/10 text-rose-600 ring-rose-500/25 dark:text-rose-400",
 };
 
 function StatusCell({ status }) {
@@ -88,10 +91,11 @@ function StatusCell({ status }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium capitalize",
-        STATUS_STYLES[status] ?? "bg-muted text-muted-foreground",
+        "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium capitalize ring-1 ring-inset",
+        STATUS_STYLES[status] ?? "bg-muted text-muted-foreground ring-border",
       )}
     >
+      <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
       {status}
     </span>
   );
