@@ -377,7 +377,10 @@ const MODERN_FRONTEND_SKILL =
   "clamp() (e.g. clamp(2.25rem,1rem+4vw,4.75rem)) — bold, never oversized or overflowing. " +
   "The clamp must actually scale: min ≤2.75rem so it never overflows a 390px " +
   "phone, max ≤5.25rem, and max at least 1.8× min — never a near-fixed clamp like " +
-  "clamp(4.6rem,1rem+2vw,4.9rem). Tight negative tracking (~-0.03em) and " +
+  "clamp(4.6rem,1rem+2vw,4.9rem). HARD CAP: the hero headline must NEVER exceed 80px / 5rem at " +
+  "ANY viewport — never Tailwind text-7xl/8xl/9xl on it, never a clamp max above 5rem. It must " +
+  "read comfortably on 2-3 lines on desktop and stay legible on a 390px phone; a headline so big " +
+  "it fills the screen or wraps awkwardly is a FAIL. Tight negative tracking (~-0.03em) and " +
   "leading-[0.95] on the hero headline. Body ≥16px, text measure 65-75ch. One kinetic / " +
   "gradient-text headline moment, used ONCE.\n" +
   "- COLOUR — REDUCED + ACCENT: a restrained palette, monochrome/neutral base + ONE " +
@@ -387,13 +390,22 @@ const MODERN_FRONTEND_SKILL =
   "FROM the six hex :root vars (color-mix(in oklch, var(--brand) 12%, var(--surface)), " +
   "oklch(from var(--brand) calc(l + .12) c h)) — no unrelated raw hex, no hue drift in " +
   "gradients. Alternate section temperature (dark → light → dark) for rhythm. All text " +
-  "≥ WCAG AA 4.5:1.\n" +
+  "≥ WCAG AA 4.5:1. CONTRAST LAW — any --brand / --brand-2 / --accent / dark / saturated / " +
+  "mid-tone background gets WHITE or near-white text; var(--ink)/dark/black text is ONLY for " +
+  "light (--bg / --surface / white) backgrounds. Dark or black text on a blue/brand/coloured " +
+  "block is an automatic FAIL — check every coloured section and every button.\n" +
   "- LAYOUT — REDUCTION WITH DEPTH: deliberately break the grid (asymmetric balance, " +
   "not everything centered); bento grids of varied visual weight for feature/service " +
   "sections; alternate full-bleed media with constrained text (≤720px, 65-75ch); " +
   "generous vertical rhythm (section spacing ~120-160px desktop → ~64px mobile). Depth " +
   "via a restrained shadow system (3-5 levels) + subtle blur/texture, not flat blocks. " +
   "Commit to ONE visual style per variant — no style collage.\n" +
+  "- CONSISTENCY (design-system discipline): reuse ONE type scale, ONE corner-radius, ONE shadow " +
+  "system, ONE spacing rhythm, and ONE button/card style across EVERY section — mismatched radii, " +
+  "random shadows, or drifting spacing read as amateur. Clean, modern, minimal: prefer restraint " +
+  "and whitespace over stacking effects. But do NOT repeat the SAME section layout back-to-back — " +
+  "vary composition (split / bento / full-bleed / offset) section to section while keeping the " +
+  "visual language identical.\n" +
   "- HERO (pick the variant that fits the aesthetic direction): STATEMENT (huge type + " +
   "subline + CTA, minimal imagery), SPLIT (copy one side / industry photo the other), or " +
   "IMMERSIVE (full-bleed photo/scrim + overlay type). Headline ≤15 words, primary CTA " +
@@ -475,7 +487,9 @@ export function buildWebsiteRequest(business, variant = 0) {
     "\n" +
     "CONTRAST & READABILITY — non-negotiable, WCAG AA (≥4.5:1 for body text):\n" +
     "- Light text ONLY on dark backgrounds; dark text (var(--ink)) ONLY on light backgrounds. " +
-    "Never leave default black text on a dark or mid-tone section.\n" +
+    "Never leave default black text on a dark or mid-tone section. A --brand / --brand-2 / " +
+    "--accent / blue / saturated background gets WHITE or near-white text — dark-on-blue or " +
+    "black-on-brand is an automatic FAIL. Buttons too: a --brand/--accent fill needs white label.\n" +
     "- Any text over a photo/hero image MUST sit on a dark scrim: an absolute gradient/solid " +
     "overlay (e.g. bg-black/50) between the image and white/light text. No text over images " +
     "without an overlay.\n" +
@@ -685,7 +699,9 @@ export function buildCustomWebsiteRequest(business, instructions, sourceSite = n
     "classes (they render BLACK).\n" +
     "\n" +
     "CONTRAST & READABILITY — WCAG AA (≥4.5:1 body text): light text ONLY on dark backgrounds, " +
-    "dark text (var(--ink)) ONLY on light backgrounds; any text over a photo sits on a dark " +
+    "dark text (var(--ink)) ONLY on light backgrounds; a --brand / --brand-2 / --accent / blue / " +
+    "saturated background (or button fill) gets WHITE/near-white text — dark-on-blue or black-on-" +
+    "brand is an automatic FAIL; any text over a photo sits on a dark " +
     "scrim overlay; set an explicit colour on every heading/paragraph in a coloured section; " +
     "a light/glass nav uses dark var(--ink) links, white nav links only over a dark hero.\n" +
     "\n" +

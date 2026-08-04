@@ -1,66 +1,17 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Globe, MapPin, Phone, Mail, Star, ExternalLink, Lightbulb, TrendingDown, Users } from "lucide-react";
+import { ArrowLeft, Globe, MapPin, Phone, Mail, Star, ExternalLink } from "lucide-react";
 import { getUserAndOrg } from "@/lib/org";
 import { PageHeader } from "@/components/page-header";
 import { ScoreRing } from "@/components/audit/score-ring";
 import { AuditDetail } from "@/components/audit/audit-detail";
 import { LeadActions } from "@/components/leads/lead-actions";
 import { BusinessTools } from "@/components/leads/business-tools";
+import { InsightPanel } from "@/components/leads/insight-panel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { formatCurrency, formatNumber, one } from "@/lib/utils";
-
-// Scan a string for a balanced, top-level JSON array and return its parsed
-// value, ignoring any trailing junk after the closing bracket. Bracket depth is
-// tracked outside of quoted strings so item text containing "]" is safe. Some
-// legacy insight rows stored the raw model text — a JSON array followed by
-// `</problems><parameter …>` XML garbage — instead of a real array.
-function extractJsonArray(str) {
-  const start = str.indexOf("[");
-  if (start === -1) return null;
-  let depth = 0, inStr = false, esc = false;
-  for (let i = start; i < str.length; i++) {
-    const c = str[i];
-    if (inStr) {
-      if (esc) esc = false;
-      else if (c === "\\") esc = true;
-      else if (c === '"') inStr = false;
-      continue;
-    }
-    if (c === '"') inStr = true;
-    else if (c === "[") depth++;
-    else if (c === "]" && --depth === 0) {
-      try {
-        const arr = JSON.parse(str.slice(start, i + 1));
-        return Array.isArray(arr) ? arr : null;
-      } catch {
-        return null;
-      }
-    }
-  }
-  return null;
-}
-
-// Insight JSON is model-generated, so `problems`/`improvements` aren't always a
-// clean string[] — a row may hold a single string, an object like
-// { problem: "…" }, or a string that's really a JSON array + trailing garbage.
-// Coerce to a string[] so the list render is readable and never crashes.
-function asStringList(value) {
-  if (Array.isArray(value)) {
-    return value
-      .map((v) => (typeof v === "string" ? v : v?.problem ?? v?.improvement ?? v?.text ?? v?.title))
-      .filter((v) => typeof v === "string" && v.trim())
-      .map((v) => v.trim());
-  }
-  if (typeof value === "string" && value.trim()) {
-    const parsed = extractJsonArray(value);
-    if (parsed) return asStringList(parsed);
-    return [value.trim()];
-  }
-  return [];
-}
+import { one } from "@/lib/utils";
 
 export default async function LeadDetailPage({ params }) {
   const { id } = await params;
@@ -174,64 +125,7 @@ export default async function LeadDetailPage({ params }) {
             </TabsList>
 
             <TabsContent value="overview">
-              {insight ? (
-                <div className="space-y-4">
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-base"><Lightbulb className="h-4 w-4 text-primary" /> AI insight</CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0 text-sm">{insight.summary}</CardContent>
-                  </Card>
-
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <Card>
-                      <CardContent className="flex items-center gap-3 py-5">
-                        <Users className="h-8 w-8 text-warning" />
-                        <div>
-                          <div className="text-xs text-muted-foreground">Est. missed customers / mo</div>
-                          <div className="text-xl font-semibold">{formatNumber(insight.estimatedMissedCustomersPerMonth)}</div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    <Card>
-                      <CardContent className="flex items-center gap-3 py-5">
-                        <TrendingDown className="h-8 w-8 text-destructive" />
-                        <div>
-                          <div className="text-xs text-muted-foreground">Est. lost revenue / mo</div>
-                          <div className="text-xl font-semibold">{formatCurrency(insight.estimatedLostRevenuePerMonth)}</div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  {asStringList(insight.problems).length > 0 && (
-                    <Card>
-                      <CardHeader className="pb-2"><CardTitle className="text-base">Problems found</CardTitle></CardHeader>
-                      <CardContent className="pt-0">
-                        <ul className="space-y-1.5 text-sm text-muted-foreground">
-                          {asStringList(insight.problems).map((p, i) => <li key={i} className="flex gap-2"><span className="text-destructive">•</span> {p}</li>)}
-                        </ul>
-                      </CardContent>
-                    </Card>
-                  )}
-                  {asStringList(insight.improvements).length > 0 && (
-                    <Card>
-                      <CardHeader className="pb-2"><CardTitle className="text-base">Suggested improvements</CardTitle></CardHeader>
-                      <CardContent className="pt-0">
-                        <ul className="space-y-1.5 text-sm text-muted-foreground">
-                          {asStringList(insight.improvements).map((p, i) => <li key={i} className="flex gap-2"><span className="text-success">→</span> {p}</li>)}
-                        </ul>
-                      </CardContent>
-                    </Card>
-                  )}
-                </div>
-              ) : (
-                <Card>
-                  <CardContent className="py-10 text-center text-sm text-muted-foreground">
-                    AI insight will appear here once the audit + insight jobs complete.
-                  </CardContent>
-                </Card>
-              )}
+              <InsightPanel leadId={lead?.id} insight={insight} />
             </TabsContent>
 
             <TabsContent value="audit">
