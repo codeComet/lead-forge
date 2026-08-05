@@ -26,6 +26,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/apps/worker/node_modules ./apps/worker/node_modules
 COPY packages/shared ./packages/shared
 COPY apps/worker ./apps/worker
+# Hand-built static site templates (e.g. dentists) served verbatim by the
+# worker — resolved at /app/site_templates from src/lib/static-template.js.
+COPY site_templates ./site_templates
 
 WORKDIR /app/apps/worker
 # Compose overrides nothing needed — start without the dev --env-file flag.
