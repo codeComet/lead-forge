@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabase.js";
 import { generateWebsiteHtml } from "../lib/website-model.js";
 import { extractUrl, scrapeHomepage } from "../lib/scrape-page.js";
 import { extractBrandColor } from "../lib/extract-brand-color.js";
+import { staticTemplateFor, buildStaticSite } from "../lib/static-template.js";
 
 // Strip accidental markdown fences / prose the model may wrap around the HTML.
 function cleanHtml(raw) {
@@ -75,6 +76,24 @@ export async function processGenerateWebsite(job) {
   const customPrompt = (job.data.customPrompt || "").trim();
   if (customPrompt) {
     return await processCustomWebsite(job, { demoId, businessId, orgId, business, customPrompt });
+  }
+
+  // Static pre-built template (e.g. dentists): serve the hand-designed file
+  // verbatim, swapping only title + header brand name. No model call, no tokens,
+  // no industry cache. Runs even for a forced rebuild — this industry never uses
+  // AI. A custom prompt (handled above) is the only way to bypass it.
+  const staticFile = staticTemplateFor(business);
+  if (staticFile) {
+    const html = await buildStaticSite(staticFile, business);
+    if (!isHtml(html)) {
+      await markFailed(demoId, "static template produced invalid HTML");
+      throw new Error("invalid HTML output");
+    }
+    await supabase
+      .from("website_demos")
+      .update({ status: "done", html, model: `template:static/${staticFile}`, tokens: 0, error: null })
+      .eq("id", demoId);
+    return { demoId, businessId, bytes: html.length, static: true };
   }
 
   const key = industryKey(business);
