@@ -38,6 +38,17 @@ export const LEAD_STATUS_LABELS = {
   lost: "Lost",
 };
 
+// Hand-built static website templates that bypass AI generation. `id` must
+// match a key in the worker's static-template registry
+// (apps/worker/src/lib/static-template.js). Used to populate the template
+// dropdown in the demo-site UI.
+export const STATIC_TEMPLATES = [
+  { id: "dentist", label: "Dentist" },
+  { id: "restaurant", label: "Restaurant" },
+  { id: "gym-hallen", label: "Gym — Hallen" },
+  { id: "gym-volt", label: "Gym — Volt" },
+];
+
 // Audit / job lifecycle status.
 export const AUDIT_STATUSES = {
   pending: "pending",

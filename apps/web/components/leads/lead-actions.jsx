@@ -18,7 +18,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { LEAD_STATUSES, LEAD_STATUS_LABELS } from "@leadforge/shared/constants";
+import { LEAD_STATUSES, LEAD_STATUS_LABELS, STATIC_TEMPLATES } from "@leadforge/shared/constants";
 import { ProviderSelect } from "@/components/providers/provider-select";
 
 export function LeadActions({ lead, business }) {
@@ -37,6 +37,8 @@ export function LeadActions({ lead, business }) {
   // business (a redesign of the pasted URL's homepage, or a from-scratch build).
   const [customPrompt, setCustomPrompt] = React.useState("");
   const [showCustom, setShowCustom] = React.useState(false);
+  // Explicit static template to build from ("" = auto-detect from business type).
+  const [template, setTemplate] = React.useState("");
 
   const { data: proposals = [] } = useQuery({
     queryKey: ["proposals", lead.id],
@@ -94,6 +96,7 @@ export function LeadActions({ lead, business }) {
           provider: provider || undefined,
           force: demos.length > 0,
           customPrompt: customPrompt.trim() || undefined,
+          template: template || undefined,
         }),
       });
       const json = await res.json();
@@ -157,6 +160,17 @@ export function LeadActions({ lead, business }) {
               : "Generate demo site"}
         </Button>
         <ProviderSelect onChange={setProvider} />
+        <select
+          value={template}
+          onChange={(e) => setTemplate(e.target.value)}
+          title="Website template"
+          className="h-9 rounded-lg border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <option value="">Auto template</option>
+          {STATIC_TEMPLATES.map((t) => (
+            <option key={t.id} value={t.id}>{t.label}</option>
+          ))}
+        </select>
         <select
           value={status}
           onChange={(e) => updateStatus(e.target.value)}

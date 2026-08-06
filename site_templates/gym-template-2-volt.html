@@ -1,0 +1,1836 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOLT Berlin — Strength Club in Kreuzberg | Loud room, serious lifting</title>
+<meta name="description" content="A strength club on Ritterstraße in Kreuzberg. Barbells, ergs, bag work and a coach on the floor every hour we're open. Build your week and claim seven free days.">
+<meta name="theme-color" content="#1F3BEB">
+<link rel="canonical" href="https://example.de/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="VOLT Berlin — Strength Club in Kreuzberg">
+<meta property="og:description" content="Loud room, serious lifting. Build your training week in thirty seconds and claim seven free days.">
+<meta property="og:locale" content="en_GB">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%231F3BEB'/><path d='M18 3 8 18h6l-2 11 12-16h-7z' fill='%23FFD400'/></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   VOLT — TOKENS
+   A poster palette, not a dark room. Off-white paper, near-black
+   ink, and three saturated blocks: ultramarine, blaze, sun.
+   Colour is structural here — each section owns one block.
+   ============================================================ */
+:root{
+  --paper:#FBFAF7;    /* page ground */
+  --ink:#0D0D12;      /* type, dark blocks */
+  --volt:#1F3BEB;     /* ultramarine — the brand block */
+  --volt-dk:#1730BE;
+  --flare:#FF4A1C;    /* blaze — energy, urgency, conditioning */
+  --sun:#FFD400;      /* highlight — never carries small text */
+  --mist:#E7E6E0;     /* hairlines and rest states */
+  --smoke:#5C5C63;    /* secondary type */
+  --pad:clamp(1.15rem,4vw,2.5rem);
+  --max:1240px;
+  --ease:cubic-bezier(.16,.84,.34,1);
+  --edge:3px solid var(--ink);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:5.5rem;-webkit-text-size-adjust:100%}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  font-size:clamp(1rem,.97rem + .18vw,1.075rem);line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+[hidden]{display:none !important}
+svg{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+input,select,textarea{font:inherit;color:inherit}
+
+/* ---------- type ---------- */
+.display,h1,h2,h3.big{
+  font-family:'Anton','Arial Narrow',sans-serif;font-weight:400;
+  text-transform:uppercase;line-height:.86;letter-spacing:-.005em;text-wrap:balance;
+}
+h1{font-size:clamp(3.2rem,1.4rem + 8.4vw,8.5rem)}
+h2{font-size:clamp(2.4rem,1.4rem + 4.4vw,5.25rem)}
+h3{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.1rem,1rem + .45vw,1.35rem);
+  line-height:1.2;letter-spacing:-.02em}
+h3.big{font-size:clamp(1.6rem,1.2rem + 1.6vw,2.4rem);letter-spacing:0}
+p{text-wrap:pretty}
+
+.tag{font-family:'Roboto Mono',ui-monospace,monospace;font-weight:700;font-size:.7rem;
+  letter-spacing:.18em;text-transform:uppercase;display:inline-block}
+.tag--volt{color:var(--volt)}
+.tag--flare{color:var(--flare)}
+.num{font-family:'Roboto Mono',monospace;font-weight:500;font-variant-numeric:tabular-nums}
+.lead{font-size:clamp(1.05rem,1rem + .55vw,1.32rem);line-height:1.5}
+.smoke{color:var(--smoke)}
+
+:focus-visible{outline:3px solid var(--flare);outline-offset:3px}
+
+.skip{position:absolute;left:-9999px;top:0;z-index:400;background:var(--ink);color:var(--sun);
+  padding:.9rem 1.4rem;font-weight:700}
+.skip:focus{left:0}
+
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--pad)}
+.sec{padding-block:clamp(3.5rem,8vw,7rem)}
+.sec--tight{padding-block:clamp(2.5rem,5vw,4rem)}
+.sec-head{margin-bottom:clamp(2rem,4vw,3.25rem)}
+.sec-head p{max-width:52ch;margin-top:1rem;color:var(--smoke)}
+
+/* ---------- buttons: hard edges, hard shadows ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:1rem 1.7rem;font-weight:700;font-size:.95rem;letter-spacing:.02em;
+  text-transform:uppercase;text-decoration:none;white-space:nowrap;
+  border:var(--edge);background:var(--paper);color:var(--ink);
+  box-shadow:5px 5px 0 var(--ink);
+  transition:transform .14s var(--ease),box-shadow .14s var(--ease),background-color .14s,color .14s}
+.btn:hover{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--ink)}
+.btn:active{transform:translate(5px,5px);box-shadow:0 0 0 var(--ink)}
+.btn--volt{background:var(--volt);color:#fff}
+.btn--flare{background:var(--flare);color:var(--ink)}
+.btn--sun{background:var(--sun);color:var(--ink)}
+.btn--ink{background:var(--ink);color:var(--paper);box-shadow:5px 5px 0 var(--volt)}
+.btn--ink:hover{box-shadow:2px 2px 0 var(--volt)}
+.btn--sm{padding:.6rem 1.05rem;font-size:.8rem;box-shadow:3px 3px 0 var(--ink)}
+.btn--sm:hover{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn--block{width:100%}
+.btn[disabled]{opacity:.4;pointer-events:none;box-shadow:none;transform:none}
+
+.box{border:var(--edge);background:var(--paper)}
+.box--shadow{box-shadow:8px 8px 0 var(--ink)}
+.pill{display:inline-flex;align-items:center;gap:.35rem;border:2px solid var(--ink);
+  padding:.22rem .6rem;font-family:'Roboto Mono',monospace;font-weight:700;
+  font-size:.62rem;letter-spacing:.12em;text-transform:uppercase}
+.pill--sun{background:var(--sun)}
+.pill--volt{background:var(--volt);color:#fff;border-color:var(--volt)}
+.pill--flare{background:var(--flare)}
+
+/* ---------- header ---------- */
+.hdr{position:fixed;inset:0 0 auto;z-index:200;background:var(--paper);
+  border-bottom:var(--edge);transition:transform .3s var(--ease)}
+.hdr__in{max-width:var(--max);margin-inline:auto;padding:.7rem var(--pad);
+  display:flex;align-items:center;gap:1.25rem}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;margin-right:auto}
+.brand__mark{width:2.3rem;height:2.3rem;background:var(--volt);display:grid;place-items:center;flex:none}
+.brand__name{font-family:'Anton',sans-serif;font-size:1.5rem;letter-spacing:.02em;
+  text-transform:uppercase;line-height:1}
+.brand__sub{display:block;font-family:'Roboto Mono',monospace;font-weight:700;font-size:.55rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--smoke);margin-top:.15rem;white-space:nowrap}
+.nav{display:flex;gap:1.35rem}
+.nav a{text-decoration:none;font-weight:700;font-size:.82rem;letter-spacing:.08em;
+  text-transform:uppercase;white-space:nowrap;padding:.3rem 0;border-bottom:3px solid transparent;
+  transition:border-color .2s,color .2s}
+.nav a:hover,.nav a[aria-current="true"]{border-bottom-color:var(--flare);color:var(--volt)}
+.hdr__cta{display:flex;align-items:center;gap:.7rem}
+.live{display:inline-flex;align-items:center;gap:.4rem;font-family:'Roboto Mono',monospace;
+  font-weight:700;font-size:.63rem;letter-spacing:.12em;text-transform:uppercase}
+.live__dot{width:.5rem;height:.5rem;border-radius:50%;background:var(--smoke);flex:none}
+.live.is-open .live__dot{background:var(--flare);animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,74,28,.55)}50%{box-shadow:0 0 0 6px rgba(255,74,28,0)}}
+.burger{display:none;width:2.6rem;height:2.6rem;border:var(--edge);background:var(--sun);place-items:center}
+
+/* ---------- mobile sheet ---------- */
+.sheet{position:fixed;inset:0;z-index:300;background:var(--volt);color:#fff;
+  padding:1.1rem var(--pad) 2rem;display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .35s var(--ease);visibility:hidden}
+.sheet.is-open{transform:none;visibility:visible}
+.sheet__top{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem}
+.sheet__link{font-family:'Anton',sans-serif;font-size:2.4rem;text-transform:uppercase;
+  text-decoration:none;line-height:1.15;padding:.25rem 0}
+.sheet__link:hover{color:var(--sun)}
+.sheet__foot{margin-top:auto;display:grid;gap:.7rem}
+
+/* ============================================================
+   HERO — the headline is the thesis. One word gets the block.
+   ============================================================ */
+.hero{padding-top:clamp(6.5rem,11vw,9.5rem);padding-bottom:clamp(2rem,4vw,3.5rem);position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;top:-16vw;right:-14vw;width:52vw;height:52vw;
+  max-width:640px;max-height:640px;background:var(--volt);opacity:.1;transform:rotate(24deg);z-index:-1}
+.hero__grid{display:grid;grid-template-columns:1.3fr .7fr;gap:clamp(1.5rem,4vw,3.5rem);align-items:end}
+.hero h1{margin-bottom:1.4rem}
+.hero .hl{display:inline-block;background:var(--sun);padding:0 .12em .04em;
+  transform:rotate(-1.4deg);box-shadow:6px 6px 0 var(--ink)}
+.hero .out{-webkit-text-stroke:2px var(--ink);color:transparent}
+.hero__p{max-width:44ch;color:var(--smoke)}
+.hero__actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.9rem}
+
+/* live "next class" card */
+.nextup{border:var(--edge);background:var(--ink);color:var(--paper);box-shadow:8px 8px 0 var(--flare)}
+.nextup__top{background:var(--flare);color:var(--ink);padding:.5rem .95rem;
+  display:flex;justify-content:space-between;align-items:center;gap:.75rem;
+  font-family:'Roboto Mono',monospace;font-weight:700;font-size:.63rem;
+  letter-spacing:.14em;text-transform:uppercase}
+.nextup__body{padding:1.1rem 1.15rem 1.25rem}
+.nextup__clock{font-family:'Anton',sans-serif;font-size:clamp(2.6rem,2rem + 2.6vw,3.9rem);
+  line-height:.9;letter-spacing:.01em;color:var(--sun);font-variant-numeric:tabular-nums}
+.nextup__unit{font-family:'Roboto Mono',monospace;font-weight:700;font-size:.58rem;
+  letter-spacing:.18em;text-transform:uppercase;color:#9A9AA4;margin-top:.4rem}
+.nextup__what{margin-top:1rem;padding-top:.9rem;border-top:2px solid #2A2A33}
+.nextup__what b{font-family:'Anton',sans-serif;font-size:1.35rem;text-transform:uppercase;
+  letter-spacing:.01em;display:block;line-height:1.05}
+.nextup__what span{font-family:'Roboto Mono',monospace;font-size:.65rem;letter-spacing:.11em;
+  text-transform:uppercase;color:#9A9AA4;display:block;margin-top:.3rem}
+.nextup .btn{margin-top:1rem}
+
+/* ---------- marquee ---------- */
+.ticker{background:var(--ink);color:var(--sun);border-block:var(--edge);overflow:hidden;
+  padding-block:.7rem;display:flex;user-select:none}
+.ticker__run{display:flex;flex:none;gap:2.5rem;padding-right:2.5rem;
+  animation:roll 28s linear infinite;will-change:transform}
+.ticker:hover .ticker__run{animation-play-state:paused}
+@keyframes roll{to{transform:translateX(-100%)}}
+.ticker span{font-family:'Anton',sans-serif;font-size:clamp(1.1rem,.9rem + .7vw,1.6rem);
+  text-transform:uppercase;white-space:nowrap;letter-spacing:.02em}
+.ticker em{font-style:normal;color:var(--flare)}
+
+/* ---------- stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:var(--edge);background:var(--ink)}
+.stat{background:var(--paper);padding:clamp(1.2rem,3vw,2rem) clamp(1rem,2vw,1.6rem);
+  border-right:var(--edge)}
+.stat:last-child{border-right:0}
+.stat__n{font-family:'Anton',sans-serif;font-size:clamp(2.4rem,1.6rem + 3vw,4.2rem);
+  line-height:.85;font-variant-numeric:tabular-nums}
+.stat__n i{font-style:normal;color:var(--flare)}
+.stat__l{font-family:'Roboto Mono',monospace;font-weight:700;font-size:.63rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--smoke);margin-top:.8rem;
+  padding-top:.7rem;border-top:3px solid var(--sun);display:inline-block}
+
+/* ---------- class grid: hover inverts ---------- */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1rem,2vw,1.5rem)}
+.cd{border:var(--edge);background:var(--paper);display:flex;flex-direction:column;overflow:hidden;
+  transition:transform .18s var(--ease),box-shadow .18s var(--ease),background-color .18s,color .18s}
+.cd:hover{transform:translate(-4px,-4px);box-shadow:10px 10px 0 var(--volt);background:var(--ink);color:var(--paper)}
+.cd__media{aspect-ratio:16/10;border-bottom:var(--edge);overflow:hidden;position:relative}
+.cd__media svg{width:100%;height:100%}
+.cd__no{position:absolute;left:0;top:0;background:var(--ink);color:var(--sun);
+  font-family:'Roboto Mono',monospace;font-weight:700;font-size:.7rem;letter-spacing:.1em;
+  padding:.3rem .6rem;border-right:var(--edge);border-bottom:var(--edge)}
+.cd__body{padding:clamp(1rem,2vw,1.35rem);display:flex;flex-direction:column;gap:.5rem;flex:1}
+.cd__body p{font-size:.93rem;color:var(--smoke);transition:color .18s}
+.cd:hover .cd__body p{color:#B6B6BE}
+.cd__foot{margin-top:auto;padding-top:.9rem;display:flex;justify-content:space-between;
+  gap:.75rem;align-items:center;font-family:'Roboto Mono',monospace;font-weight:700;
+  font-size:.63rem;letter-spacing:.11em;text-transform:uppercase;color:var(--smoke);
+  border-top:2px solid var(--mist);transition:color .18s,border-color .18s}
+.cd:hover .cd__foot{color:var(--sun);border-top-color:#2A2A33}
+
+/* ============================================================
+   SIGNATURE — BUILD YOUR WEEK
+   Three controls write a live seven-day grid. Colour encodes
+   session type, so the week is readable at a glance.
+   ============================================================ */
+.builder{background:var(--volt);color:#fff;border-block:var(--edge)}
+.builder .tag{color:var(--sun)}
+.builder h2{color:#fff}
+.builder__grid{display:grid;grid-template-columns:.82fr 1.18fr;gap:clamp(1.5rem,3vw,2.75rem);align-items:start}
+.ctrl{margin-bottom:1.6rem}
+.ctrl__lbl{font-family:'Roboto Mono',monospace;font-weight:700;font-size:.63rem;
+  letter-spacing:.16em;text-transform:uppercase;color:#C3CCFB;margin-bottom:.65rem;display:block}
+.opts{display:flex;flex-wrap:wrap;gap:.5rem}
+.opt{border:3px solid #fff;background:transparent;color:#fff;padding:.6rem 1rem;
+  font-weight:700;font-size:.85rem;letter-spacing:.03em;text-transform:uppercase;
+  transition:background-color .15s,color .15s,transform .12s}
+.opt:hover{transform:translateY(-2px)}
+.opt[aria-pressed="true"]{background:var(--sun);border-color:var(--sun);color:var(--ink)}
+.opt--n{min-width:3.1rem;font-family:'Roboto Mono',monospace}
+
+/* the week */
+.weekwrap{border:var(--edge);background:var(--paper);color:var(--ink);box-shadow:10px 10px 0 var(--ink)}
+.weekwrap__top{display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  padding:.7rem 1rem;background:var(--ink);color:var(--paper);
+  font-family:'Roboto Mono',monospace;font-weight:700;font-size:.65rem;
+  letter-spacing:.14em;text-transform:uppercase}
+.week{display:grid;grid-template-columns:repeat(7,1fr)}
+.wd{border-right:2px solid var(--mist);border-bottom:2px solid var(--mist);min-height:9.5rem;
+  display:flex;flex-direction:column}
+.wd:nth-child(7n){border-right:0}
+.wd__h{font-family:'Roboto Mono',monospace;font-weight:700;font-size:.6rem;letter-spacing:.12em;
+  text-transform:uppercase;padding:.45rem .4rem;text-align:center;border-bottom:2px solid var(--mist);
+  color:var(--smoke)}
+.wd__s{flex:1;padding:.55rem .45rem;display:flex;flex-direction:column;gap:.25rem;
+  animation:pop .32s var(--ease) both}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.wd__type{font-family:'Roboto Mono',monospace;font-weight:700;font-size:.55rem;
+  letter-spacing:.1em;text-transform:uppercase;opacity:.72}
+.wd__name{font-weight:700;font-size:.78rem;line-height:1.15;letter-spacing:-.01em}
+.wd__min{margin-top:auto;font-family:'Roboto Mono',monospace;font-weight:700;font-size:.6rem}
+.wd--S .wd__s{background:var(--volt);color:#fff}
+.wd--C .wd__s{background:var(--flare);color:var(--ink)}
+.wd--K .wd__s{background:var(--sun);color:var(--ink)}
+.wd--R .wd__s{background:repeating-linear-gradient(45deg,var(--paper),var(--paper) 6px,var(--mist) 6px,var(--mist) 12px);
+  color:var(--smoke);align-items:center;justify-content:center;text-align:center}
+.wd--R .wd__name{font-size:.68rem;opacity:.8}
+
+.wtot{display:grid;grid-template-columns:repeat(3,1fr);border-top:var(--edge)}
+.wtot div{padding:.85rem 1rem;border-right:2px solid var(--mist)}
+.wtot div:last-child{border-right:0}
+.wtot b{font-family:'Anton',sans-serif;font-size:clamp(1.5rem,1.2rem + 1vw,2.1rem);
+  display:block;line-height:1;font-variant-numeric:tabular-nums}
+.wtot span{font-family:'Roboto Mono',monospace;font-weight:700;font-size:.58rem;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--smoke);display:block;margin-top:.35rem}
+.legend{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:1.3rem;list-style:none}
+.legend span{display:inline-flex;align-items:center;background:var(--paper);color:var(--ink);
+  border:2px solid var(--ink);padding:.28rem .55rem;
+  font-family:'Roboto Mono',monospace;font-weight:700;font-size:.57rem;
+  letter-spacing:.11em;text-transform:uppercase}
+.legend i{width:.8rem;height:.8rem;display:inline-block;margin-right:.4rem;
+  border:2px solid var(--ink)}
+
+/* ============================================================
+   BOOKING
+   ============================================================ */
+.bk{border:var(--edge);background:var(--paper)}
+.bk__tabs{display:flex;border-bottom:var(--edge)}
+.bktab{flex:1;padding:.9rem 1rem;font-weight:700;font-size:.85rem;letter-spacing:.06em;
+  text-transform:uppercase;border-right:var(--edge);transition:background-color .15s,color .15s}
+.bktab:last-child{border-right:0}
+.bktab[aria-selected="true"]{background:var(--ink);color:var(--sun)}
+.bk__body{padding:clamp(1rem,2.4vw,1.6rem)}
+.dstrip{display:flex;gap:.4rem;overflow-x:auto;min-width:0;padding-bottom:.55rem;margin-bottom:1.1rem}
+.dbtn{flex:none;border:3px solid var(--ink);background:var(--paper);padding:.45rem .7rem;
+  text-align:center;min-width:3.9rem;line-height:1.2;transition:background-color .15s,color .15s}
+.dbtn b{display:block;font-family:'Anton',sans-serif;font-size:1.2rem;letter-spacing:.01em}
+.dbtn span{font-family:'Roboto Mono',monospace;font-weight:700;font-size:.55rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--smoke)}
+.dbtn[aria-selected="true"]{background:var(--volt);color:#fff}
+.dbtn[aria-selected="true"] span{color:var(--sun)}
+
+.rows{display:grid;gap:.5rem}
+.row{display:grid;grid-template-columns:4.4rem 1fr auto auto;gap:.9rem;align-items:center;
+  border:3px solid var(--ink);padding:.7rem .85rem;transition:background-color .15s}
+.row__t{font-family:'Anton',sans-serif;font-size:1.15rem;letter-spacing:.01em}
+.row__n{display:block;font-weight:700;font-size:.98rem;letter-spacing:-.01em}
+.row__m{display:block;font-family:'Roboto Mono',monospace;font-size:.6rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--smoke);margin-top:.12rem}
+.row__s{font-family:'Roboto Mono',monospace;font-weight:700;font-size:.62rem;
+  letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.row__s b{color:var(--volt)}
+.row.is-low{border-color:var(--flare)}
+.row.is-low .row__s b{color:var(--flare)}
+.row.is-full{border-style:dashed;border-color:var(--mist);color:var(--smoke)}
+.row.is-on{background:var(--sun)}
+.rows__empty{border:3px dashed var(--mist);padding:2.2rem 1rem;text-align:center;color:var(--smoke)}
+
+.coachrow{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1.3rem}
+.cbtn{border:3px solid var(--ink);background:var(--paper);padding:.7rem;display:flex;gap:.6rem;
+  align-items:center;text-align:left;transition:background-color .15s,color .15s}
+.cbtn[aria-pressed="true"]{background:var(--volt);color:#fff}
+.cbtn__av{width:2.3rem;height:2.3rem;flex:none;display:grid;place-items:center;
+  font-family:'Anton',sans-serif;font-size:.95rem;border:2px solid var(--ink)}
+.cbtn b{display:block;font-weight:700;font-size:.9rem;letter-spacing:-.01em}
+.cbtn i{font-style:normal;font-family:'Roboto Mono',monospace;font-weight:700;font-size:.55rem;
+  letter-spacing:.11em;text-transform:uppercase;opacity:.7}
+.slotgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(4.9rem,1fr));gap:.45rem}
+.sbtn{border:3px solid var(--ink);background:var(--paper);padding:.55rem .25rem;
+  font-family:'Roboto Mono',monospace;font-weight:700;font-size:.78rem;
+  transition:background-color .15s,color .15s}
+.sbtn[aria-pressed="true"]{background:var(--sun)}
+.sbtn[disabled]{border-color:var(--mist);color:#B4B4BA;text-decoration:line-through;pointer-events:none}
+.sublbl{font-family:'Roboto Mono',monospace;font-weight:700;font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--smoke);margin-bottom:.55rem}
+
+/* held-spots strip */
+.held{border:var(--edge);border-top:0;background:var(--ink);color:var(--paper);
+  padding:.9rem clamp(1rem,2.4vw,1.6rem);display:flex;flex-wrap:wrap;gap:.7rem;align-items:center}
+.held__lbl{font-family:'Roboto Mono',monospace;font-weight:700;font-size:.62rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--sun);margin-right:.3rem}
+.held__none{font-size:.88rem;color:#9A9AA4}
+.hchip{display:inline-flex;align-items:center;gap:.5rem;background:var(--paper);color:var(--ink);
+  border:2px solid var(--sun);padding:.3rem .5rem .3rem .7rem;font-size:.82rem;font-weight:700}
+.hchip span{font-family:'Roboto Mono',monospace;font-weight:400;font-size:.62rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--smoke)}
+.hchip button{line-height:1;font-size:1rem;padding:0 .2rem;color:var(--smoke)}
+.hchip button:hover{color:var(--flare)}
+.held__go{margin-left:auto}
+.held__go .btn[disabled]{opacity:1;background:#23232B;color:#7A7A85;border-color:#3A3A45;box-shadow:none}
+.held__ok{width:100%;background:var(--sun);color:var(--ink);padding:.8rem 1rem;font-weight:700;
+  font-size:.9rem;display:none}
+.held__ok.is-on{display:block}
+
+/* ---------- coaches ---------- */
+.crew{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(1rem,2vw,1.4rem)}
+.cw{border:var(--edge);overflow:hidden;background:var(--paper)}
+.cw__media{aspect-ratio:4/5;border-bottom:var(--edge)}
+.cw__media svg{width:100%;height:100%}
+.cw__body{padding:.9rem 1rem 1.1rem}
+.cw__body h3{font-size:1.15rem}
+.cw__body p{font-family:'Roboto Mono',monospace;font-weight:700;font-size:.6rem;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--smoke);margin-top:.3rem}
+.cw__lift{margin-top:.7rem;padding-top:.7rem;border-top:2px solid var(--mist);
+  font-family:'Roboto Mono',monospace;font-size:.68rem;letter-spacing:.05em;color:var(--ink)}
+.cw__lift b{color:var(--flare)}
+
+/* ---------- gallery ---------- */
+.floor{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.55rem,1.4vw,.9rem)}
+.floor button{border:var(--edge);overflow:hidden;aspect-ratio:4/3;padding:0;display:block;
+  transition:transform .18s var(--ease),box-shadow .18s var(--ease)}
+.floor button:hover{transform:translate(-3px,-3px);box-shadow:7px 7px 0 var(--flare)}
+.floor svg{width:100%;height:100%}
+.lb{position:fixed;inset:0;z-index:350;background:rgba(13,13,18,.96);display:none;
+  place-items:center;padding:clamp(1rem,4vw,3rem)}
+.lb.is-on{display:grid}
+.lb__fig{width:min(88vw,900px);aspect-ratio:4/3;border:var(--edge);border-color:var(--sun);overflow:hidden}
+.lb__fig svg{width:100%;height:100%}
+.lb__cap{position:absolute;bottom:1.4rem;left:0;right:0;text-align:center;color:var(--sun);
+  font-family:'Roboto Mono',monospace;font-weight:700;font-size:.65rem;
+  letter-spacing:.14em;text-transform:uppercase}
+.lb__x,.lb__p,.lb__n{position:absolute;width:3rem;height:3rem;border:3px solid var(--sun);
+  color:var(--sun);display:grid;place-items:center;font-size:1.4rem;background:transparent}
+.lb__x:hover,.lb__p:hover,.lb__n:hover{background:var(--sun);color:var(--ink)}
+.lb__x{top:1.2rem;right:1.2rem}
+.lb__p{left:1.2rem;top:50%;transform:translateY(-50%)}
+.lb__n{right:1.2rem;top:50%;transform:translateY(-50%)}
+
+/* ---------- membership ---------- */
+.toggle{display:inline-flex;border:var(--edge);margin-bottom:clamp(1.75rem,3vw,2.5rem)}
+.toggle button{padding:.6rem 1.15rem;font-weight:700;font-size:.8rem;letter-spacing:.08em;
+  text-transform:uppercase;border-right:var(--edge);transition:background-color .15s,color .15s}
+.toggle button:last-child{border-right:0}
+.toggle button[aria-pressed="true"]{background:var(--ink);color:var(--sun)}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1rem,2vw,1.5rem);align-items:start}
+.tier{border:var(--edge);background:var(--paper);padding:clamp(1.2rem,2.4vw,1.75rem);
+  display:flex;flex-direction:column;gap:.85rem}
+.tier--hero{background:var(--volt);color:#fff;box-shadow:10px 10px 0 var(--ink)}
+.tier__name{font-family:'Anton',sans-serif;font-size:1.6rem;text-transform:uppercase;line-height:1}
+.tier__price{font-family:'Anton',sans-serif;font-size:clamp(2.6rem,2rem + 2vw,3.6rem);line-height:.9;
+  font-variant-numeric:tabular-nums}
+.tier__per{font-family:'Roboto Mono',monospace;font-weight:700;font-size:.62rem;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--smoke)}
+.tier--hero .tier__per{color:#C3CCFB}
+.tier ul{list-style:none;display:grid;gap:.55rem;margin:.4rem 0 .6rem}
+.tier li{display:flex;gap:.55rem;font-size:.92rem;align-items:flex-start}
+.tier li svg{flex:none;margin-top:.28rem;color:var(--flare)}
+.tier--hero li svg{color:var(--sun)}
+.tier .btn{margin-top:auto}
+.tier__note{font-size:.82rem;color:var(--smoke)}
+.tier--hero .tier__note{color:#C3CCFB}
+
+/* ---------- reviews ---------- */
+.says{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1rem,2vw,1.5rem)}
+.say{border:var(--edge);padding:clamp(1.2rem,2.4vw,1.7rem);display:flex;flex-direction:column;gap:.9rem}
+.say:nth-child(1){background:var(--sun)}
+.say:nth-child(2){background:var(--flare)}
+.say:nth-child(3){background:var(--volt);color:#fff}
+.say blockquote{font-family:'Anton',sans-serif;font-size:clamp(1.25rem,1.05rem + .8vw,1.75rem);
+  text-transform:uppercase;line-height:1.02;letter-spacing:.005em}
+.say__who{margin-top:auto;font-family:'Roboto Mono',monospace;font-weight:700;font-size:.62rem;
+  letter-spacing:.12em;text-transform:uppercase}
+.say__who span{display:block;font-weight:400;opacity:.72;margin-top:.25rem}
+
+/* ---------- faq ---------- */
+.qs{max-width:56rem;border-top:var(--edge)}
+.q{border-bottom:var(--edge)}
+.q summary{cursor:pointer;list-style:none;padding:1.15rem 2.6rem 1.15rem 0;position:relative;
+  font-weight:700;font-size:clamp(1rem,.97rem + .3vw,1.15rem);letter-spacing:-.01em}
+.q summary::-webkit-details-marker{display:none}
+.q summary::after{content:"+";position:absolute;right:.4rem;top:1rem;
+  font-family:'Anton',sans-serif;font-size:1.5rem;line-height:1;color:var(--flare);
+  transition:transform .25s var(--ease)}
+.q[open] summary::after{transform:rotate(45deg)}
+.q p{padding:0 3rem 1.3rem 0;color:var(--smoke)}
+
+/* ---------- big CTA ---------- */
+.shout{background:var(--flare);border-block:var(--edge);padding-block:clamp(2.75rem,6vw,5rem)}
+.shout h2{max-width:18ch}
+.shout p{margin-top:1rem;max-width:46ch;font-weight:500}
+.shout__row{display:flex;flex-wrap:wrap;gap:.85rem;margin-top:1.9rem}
+
+/* ---------- contact ---------- */
+.find{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.25rem,2.5vw,2rem);align-items:start}
+.find>*{min-width:0}
+.frm{border:var(--edge);padding:clamp(1.2rem,2.6vw,2rem);background:var(--paper)}
+.fld{margin-bottom:1rem}
+.fld label{display:block;font-family:'Roboto Mono',monospace;font-weight:700;font-size:.6rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--smoke);margin-bottom:.35rem}
+.fld input,.fld select,.fld textarea{width:100%;background:var(--paper);border:3px solid var(--ink);
+  padding:.7rem .8rem;font-size:.96rem;transition:border-color .15s,background-color .15s}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--volt);background:#F4F5FE;outline:none}
+.fld--row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem}
+.fld__e{display:none;color:#B3200A;font-weight:700;font-size:.78rem;margin-top:.3rem}
+.fld.bad input,.fld.bad select{border-color:#B3200A}
+.fld.bad .fld__e{display:block}
+.agree{display:flex;gap:.6rem;align-items:flex-start;font-size:.84rem;color:var(--smoke);margin:1rem 0}
+.agree input{width:1.1rem;height:1.1rem;margin-top:.2rem;flex:none;accent-color:var(--volt)}
+.frm__ok{display:none;border:var(--edge);background:var(--sun);padding:1.1rem;font-weight:500}
+.frm__ok.is-on{display:block}
+.frm__ok b{font-family:'Anton',sans-serif;font-size:1.35rem;text-transform:uppercase;
+  display:block;margin-bottom:.35rem}
+
+.where{border:var(--edge);background:var(--paper)}
+.gmap{aspect-ratio:16/11;border-bottom:var(--edge);background:var(--mist)}
+.gmap iframe{width:100%;height:100%;border:0;filter:grayscale(.35) contrast(1.05)}
+.where__in{padding:clamp(1.2rem,2.6vw,1.8rem)}
+.lines{display:grid;gap:.45rem;margin-bottom:1.3rem}
+.lines a{text-decoration:none;font-weight:700;display:flex;gap:.55rem;align-items:center;font-size:.95rem}
+.lines a:hover{color:var(--volt)}
+.lines svg{color:var(--flare);flex:none}
+.hrs{display:grid;margin-top:.3rem;border-top:2px solid var(--mist)}
+.hrs div{display:flex;justify-content:space-between;gap:1rem;padding:.5rem 0;
+  border-bottom:2px solid var(--mist);font-size:.9rem}
+.hrs div:last-child{border-bottom:0}
+.hrs div.now{background:var(--sun);font-weight:700;padding-inline:.5rem;margin-inline:-.5rem}
+.hrs time{font-family:'Roboto Mono',monospace;font-size:.82rem}
+.travel{list-style:none;display:grid;gap:.6rem;margin-top:1.2rem;padding-top:1.2rem;
+  border-top:2px solid var(--mist)}
+.travel li{display:flex;gap:.6rem;font-size:.89rem;color:var(--smoke);align-items:flex-start}
+.travel svg{flex:none;margin-top:.2rem;color:var(--volt)}
+
+/* ---------- footer ---------- */
+.ftr{background:var(--ink);color:#9A9AA4;padding-block:clamp(2.75rem,5vw,4rem) 1.75rem;border-top:var(--edge)}
+.ftr__grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:2rem}
+.ftr__brand{font-family:'Anton',sans-serif;font-size:2.6rem;color:var(--sun);
+  text-transform:uppercase;line-height:.9;margin-bottom:.7rem}
+.ftr h4{color:var(--paper);font-family:'Roboto Mono',monospace;font-weight:700;font-size:.6rem;
+  letter-spacing:.15em;text-transform:uppercase;margin-bottom:.9rem}
+.ftr a{text-decoration:none;font-size:.9rem;display:block;padding:.25rem 0}
+.ftr a:hover{color:var(--sun)}
+.ftr__bar{margin-top:clamp(2rem,4vw,3rem);padding-top:1.3rem;border-top:2px solid #23232B;
+  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.8rem}
+.ftr__bar a{display:inline;font-size:.8rem}
+
+/* ---------- sticky bar + top ---------- */
+.mbar{position:fixed;left:0;right:0;bottom:0;z-index:180;display:none;gap:.5rem;
+  padding:.6rem .7rem calc(.6rem + env(safe-area-inset-bottom));
+  background:var(--paper);border-top:var(--edge)}
+.mbar .btn{flex:1;padding-block:.8rem;box-shadow:3px 3px 0 var(--ink)}
+.toTop{position:fixed;right:1.1rem;bottom:1.3rem;z-index:170;width:2.9rem;height:2.9rem;
+  border:var(--edge);background:var(--sun);display:grid;place-items:center;
+  opacity:0;pointer-events:none;transition:opacity .25s}
+.toTop.is-on{opacity:1;pointer-events:auto}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.rv.is-in{opacity:1;transform:none}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1040px){
+  .hero__grid,.builder__grid,.find{grid-template-columns:1fr}
+  .cards,.crew,.tiers,.says,.coachrow{grid-template-columns:repeat(2,1fr)}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(2){border-right:0}
+  .stat:nth-child(1),.stat:nth-child(2){border-bottom:var(--edge)}
+  .week{grid-template-columns:repeat(4,1fr)}
+  .wd:nth-child(7n){border-right:2px solid var(--mist)}
+  .wd:nth-child(4n){border-right:0}
+}
+@media (max-width:860px){
+  .nav,.hdr__cta .btn{display:none}
+  .burger{display:grid}
+  .mbar{display:flex}
+  body{padding-bottom:4.4rem}
+  .toTop{bottom:5.4rem}
+  .floor{grid-template-columns:repeat(2,1fr)}
+  .ftr__grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:660px){
+  .live{display:none}
+  .row{grid-template-columns:4rem 1fr;row-gap:.5rem}
+  .row__s{grid-column:1/2}
+  .row .btn{grid-column:2/3;justify-self:end}
+  .week{grid-template-columns:repeat(2,1fr)}
+  .wd:nth-child(4n){border-right:2px solid var(--mist)}
+  .wd:nth-child(2n){border-right:0}
+  .wd{min-height:7.5rem}
+}
+@media (max-width:540px){
+  .cards,.crew,.tiers,.says,.coachrow,.fld--row{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr}
+  .stat{border-right:0;border-bottom:var(--edge)}
+  .stat:last-child{border-bottom:0}
+  .wtot{grid-template-columns:1fr}
+  .wtot div{border-right:0;border-bottom:2px solid var(--mist)}
+  .wtot div:last-child{border-bottom:0}
+  .ftr__grid{grid-template-columns:1fr}
+  .held__go{margin-left:0;width:100%}
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;
+    transition-duration:.001ms !important}
+  .rv{opacity:1;transform:none}
+  .ticker__run{animation:none}
+}
+@media print{
+  .hdr,.mbar,.toTop,.sheet,.lb,.ticker{display:none !important}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ══ ART ══ Flat poster shapes drawn in SVG, so the page carries no
+     external image requests. Swap any <svg><use …></svg> for an
+     <img src="…" alt="…"> when real photography arrives. -->
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+
+<symbol id="v-barbell" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice"><rect width="400" height="250" fill="#1F3BEB"/><circle cx="330" cy="40" r="90" fill="#FFD400" opacity=".22"/><rect x="40" y="118" width="320" height="14" fill="#FBFAF7"/><rect x="66" y="76" width="34" height="98" fill="#0D0D12"/><rect x="106" y="92" width="22" height="66" fill="#FF4A1C"/><rect x="300" y="76" width="34" height="98" fill="#0D0D12"/><rect x="272" y="92" width="22" height="66" fill="#FF4A1C"/><path d="M40 190h320" stroke="#FFD400" stroke-width="8"/><text x="200" y="228" font-family="monospace" font-size="17" font-weight="700" fill="#FFD400" text-anchor="middle" letter-spacing="4">BARBELL CLUB</text></symbol>
+
+<symbol id="v-engine" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice"><rect width="400" height="250" fill="#FF4A1C"/><path d="M0 250 L0 170 L60 190 L120 120 L180 150 L240 60 L300 100 L360 30 L400 60 L400 250Z" fill="#0D0D12"/><path d="M0 170 L60 190 L120 120 L180 150 L240 60 L300 100 L360 30 L400 60" fill="none" stroke="#FFD400" stroke-width="7" stroke-linejoin="round"/><circle cx="240" cy="60" r="12" fill="#FFD400"/><rect x="26" y="26" width="86" height="26" fill="#FBFAF7"/><text x="69" y="45" font-family="monospace" font-size="15" font-weight="700" fill="#0D0D12" text-anchor="middle">ENGINE</text></symbol>
+
+<symbol id="v-oly" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice"><rect width="400" height="250" fill="#FFD400"/><rect x="0" y="200" width="400" height="50" fill="#0D0D12"/><rect x="60" y="52" width="280" height="12" fill="#0D0D12"/><circle cx="76" cy="58" r="42" fill="#1F3BEB" stroke="#0D0D12" stroke-width="6"/><circle cx="76" cy="58" r="13" fill="#FFD400"/><circle cx="324" cy="58" r="42" fill="#1F3BEB" stroke="#0D0D12" stroke-width="6"/><circle cx="324" cy="58" r="13" fill="#FFD400"/><circle cx="200" cy="118" r="19" fill="#0D0D12"/><path d="M200 138v34M200 172l-26 32M200 172l26 32M182 96l18 26 18-26" stroke="#0D0D12" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+
+<symbol id="v-bag" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice"><rect width="400" height="250" fill="#0D0D12"/><rect x="0" y="0" width="400" height="18" fill="#FF4A1C"/><path d="M150 18v34M250 18v34" stroke="#FBFAF7" stroke-width="7"/><rect x="146" y="52" width="108" height="150" rx="16" fill="#FF4A1C"/><path d="M146 100h108M146 150h108" stroke="#0D0D12" stroke-width="6"/><circle cx="76" cy="150" r="34" fill="#FFD400"/><path d="M76 150l-42-18" stroke="#FFD400" stroke-width="16" stroke-linecap="round"/><circle cx="330" cy="176" r="26" fill="#1F3BEB"/><text x="200" y="234" font-family="monospace" font-size="16" font-weight="700" fill="#FFD400" text-anchor="middle" letter-spacing="4">BAG WORK</text></symbol>
+
+<symbol id="v-sled" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice"><rect width="400" height="250" fill="#1F3BEB"/><rect x="0" y="196" width="400" height="54" fill="#0D0D12"/><path d="M0 196h400" stroke="#FFD400" stroke-width="6"/><rect x="42" y="120" width="120" height="76" fill="#FF4A1C" stroke="#0D0D12" stroke-width="6"/><rect x="76" y="60" width="20" height="66" fill="#0D0D12"/><rect x="112" y="60" width="20" height="66" fill="#0D0D12"/><circle cx="86" cy="56" r="17" fill="#FFD400"/><circle cx="122" cy="56" r="17" fill="#FFD400"/><path d="M170 158h94" stroke="#FBFAF7" stroke-width="9" stroke-linecap="round"/><circle cx="296" cy="132" r="21" fill="#0D0D12"/><path d="M296 154v26M296 180l-22 16M296 180l22 16M276 148l20-8 20 8" stroke="#0D0D12" stroke-width="13" stroke-linecap="round" fill="none"/></symbol>
+
+<symbol id="v-reset" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice"><rect width="400" height="250" fill="#FBFAF7"/><circle cx="200" cy="118" r="98" fill="#FFD400"/><circle cx="200" cy="118" r="66" fill="none" stroke="#0D0D12" stroke-width="6"/><circle cx="200" cy="118" r="34" fill="#1F3BEB"/><path d="M200 20v-14M200 230v14M102 118H88M312 118h14" stroke="#0D0D12" stroke-width="7" stroke-linecap="round"/><path d="M20 216c40-26 80 26 120 0s80 26 120 0 80 26 120 0" fill="none" stroke="#FF4A1C" stroke-width="7"/><rect x="0" y="0" width="400" height="10" fill="#0D0D12"/></symbol>
+
+<symbol id="v-face1" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice"><rect width="400" height="500" fill="#1F3BEB"/><circle cx="200" cy="176" r="96" fill="#FBFAF7"/><path d="M104 158c6-62 46-88 96-88s90 26 96 88c-18-32-52-46-96-46s-78 14-96 46Z" fill="#0D0D12"/><path d="M200 290c92 0 148 64 154 210H46c6-146 62-210 154-210Z" fill="#FFD400"/><path d="M200 290l-48 52h96Z" fill="#FBFAF7"/><rect x="238" y="404" width="62" height="16" fill="#FF4A1C"/><circle cx="170" cy="180" r="9" fill="#0D0D12"/><circle cx="230" cy="180" r="9" fill="#0D0D12"/></symbol>
+
+<symbol id="v-face2" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice"><rect width="400" height="500" fill="#FF4A1C"/><circle cx="200" cy="176" r="96" fill="#FBFAF7"/><path d="M104 168c0-58 44-96 96-96s96 38 96 96c-22-24-52-38-96-38s-74 14-96 38Z" fill="#1F3BEB"/><path d="M200 290c92 0 148 64 154 210H46c6-146 62-210 154-210Z" fill="#0D0D12"/><path d="M200 290l-48 52h96Z" fill="#FFD400"/><rect x="100" y="400" width="62" height="16" fill="#FFD400"/><circle cx="170" cy="180" r="9" fill="#0D0D12"/><circle cx="230" cy="180" r="9" fill="#0D0D12"/></symbol>
+
+<symbol id="v-face3" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice"><rect width="400" height="500" fill="#FFD400"/><circle cx="200" cy="176" r="96" fill="#FBFAF7"/><path d="M106 190c-10-70 40-118 94-118s104 48 94 118c-8-46-46-70-94-70s-86 24-94 70Z" fill="#0D0D12"/><path d="M200 290c92 0 148 64 154 210H46c6-146 62-210 154-210Z" fill="#1F3BEB"/><path d="M200 290l-48 52h96Z" fill="#FBFAF7"/><rect x="238" y="404" width="62" height="16" fill="#FF4A1C"/><circle cx="170" cy="180" r="9" fill="#0D0D12"/><circle cx="230" cy="180" r="9" fill="#0D0D12"/></symbol>
+
+<symbol id="v-face4" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice"><rect width="400" height="500" fill="#0D0D12"/><circle cx="200" cy="176" r="96" fill="#FBFAF7"/><path d="M104 176c0-58 44-104 96-104s96 46 96 104c-16-40-52-60-96-60s-80 20-96 60Z" fill="#FF4A1C"/><path d="M200 290c92 0 148 64 154 210H46c6-146 62-210 154-210Z" fill="#FBFAF7"/><path d="M200 290l-48 52h96Z" fill="#1F3BEB"/><rect x="238" y="404" width="62" height="16" fill="#1F3BEB"/><circle cx="170" cy="180" r="9" fill="#0D0D12"/><circle cx="230" cy="180" r="9" fill="#0D0D12"/></symbol>
+
+<symbol id="v-rack" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#FBFAF7"/><rect x="0" y="252" width="400" height="48" fill="#0D0D12"/><rect x="52" y="30" width="26" height="230" fill="#1F3BEB"/><rect x="322" y="30" width="26" height="230" fill="#1F3BEB"/><rect x="52" y="30" width="296" height="24" fill="#1F3BEB"/><rect x="52" y="130" width="296" height="14" fill="#FF4A1C"/><rect x="96" y="54" width="18" height="60" fill="#0D0D12"/><rect x="286" y="54" width="18" height="60" fill="#0D0D12"/><circle cx="150" cy="200" r="34" fill="#FFD400" stroke="#0D0D12" stroke-width="6"/><circle cx="250" cy="200" r="34" fill="#FFD400" stroke="#0D0D12" stroke-width="6"/><rect x="150" y="193" width="100" height="14" fill="#0D0D12"/></symbol>
+
+<symbol id="v-erg" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#FFD400"/><rect x="0" y="248" width="400" height="52" fill="#0D0D12"/><rect x="60" y="196" width="280" height="18" fill="#0D0D12"/><circle cx="80" cy="160" r="52" fill="#1F3BEB" stroke="#0D0D12" stroke-width="7"/><path d="M80 108v104M28 160h104M43 123l74 74M117 123l-74 74" stroke="#0D0D12" stroke-width="5"/><rect x="188" y="180" width="66" height="26" fill="#FF4A1C" stroke="#0D0D12" stroke-width="5"/><path d="M132 160h64" stroke="#0D0D12" stroke-width="7"/><rect x="300" y="128" width="46" height="70" fill="#FBFAF7" stroke="#0D0D12" stroke-width="6"/><path d="M310 150h26M310 166h26" stroke="#1F3BEB" stroke-width="6"/></symbol>
+
+<symbol id="v-plates" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#1F3BEB"/><circle cx="106" cy="168" r="86" fill="#FF4A1C" stroke="#0D0D12" stroke-width="8"/><circle cx="106" cy="168" r="26" fill="#1F3BEB" stroke="#0D0D12" stroke-width="6"/><circle cx="220" cy="190" r="66" fill="#FFD400" stroke="#0D0D12" stroke-width="8"/><circle cx="220" cy="190" r="20" fill="#1F3BEB" stroke="#0D0D12" stroke-width="6"/><circle cx="316" cy="208" r="48" fill="#FBFAF7" stroke="#0D0D12" stroke-width="8"/><circle cx="316" cy="208" r="15" fill="#1F3BEB" stroke="#0D0D12" stroke-width="6"/><rect x="0" y="0" width="400" height="16" fill="#FFD400"/></symbol>
+
+<symbol id="v-rings" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#FF4A1C"/><rect x="0" y="0" width="400" height="26" fill="#0D0D12"/><path d="M140 26v96M260 26v96" stroke="#FBFAF7" stroke-width="9"/><circle cx="140" cy="150" r="30" fill="none" stroke="#0D0D12" stroke-width="14"/><circle cx="260" cy="150" r="30" fill="none" stroke="#0D0D12" stroke-width="14"/><circle cx="200" cy="150" r="20" fill="#0D0D12"/><path d="M200 170v42M200 212l-28 44M200 212l28 44M182 156l18-14 18 14" stroke="#0D0D12" stroke-width="14" stroke-linecap="round" fill="none"/><rect x="0" y="278" width="400" height="22" fill="#FFD400"/></symbol>
+
+<symbol id="v-turf" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#0D0D12"/><rect x="0" y="90" width="400" height="210" fill="#1F3BEB"/><path d="M0 120h400M0 160h400M0 200h400M0 240h400M0 280h400" stroke="#FBFAF7" stroke-width="4" opacity=".35"/><rect x="40" y="150" width="80" height="46" fill="#FF4A1C" stroke="#0D0D12" stroke-width="6"/><rect x="150" y="130" width="44" height="86" fill="#FFD400" stroke="#0D0D12" stroke-width="6"/><rect x="230" y="150" width="44" height="66" fill="#FFD400" stroke="#0D0D12" stroke-width="6"/><rect x="310" y="164" width="52" height="52" fill="#FBFAF7" stroke="#0D0D12" stroke-width="6"/><rect x="0" y="34" width="180" height="30" fill="#FFD400"/><text x="90" y="56" font-family="monospace" font-size="17" font-weight="700" fill="#0D0D12" text-anchor="middle">30 M LANE</text></symbol>
+
+<symbol id="v-lockers" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#FBFAF7"/><g stroke="#0D0D12" stroke-width="6"><rect x="24" y="30" width="84" height="112" fill="#1F3BEB"/><rect x="118" y="30" width="84" height="112" fill="#FFD400"/><rect x="212" y="30" width="84" height="112" fill="#1F3BEB"/><rect x="306" y="30" width="76" height="112" fill="#FF4A1C"/><rect x="24" y="152" width="84" height="112" fill="#FF4A1C"/><rect x="118" y="152" width="84" height="112" fill="#1F3BEB"/><rect x="212" y="152" width="84" height="112" fill="#FFD400"/><rect x="306" y="152" width="76" height="112" fill="#1F3BEB"/></g><g fill="#0D0D12"><circle cx="92" cy="90" r="7"/><circle cx="186" cy="90" r="7"/><circle cx="280" cy="90" r="7"/><circle cx="92" cy="212" r="7"/><circle cx="186" cy="212" r="7"/><circle cx="280" cy="212" r="7"/></g></symbol>
+
+<symbol id="v-cafe" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#FFD400"/><rect x="0" y="212" width="400" height="88" fill="#0D0D12"/><rect x="40" y="180" width="320" height="32" fill="#FF4A1C" stroke="#0D0D12" stroke-width="6"/><path d="M136 176V96c0-16 12-26 30-26h48c18 0 30 10 30 26v80Z" fill="#FBFAF7" stroke="#0D0D12" stroke-width="6"/><path d="M244 100h26c14 0 22 10 22 24s-8 24-22 24h-26" fill="none" stroke="#0D0D12" stroke-width="6"/><path d="M166 60c-8-14 6-22 0-36M200 60c-8-14 6-22 0-36M234 60c-8-14 6-22 0-36" stroke="#1F3BEB" stroke-width="6" stroke-linecap="round" fill="none"/><rect x="316" y="118" width="44" height="58" fill="#1F3BEB" stroke="#0D0D12" stroke-width="6"/></symbol>
+
+<symbol id="v-yard" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#1F3BEB"/><rect x="0" y="220" width="400" height="80" fill="#0D0D12"/><rect x="30" y="90" width="86" height="130" fill="#FBFAF7"/><rect x="130" y="130" width="66" height="90" fill="#FFD400"/><rect x="210" y="60" width="70" height="160" fill="#FF4A1C"/><rect x="294" y="118" width="80" height="102" fill="#FBFAF7"/><g fill="#0D0D12"><rect x="46" y="112" width="20" height="26"/><rect x="80" y="112" width="20" height="26"/><rect x="46" y="156" width="20" height="26"/><rect x="228" y="86" width="18" height="24"/><rect x="228" y="130" width="18" height="24"/><rect x="312" y="140" width="20" height="26"/><rect x="344" y="140" width="20" height="26"/></g><path d="M0 250h400" stroke="#FFD400" stroke-width="6" stroke-dasharray="30 22"/></symbol>
+
+<symbol id="v-desk" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#FF4A1C"/><rect x="0" y="0" width="400" height="22" fill="#0D0D12"/><rect x="50" y="160" width="300" height="100" fill="#0D0D12"/><rect x="40" y="140" width="320" height="26" fill="#FBFAF7" stroke="#0D0D12" stroke-width="6"/><rect x="118" y="52" width="164" height="74" fill="#FFD400" stroke="#0D0D12" stroke-width="6"/><text x="200" y="100" font-family="monospace" font-size="30" font-weight="700" fill="#0D0D12" text-anchor="middle" letter-spacing="3">VOLT</text><circle cx="330" cy="200" r="22" fill="#1F3BEB" stroke="#FBFAF7" stroke-width="5"/><rect x="70" y="188" width="86" height="14" fill="#1F3BEB"/></symbol>
+
+</svg>
+
+<!-- ══ HEADER ══════════════════════════════════════════════ -->
+<header class="hdr" id="hdr">
+  <div class="hdr__in">
+    <a class="brand" href="#top">
+      <span class="brand__mark" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 32 32"><path d="M18 3 8 18h6l-2 11 12-16h-7z" fill="#FFD400"/></svg>
+      </span>
+      <span>
+        <span class="brand__name">Volt</span>
+        <span class="brand__sub">Strength club · Kreuzberg</span>
+      </span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Sections">
+      <a href="#classes">Classes</a>
+      <a href="#build">Build your week</a>
+      <a href="#book">Book</a>
+      <a href="#crew">Crew</a>
+      <a href="#prices">Prices</a>
+      <a href="#find">Find us</a>
+    </nav>
+
+    <div class="hdr__cta">
+      <span class="live" id="live" aria-live="polite">
+        <span class="live__dot"></span><span id="liveText">Checking</span>
+      </span>
+      <a class="btn btn--volt btn--sm" href="#trial">Seven free days</a>
+      <button class="burger" id="burger" aria-expanded="false" aria-controls="sheet" aria-label="Open menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ══ MOBILE SHEET ═══════════════════════════════════════ -->
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="sheet__top">
+    <span class="tag" style="color:#FFD400">Menu</span>
+    <button class="burger" id="sheetClose" aria-label="Close menu" style="display:grid">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <a class="sheet__link" href="#classes">Classes</a>
+  <a class="sheet__link" href="#build">Build your week</a>
+  <a class="sheet__link" href="#book">Book</a>
+  <a class="sheet__link" href="#crew">Crew</a>
+  <a class="sheet__link" href="#prices">Prices</a>
+  <a class="sheet__link" href="#find">Find us</a>
+  <div class="sheet__foot">
+    <a class="btn btn--sun btn--block" href="#trial">Claim seven free days</a>
+    <a class="btn btn--block" href="tel:+493055578420">+49 30 5557 8420</a>
+  </div>
+</div>
+
+<main id="main">
+<span id="top"></span>
+
+<!-- ══ HERO ═══════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="wrap hero__grid">
+    <div>
+      <span class="tag tag--flare">Ritterstraße 12 · 10969 Berlin-Kreuzberg</span>
+      <h1 style="margin-top:1rem">Loud room.<br><span class="hl">Serious</span><br>lifting.</h1>
+      <p class="lead hero__p">Two hundred tonnes of steel in a former printworks, a coach on the floor
+        every hour we're open, and a playlist nobody apologises for. Come and find out what you can
+        actually do.</p>
+      <div class="hero__actions">
+        <a class="btn btn--ink" href="#trial">Claim seven free days</a>
+        <a class="btn" href="#build">Build your week</a>
+      </div>
+    </div>
+
+    <!-- live countdown to the next class on the timetable -->
+    <div class="nextup" id="nextup">
+      <div class="nextup__top">
+        <span>Next class starts in</span><span id="nextRoom">—</span>
+      </div>
+      <div class="nextup__body">
+        <p class="nextup__clock" id="nextClock">--:--:--</p>
+        <p class="nextup__unit">Hours · Minutes · Seconds</p>
+        <div class="nextup__what">
+          <b id="nextName">Loading the timetable</b>
+          <span id="nextMeta">One moment</span>
+        </div>
+        <a class="btn btn--sun btn--block btn--sm" href="#book">Take a spot</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TICKER ═════════════════════════════════════════════ -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__run">
+    <span>Barbell club</span><span><em>✦</em></span><span>Engine room</span><span><em>✦</em></span>
+    <span>Olympic lifting</span><span><em>✦</em></span><span>Bag work</span><span><em>✦</em></span>
+    <span>Sled &amp; carry</span><span><em>✦</em></span><span>Reset</span><span><em>✦</em></span>
+    <span>Open 06:00 – 23:00</span><span><em>✦</em></span>
+  </div>
+  <div class="ticker__run">
+    <span>Barbell club</span><span><em>✦</em></span><span>Engine room</span><span><em>✦</em></span>
+    <span>Olympic lifting</span><span><em>✦</em></span><span>Bag work</span><span><em>✦</em></span>
+    <span>Sled &amp; carry</span><span><em>✦</em></span><span>Reset</span><span><em>✦</em></span>
+    <span>Open 06:00 – 23:00</span><span><em>✦</em></span>
+  </div>
+</div>
+
+<!-- ══ STATS ══════════════════════════════════════════════ -->
+<section class="sec--tight">
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat">
+        <p class="stat__n"><span class="cnt" data-to="1450">0</span><i> m²</i></p>
+        <p class="stat__l">Of former printworks</p>
+      </div>
+      <div class="stat">
+        <p class="stat__n"><span class="cnt" data-to="62">0</span></p>
+        <p class="stat__l">Classes every week</p>
+      </div>
+      <div class="stat">
+        <p class="stat__n"><span class="cnt" data-to="17">0</span><i>h</i></p>
+        <p class="stat__l">Open, every weekday</p>
+      </div>
+      <div class="stat">
+        <p class="stat__n">4.9<i>★</i></p>
+        <p class="stat__l">From 840 Google reviews</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CLASSES ════════════════════════════════════════════ -->
+<section class="sec" id="classes">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag tag--volt">What's on the floor</span>
+      <h2>Six classes. No<br>choreography.</h2>
+      <p>Every one is coached, capped at twelve, and written in eight-week blocks so you can see the
+        numbers move. Turn up to any of them in your first week.</p>
+    </div>
+
+    <div class="cards">
+      <article class="cd rv">
+        <div class="cd__media"><span class="cd__no">01</span><svg role="img" aria-label="Poster illustration: a loaded barbell"><use href="#v-barbell" width="100%" height="100%"/></svg></div>
+        <div class="cd__body">
+          <h3>Barbell Club</h3>
+          <p>Squat, bench, deadlift, press. The main course. Eight-week blocks with a test day at the
+            end and your numbers written on the wall.</p>
+          <div class="cd__foot"><span>60 min · cap 12</span><span>Mon Wed Fri</span></div>
+        </div>
+      </article>
+
+      <article class="cd rv">
+        <div class="cd__media"><span class="cd__no">02</span><svg role="img" aria-label="Poster illustration: a rising output graph"><use href="#v-engine" width="100%" height="100%"/></svg></div>
+        <div class="cd__body">
+          <h3>Engine Room</h3>
+          <p>Rowers, bikes and SkiErgs, run as intervals against the clock. Forty-five minutes that
+            feel considerably longer than forty-five minutes.</p>
+          <div class="cd__foot"><span>45 min · cap 12</span><span>Tue Thu Sat</span></div>
+        </div>
+      </article>
+
+      <article class="cd rv">
+        <div class="cd__media"><span class="cd__no">03</span><svg role="img" aria-label="Poster illustration: a lifter under a barbell"><use href="#v-oly" width="100%" height="100%"/></svg></div>
+        <div class="cd__body">
+          <h3>Olympic Lifting</h3>
+          <p>Snatch, clean and jerk on six platforms. Filmed every session, reviewed on the spot.
+            Technique gets fixed before load goes on.</p>
+          <div class="cd__foot"><span>75 min · cap 8</span><span>Tue Thu Sun</span></div>
+        </div>
+      </article>
+
+      <article class="cd rv">
+        <div class="cd__media"><span class="cd__no">04</span><svg role="img" aria-label="Poster illustration: a punch bag"><use href="#v-bag" width="100%" height="100%"/></svg></div>
+        <div class="cd__body">
+          <h3>Bag Work</h3>
+          <p>Boxing conditioning without the sparring. Footwork, combinations and rounds on the bag,
+            coached by someone who has actually fought.</p>
+          <div class="cd__foot"><span>50 min · cap 14</span><span>Mon Wed Sat</span></div>
+        </div>
+      </article>
+
+      <article class="cd rv">
+        <div class="cd__media"><span class="cd__no">05</span><svg role="img" aria-label="Poster illustration: a weighted sled"><use href="#v-sled" width="100%" height="100%"/></svg></div>
+        <div class="cd__body">
+          <h3>Sled &amp; Carry</h3>
+          <p>Thirty metres of turf, a sled, and everything heavy we own. Brutally simple, low skill,
+            and the fastest way in if you've never lifted.</p>
+          <div class="cd__foot"><span>40 min · cap 12</span><span>Wed Fri Sun</span></div>
+        </div>
+      </article>
+
+      <article class="cd rv">
+        <div class="cd__media"><span class="cd__no">06</span><svg role="img" aria-label="Poster illustration: a target and a wave"><use href="#v-reset" width="100%" height="100%"/></svg></div>
+        <div class="cd__body">
+          <h3>Reset</h3>
+          <p>Loaded stretching, breathing and joint work. The class that keeps the other five
+            available to you. Sauna afterwards, obviously.</p>
+          <div class="cd__foot"><span>40 min · cap 16</span><span>Tue Thu Sun</span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SIGNATURE: BUILD YOUR WEEK ═════════════════════════ -->
+<section class="builder sec" id="build">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">The thirty-second plan</span>
+      <h2>Build your week.</h2>
+      <p style="color:#C3CCFB">Three answers and we'll lay out a training week you could actually
+        keep. Change your mind as often as you like — nothing is saved until you say so.</p>
+    </div>
+
+    <div class="builder__grid">
+      <div>
+        <div class="ctrl">
+          <span class="ctrl__lbl" id="lblGoal">1 — What are you after?</span>
+          <div class="opts" role="group" aria-labelledby="lblGoal" id="goalOpts"></div>
+        </div>
+        <div class="ctrl">
+          <span class="ctrl__lbl" id="lblDays">2 — Days a week</span>
+          <div class="opts" role="group" aria-labelledby="lblDays" id="dayOpts"></div>
+        </div>
+        <div class="ctrl">
+          <span class="ctrl__lbl" id="lblLen">3 — Time per session</span>
+          <div class="opts" role="group" aria-labelledby="lblLen" id="lenOpts"></div>
+        </div>
+        <p class="legend">
+          <span><i style="background:#1F3BEB"></i>Strength</span>
+          <span><i style="background:#FF4A1C"></i>Conditioning</span>
+          <span><i style="background:#FFD400"></i>Skill</span>
+          <span><i style="background:#E7E6E0"></i>Rest</span>
+        </p>
+      </div>
+
+      <div>
+        <div class="weekwrap">
+          <div class="weekwrap__top">
+            <span id="planTitle">Your week</span><span id="planGoal">—</span>
+          </div>
+          <div class="week" id="week" aria-live="polite"></div>
+          <div class="wtot">
+            <div><b id="totSess">0</b><span>Sessions</span></div>
+            <div><b id="totMin">0</b><span>Minutes on the floor</span></div>
+            <div><b id="totKcal">0</b><span>Est. kcal burned</span></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.4rem">
+          <a class="btn btn--sun" href="#book" id="lockIn">Lock this in</a>
+          <a class="btn" href="#trial" style="background:transparent;color:#fff;border-color:#fff;box-shadow:5px 5px 0 #FFD400">Try it free for a week</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BOOKING ════════════════════════════════════════════ -->
+<section class="sec" id="book">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag tag--volt">Take a spot</span>
+      <h2>Book a class or<br>an hour one to one.</h2>
+      <p>Spots are live. Members book fourteen days out; on a free week you can hold up to three
+        classes and one hour with a coach.</p>
+    </div>
+
+    <div class="bk rv">
+      <div class="bk__tabs" role="tablist" aria-label="What would you like to book?">
+        <button class="bktab" id="tabC" role="tab" aria-selected="true" aria-controls="paneC">Classes</button>
+        <button class="bktab" id="tabP" role="tab" aria-selected="false" aria-controls="paneP">One to one</button>
+      </div>
+
+      <div class="bk__body">
+        <div id="paneC" role="tabpanel" aria-labelledby="tabC">
+          <div class="dstrip" id="cDays" role="tablist" aria-label="Choose a day"></div>
+          <div class="rows" id="cRows"></div>
+        </div>
+
+        <div id="paneP" role="tabpanel" aria-labelledby="tabP" hidden>
+          <p class="sublbl">1 — Pick a coach</p>
+          <div class="coachrow" id="pCoaches"></div>
+          <p class="sublbl">2 — Pick a day</p>
+          <div class="dstrip" id="pDays" role="tablist" aria-label="Choose a day for one to one"></div>
+          <p class="sublbl">3 — Pick an hour · €55</p>
+          <div class="slotgrid" id="pSlots"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="held" id="held">
+      <span class="held__lbl">Spots held</span>
+      <span class="held__none" id="heldNone">Nothing yet — pick something above.</span>
+      <span id="heldChips" style="display:contents"></span>
+      <span class="held__go"><button class="btn btn--sun btn--sm" id="heldGo" disabled>Confirm</button></span>
+      <div class="held__ok" id="heldOk" role="status"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CREW ═══════════════════════════════════════════════ -->
+<section class="sec" id="crew">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag tag--flare">Who's on the floor</span>
+      <h2>Coaches who<br>still compete.</h2>
+      <p>Eleven of them, all employed full time. Nobody here is paid per session, so nobody has a
+        reason to sell you one.</p>
+    </div>
+    <div class="crew">
+      <article class="cw rv">
+        <div class="cw__media"><svg role="img" aria-label="Poster portrait of Nils Adebayo"><use href="#v-face1" width="100%" height="100%"/></svg></div>
+        <div class="cw__body">
+          <h3>Nils Adebayo</h3>
+          <p>Head coach · Powerlifting</p>
+          <p class="cw__lift">Best total <b>712 kg</b> · −93 kg</p>
+        </div>
+      </article>
+      <article class="cw rv">
+        <div class="cw__media"><svg role="img" aria-label="Poster portrait of Rada Petrović"><use href="#v-face2" width="100%" height="100%"/></svg></div>
+        <div class="cw__body">
+          <h3>Rada Petrović</h3>
+          <p>Olympic lifting · IWF L2</p>
+          <p class="cw__lift">Clean &amp; jerk <b>118 kg</b></p>
+        </div>
+      </article>
+      <article class="cw rv">
+        <div class="cw__media"><svg role="img" aria-label="Poster portrait of Tobias Frey"><use href="#v-face3" width="100%" height="100%"/></svg></div>
+        <div class="cw__body">
+          <h3>Tobias Frey</h3>
+          <p>Engine · Rowing</p>
+          <p class="cw__lift">2 km erg <b>6:04</b></p>
+        </div>
+      </article>
+      <article class="cw rv">
+        <div class="cw__media"><svg role="img" aria-label="Poster portrait of Yasmin Kaya"><use href="#v-face4" width="100%" height="100%"/></svg></div>
+        <div class="cw__body">
+          <h3>Yasmin Kaya</h3>
+          <p>Bag work · Physiotherapist</p>
+          <p class="cw__lift">Amateur record <b>14–2</b></p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══ THE FLOOR ══════════════════════════════════════════ -->
+<section class="sec--tight" id="floor">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag tag--volt">The floor</span>
+      <h2>Have a look first.</h2>
+    </div>
+    <div class="floor">
+      <button data-a="v-rack" data-c="Eight racks, no queue at 18:00"><svg role="img" aria-label="Poster illustration: a squat rack"><use href="#v-rack" width="100%" height="100%"/></svg></button>
+      <button data-a="v-erg" data-c="Engine room, sixteen machines"><svg role="img" aria-label="Poster illustration: a rowing machine"><use href="#v-erg" width="100%" height="100%"/></svg></button>
+      <button data-a="v-plates" data-c="Calibrated plates, colour coded"><svg role="img" aria-label="Poster illustration: stacked weight plates"><use href="#v-plates" width="100%" height="100%"/></svg></button>
+      <button data-a="v-rings" data-c="Rings and bars over the turf"><svg role="img" aria-label="Poster illustration: gymnastic rings"><use href="#v-rings" width="100%" height="100%"/></svg></button>
+      <button data-a="v-turf" data-c="The 30-metre lane"><svg role="img" aria-label="Poster illustration: the turf lane"><use href="#v-turf" width="100%" height="100%"/></svg></button>
+      <button data-a="v-lockers" data-c="Changing rooms, towels on the house"><svg role="img" aria-label="Poster illustration: lockers"><use href="#v-lockers" width="100%" height="100%"/></svg></button>
+      <button data-a="v-cafe" data-c="Coffee bar, open till 20:00"><svg role="img" aria-label="Poster illustration: the coffee bar"><use href="#v-cafe" width="100%" height="100%"/></svg></button>
+      <button data-a="v-yard" data-c="Ritterstraße, right outside"><svg role="img" aria-label="Poster illustration: the street outside"><use href="#v-yard" width="100%" height="100%"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MEMBERSHIP ═════════════════════════════════════════ -->
+<section class="sec" id="prices">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag tag--flare">Membership</span>
+      <h2>Three prices.<br>No joining fee.</h2>
+      <p>Month to month, cancel with thirty days' notice. Annual saves you two months and freezes
+        your rate for as long as you stay.</p>
+    </div>
+
+    <div class="toggle" role="group" aria-label="Billing period">
+      <button id="payM" aria-pressed="true">Monthly</button>
+      <button id="payY" aria-pressed="false">Annual · save 2 months</button>
+    </div>
+
+    <div class="tiers">
+      <div class="tier rv">
+        <p class="tier__name">Off-peak</p>
+        <p class="tier__price"><span class="price" data-m="39" data-y="33">€39</span></p>
+        <p class="tier__per" data-per>per month</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Full floor before 16:00 and after 20:30</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Two classes a week</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Sauna and towels</li>
+        </ul>
+        <a class="btn btn--block" href="#trial">Start free</a>
+        <p class="tier__note">Best if you work from home or train early.</p>
+      </div>
+
+      <div class="tier tier--hero rv">
+        <span class="pill pill--sun" style="align-self:flex-start;color:#0D0D12">Most members</span>
+        <p class="tier__name">Full</p>
+        <p class="tier__price"><span class="price" data-m="69" data-y="58">€69</span></p>
+        <p class="tier__per" data-per>per month</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Any hour, any day, no restrictions</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Unlimited classes</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Written programme, reviewed every block</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Bring a guest twice a month</li>
+        </ul>
+        <a class="btn btn--sun btn--block" href="#trial">Start free</a>
+        <p class="tier__note">Freeze up to eight weeks a year at no cost.</p>
+      </div>
+
+      <div class="tier rv">
+        <p class="tier__name">Full + coach</p>
+        <p class="tier__price"><span class="price" data-m="169" data-y="142">€169</span></p>
+        <p class="tier__per" data-per>per month</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Everything in Full</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Two one-to-one hours a month</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Extra hours at €45 instead of €55</li>
+        </ul>
+        <a class="btn btn--block" href="#trial">Start free</a>
+        <p class="tier__note">Students and anyone over 65 take 20 % off any tier.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ REVIEWS ════════════════════════════════════════════ -->
+<section class="sec--tight">
+  <div class="wrap">
+    <div class="says">
+      <article class="say rv">
+        <blockquote>“I came for eight weeks to get ready for a hike. That was two years ago.”</blockquote>
+        <p class="say__who">Marlene B.<span>Full · since 2024</span></p>
+      </article>
+      <article class="say rv">
+        <blockquote>“Loudest gym I've trained in and somehow the most patient coaching.”</blockquote>
+        <p class="say__who">Kwame O.<span>Full + coach · since 2023</span></p>
+      </article>
+      <article class="say rv">
+        <blockquote>“Nobody looked at me sideways on day one. I deadlift 140 now.”</blockquote>
+        <p class="say__who">Jonas R.<span>Off-peak · since 2025</span></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FAQ ════════════════════════════════════════════════ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag tag--volt">Before you ask</span>
+      <h2>Fair questions.</h2>
+    </div>
+    <div class="qs">
+      <details class="q"><summary>I've never lifted anything. Is this the wrong place?</summary>
+        <p>It's the right place. Start with Sled &amp; Carry or Barbell Club — both assume you've
+          never touched a barbell, and both are capped so a coach sees every rep. About half of the
+          people in your first class will have joined this year.</p></details>
+      <details class="q"><summary>What actually happens in the free week?</summary>
+        <p>You get the full floor for seven days plus any three classes and one hour with a coach.
+          No card, no direct debit, and nobody rings you afterwards unless you ask us to.</p></details>
+      <details class="q"><summary>Is it really that loud?</summary>
+        <p>Yes, on the main floor. If you'd rather not, the mezzanine runs quiet from 09:00 to 15:00
+          and Reset is always low volume.</p></details>
+      <details class="q"><summary>Can I cancel whenever I want?</summary>
+        <p>Thirty days' notice by email, no phone call, no retention script. Annual members can
+          switch to monthly at any point instead of cancelling outright.</p></details>
+      <details class="q"><summary>Where do I park?</summary>
+        <p>There's metered street parking on Ritterstraße and a car park on Alte Jakobstraße two
+          minutes away. Realistically, take the U8 to Moritzplatz — it's a 300-metre walk.</p></details>
+      <details class="q"><summary>Do you have showers and towels?</summary>
+        <p>Twelve showers, towels included in every tier, and a drying room for cycling kit. Bring a
+          padlock or buy one at the desk for €4.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BIG CTA ════════════════════════════════════════════ -->
+<section class="shout" id="trial">
+  <div class="wrap">
+    <span class="tag" style="color:#0D0D12">Seven free days</span>
+    <h2 style="margin-top:.8rem">Take the week. Decide after.</h2>
+    <p>Full access, three classes and an hour with a coach. We don't ask for a card and we don't
+      chase you afterwards.</p>
+    <div class="shout__row">
+      <a class="btn btn--ink" href="#find">Claim your week</a>
+      <a class="btn" href="tel:+493055578420">+49 30 5557 8420</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FIND US ════════════════════════════════════════════ -->
+<section class="sec" id="find">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag tag--flare">Find us</span>
+      <h2>Ritterstraße 12,<br>Kreuzberg.</h2>
+    </div>
+
+    <div class="find">
+      <div class="frm">
+        <h3 class="big" style="margin-bottom:1.1rem">Claim seven free days</h3>
+        <form id="joinForm" novalidate>
+          <div class="fld--row">
+            <div class="fld">
+              <label for="jName">Name</label>
+              <input id="jName" type="text" autocomplete="name" required>
+              <span class="fld__e">Tell us your name.</span>
+            </div>
+            <div class="fld">
+              <label for="jPhone">Phone</label>
+              <input id="jPhone" type="tel" autocomplete="tel" required placeholder="+49 …">
+              <span class="fld__e">A number we can reach.</span>
+            </div>
+          </div>
+          <div class="fld">
+            <label for="jMail">Email</label>
+            <input id="jMail" type="email" autocomplete="email" required>
+            <span class="fld__e">Check the address.</span>
+          </div>
+          <div class="fld--row">
+            <div class="fld">
+              <label for="jGoal">What you're after</label>
+              <select id="jGoal">
+                <option value="">Still deciding</option>
+                <option value="strong">Get strong</option>
+                <option value="lean">Drop fat</option>
+                <option value="endure">Go longer</option>
+                <option value="fight">Fight fit</option>
+              </select>
+            </div>
+            <div class="fld">
+              <label for="jWhen">When you'd train</label>
+              <select id="jWhen">
+                <option value="early">Before 09:00</option>
+                <option value="mid">During the day</option>
+                <option value="late">After 17:00</option>
+                <option value="weekend">Weekends</option>
+              </select>
+            </div>
+          </div>
+          <div class="fld">
+            <label for="jNote">Anything we should know</label>
+            <textarea id="jNote" rows="3" placeholder="Old injuries, a race in the diary, coming back after a long break…"></textarea>
+          </div>
+          <label class="agree" for="jOk">
+            <input id="jOk" type="checkbox" required>
+            <span>You may contact me about this. We keep your details for twelve months and never
+              pass them on.</span>
+          </label>
+          <span class="fld__e" id="okErr" style="margin:-.6rem 0 .9rem">Tick the box so we can reply.</span>
+          <button class="btn btn--volt btn--block" type="submit">Start my free week</button>
+        </form>
+
+        <div class="frm__ok" id="joinOk" role="status">
+          <b>You're in.</b>
+          Check your email for the door code and a link to book your first class. If nothing lands in
+          ten minutes, ring <a href="tel:+493055578420">+49 30 5557 8420</a>.
+        </div>
+      </div>
+
+      <div class="where">
+        <div class="gmap">
+          <iframe title="Map showing VOLT at Ritterstraße 12, Berlin-Kreuzberg" loading="lazy"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=13.3975%2C52.4988%2C13.4195%2C52.5078&amp;layer=mapnik&amp;marker=52.5033%2C13.4085"></iframe>
+        </div>
+        <div class="where__in">
+          <div class="lines">
+            <a href="tel:+493055578420">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>
+              +49 30 5557 8420
+            </a>
+            <a href="mailto:hallo@example.de">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+              hallo@example.de
+            </a>
+            <a href="https://maps.google.com/?q=Ritterstra%C3%9Fe+12+Berlin" target="_blank" rel="noopener">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              Ritterstraße 12, 10969 Berlin
+            </a>
+          </div>
+
+          <h3>Opening hours</h3>
+          <div class="hrs" id="hrs">
+            <div data-d="1"><span>Monday</span><time>06:00 – 23:00</time></div>
+            <div data-d="2"><span>Tuesday</span><time>06:00 – 23:00</time></div>
+            <div data-d="3"><span>Wednesday</span><time>06:00 – 23:00</time></div>
+            <div data-d="4"><span>Thursday</span><time>06:00 – 23:00</time></div>
+            <div data-d="5"><span>Friday</span><time>06:00 – 22:00</time></div>
+            <div data-d="6"><span>Saturday</span><time>08:00 – 21:00</time></div>
+            <div data-d="0"><span>Sunday</span><time>08:00 – 21:00</time></div>
+          </div>
+
+          <ul class="travel">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="14" rx="3"/><path d="M4 11h16M7 21l2-4M17 21l-2-4"/></svg> U8 Moritzplatz, 300 m. Bus M29 stops on the corner.</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a4 4 0 1 0 8 0 4 4 0 0 0-8 0ZM13 17a4 4 0 1 0 8 0 4 4 0 0 0-8 0ZM7 17l4-9h5"/></svg> Secure bike room for 90 bikes, plus a drying rail.</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6"/></svg> Step-free from the street, lift to the mezzanine.</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg> Coached floor cover every hour we're open.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ══ FOOTER ═════════════════════════════════════════════ -->
+<footer class="ftr">
+  <div class="wrap">
+    <div class="ftr__grid">
+      <div>
+        <p class="ftr__brand">Volt</p>
+        <p style="font-size:.9rem;max-width:32ch">A strength club in a former printworks on
+          Ritterstraße. Open since 2019.</p>
+      </div>
+      <div>
+        <h4>Train</h4>
+        <a href="#classes">Classes</a><a href="#build">Build your week</a>
+        <a href="#book">Book a class</a><a href="#book">One to one</a>
+      </div>
+      <div>
+        <h4>The club</h4>
+        <a href="#crew">Crew</a><a href="#floor">The floor</a>
+        <a href="#prices">Prices</a><a href="#trial">Free week</a>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <a href="#find">Ritterstraße 12</a>
+        <a href="tel:+493055578420">+49 30 5557 8420</a>
+        <a href="mailto:hallo@example.de">hallo@example.de</a>
+        <a href="#find">Opening hours</a>
+      </div>
+    </div>
+    <div class="ftr__bar">
+      <span>© <span id="yr">2026</span> VOLT Berlin GmbH · HRB 000000 B · Berlin-Kreuzberg</span>
+      <span><a href="#">Impressum</a> · <a href="#">Datenschutz</a> · <a href="#">AGB</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ LIGHTBOX ═══════════════════════════════════════════ -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <div class="lb__fig" id="lbFig"></div>
+  <p class="lb__cap" id="lbCap"></p>
+  <button class="lb__x" id="lbX" aria-label="Close">&times;</button>
+  <button class="lb__p" id="lbP" aria-label="Previous">‹</button>
+  <button class="lb__n" id="lbN" aria-label="Next">›</button>
+</div>
+
+<div class="mbar">
+  <a class="btn" href="tel:+493055578420">Call</a>
+  <a class="btn btn--volt" href="#trial">Free week</a>
+</div>
+<button class="toTop" id="toTop" aria-label="Back to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"HealthClub",
+  "name":"VOLT Berlin",
+  "description":"A strength club in a former printworks on Ritterstraße, Berlin-Kreuzberg. Coached classes capped at twelve, eight racks, a 30-metre turf lane and a coach on the floor every hour.",
+  "telephone":"+493055578420",
+  "email":"hallo@example.de",
+  "address":{
+    "@type":"PostalAddress",
+    "streetAddress":"Ritterstraße 12",
+    "postalCode":"10969",
+    "addressLocality":"Berlin",
+    "addressCountry":"DE"
+  },
+  "geo":{"@type":"GeoCoordinates","latitude":52.5033,"longitude":13.4085},
+  "areaServed":"Berlin",
+  "availableLanguage":["de","en"],
+  "currenciesAccepted":"EUR",
+  "priceRange":"€39–€169 / month",
+  "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"840","bestRating":"5"},
+  "openingHoursSpecification":[
+    {"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday"],"opens":"06:00","closes":"23:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Friday","opens":"06:00","closes":"22:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":["Saturday","Sunday"],"opens":"08:00","closes":"21:00"}
+  ],
+  "amenityFeature":[
+    {"@type":"LocationFeatureSpecification","name":"Sauna","value":true},
+    {"@type":"LocationFeatureSpecification","name":"Showers and towels","value":true},
+    {"@type":"LocationFeatureSpecification","name":"Secure bicycle room","value":true},
+    {"@type":"LocationFeatureSpecification","name":"Step-free access","value":true}
+  ],
+  "makesOffer":[
+    {"@type":"Offer","name":"Off-peak membership","price":"39","priceCurrency":"EUR"},
+    {"@type":"Offer","name":"Full membership","price":"69","priceCurrency":"EUR"},
+    {"@type":"Offer","name":"Full + coach membership","price":"169","priceCurrency":"EUR"},
+    {"@type":"Offer","name":"One-to-one hour","price":"55","priceCurrency":"EUR"}
+  ]
+}
+</script>
+
+<script>
+(function () {
+  'use strict';
+  var calm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  if (!('IntersectionObserver' in window)) {
+    window.IntersectionObserver = function (cb) {
+      this.observe = function (n) { cb([{ isIntersecting: true, target: n }], this); };
+      this.unobserve = function () {}; this.disconnect = function () {};
+    };
+  }
+
+  var SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var LONGD = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  /* Berlin wall-clock time, whatever timezone the visitor is in. */
+  function berlin() {
+    var p = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/Berlin', hour12: false,
+      weekday: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit'
+    }).formatToParts(new Date()).reduce(function (o, x) { o[x.type] = x.value; return o; }, {});
+    var i = SHORT.indexOf(p.weekday);
+    return { day: i < 0 ? new Date().getDay() : i, h: +p.hour % 24, m: +p.minute, s: +p.second };
+  }
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  /* ─────────────────────────────────────────────────────────
+     1. Opening hours — live pill and today's row
+     ───────────────────────────────────────────────────────── */
+  var HRS = { 0: [480, 1260], 1: [360, 1380], 2: [360, 1380], 3: [360, 1380], 4: [360, 1380], 5: [360, 1320], 6: [480, 1260] };
+  function paintHours() {
+    var t = berlin(), mins = t.h * 60 + t.m, slot = HRS[t.day];
+    var open = !!slot && mins >= slot[0] && mins < slot[1];
+    var pill = $('#live'), txt = $('#liveText');
+    if (pill) {
+      pill.classList.toggle('is-open', open);
+      if (open) {
+        txt.textContent = 'Open · ' + pad(Math.floor(slot[1] / 60)) + ':' + pad(slot[1] % 60);
+      } else {
+        var d = t.day, hop = 0;
+        while (hop < 8 && !(HRS[d] && (d !== t.day || mins < HRS[d][0]))) { d = (d + 1) % 7; hop++; }
+        txt.textContent = 'Opens ' + (d === t.day ? 'today' : (hop === 1 ? 'tomorrow' : SHORT[d])) +
+          ' ' + pad(Math.floor(HRS[d][0] / 60)) + ':' + pad(HRS[d][0] % 60);
+      }
+    }
+    $$('#hrs div').forEach(function (r) { r.classList.toggle('now', +r.dataset.d === t.day); });
+  }
+  paintHours();
+  setInterval(paintHours, 30000);
+
+  /* ─────────────────────────────────────────────────────────
+     2. Timetable data (shared by the countdown and the booking)
+     ───────────────────────────────────────────────────────── */
+  var WEEK = {
+    1: [['06:30','Barbell Club','Nils','Main floor'],['07:30','Bag Work','Yasmin','Ring'],['12:15','Barbell Club','Rada','Main floor'],['17:00','Sled & Carry','Tobias','Turf lane'],['18:15','Barbell Club','Nils','Main floor'],['19:30','Bag Work','Yasmin','Ring']],
+    2: [['06:30','Engine Room','Tobias','Engine room'],['07:30','Reset','Yasmin','Mezzanine'],['12:15','Engine Room','Tobias','Engine room'],['17:00','Olympic Lifting','Rada','Platforms'],['18:15','Engine Room','Tobias','Engine room'],['19:30','Reset','Yasmin','Mezzanine']],
+    3: [['06:30','Barbell Club','Nils','Main floor'],['07:30','Sled & Carry','Tobias','Turf lane'],['12:15','Bag Work','Yasmin','Ring'],['17:00','Barbell Club','Rada','Main floor'],['18:15','Sled & Carry','Tobias','Turf lane'],['19:30','Barbell Club','Nils','Main floor']],
+    4: [['06:30','Engine Room','Tobias','Engine room'],['07:30','Olympic Lifting','Rada','Platforms'],['12:15','Reset','Yasmin','Mezzanine'],['17:00','Engine Room','Tobias','Engine room'],['18:15','Olympic Lifting','Rada','Platforms'],['19:30','Reset','Yasmin','Mezzanine']],
+    5: [['06:30','Barbell Club','Nils','Main floor'],['07:30','Engine Room','Tobias','Engine room'],['12:15','Sled & Carry','Tobias','Turf lane'],['16:30','Barbell Club','Nils','Main floor'],['17:45','Friday Heavy','Rada','Platforms']],
+    6: [['08:30','Engine Room','Tobias','Engine room'],['09:45','Bag Work','Yasmin','Ring'],['11:00','Barbell Club','Nils','Main floor'],['12:15','Sled & Carry','Tobias','Turf lane']],
+    0: [['09:30','Reset','Yasmin','Mezzanine'],['10:45','Olympic Lifting','Rada','Platforms'],['12:00','Sled & Carry','Tobias','Turf lane']]
+  };
+  var CAP = { 'Barbell Club': 12, 'Engine Room': 12, 'Olympic Lifting': 8, 'Bag Work': 14, 'Sled & Carry': 12, 'Reset': 16, 'Friday Heavy': 8 };
+
+  /* Stable pseudo-random from a string, so a slot keeps its number
+     of free spots for the whole visit. */
+  function seed(str) {
+    var h = 2166136261, i;
+    for (i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = (h * 16777619) >>> 0; }
+    return (h % 1000) / 1000;
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     3. Countdown to the next class
+     ───────────────────────────────────────────────────────── */
+  function tickNext() {
+    var t = berlin(), nowM = t.h * 60 + t.m, d = t.day, hop = 0, found = null;
+    while (hop < 8 && !found) {
+      var list = WEEK[d] || [];
+      for (var i = 0; i < list.length; i++) {
+        var hm = list[i][0].split(':'), mm = +hm[0] * 60 + +hm[1];
+        if (hop > 0 || mm > nowM) { found = { c: list[i], mins: mm + hop * 1440 }; break; }
+      }
+      if (!found) { d = (d + 1) % 7; hop++; }
+    }
+    if (!found) return;
+    var delta = found.mins - nowM;
+    var secs = delta * 60 - t.s;
+    var hh = Math.floor(secs / 3600), mi = Math.floor((secs % 3600) / 60), ss = secs % 60;
+    $('#nextClock').textContent = pad(hh) + ':' + pad(mi) + ':' + pad(ss);
+    $('#nextName').textContent = found.c[1];
+    $('#nextMeta').textContent = (hop === 0 ? 'Today' : (hop === 1 ? 'Tomorrow' : LONGD[d])) +
+      ' ' + found.c[0] + ' · ' + found.c[2];
+    $('#nextRoom').textContent = found.c[3];
+  }
+  tickNext();
+  setInterval(tickNext, 1000);
+
+  /* ─────────────────────────────────────────────────────────
+     4. SIGNATURE — Build your week
+     ───────────────────────────────────────────────────────── */
+  var GOALS = {
+    strong: { label: 'Get strong', rota: ['S', 'S', 'C', 'S', 'K', 'C'], line: 'Strength-led' },
+    lean:   { label: 'Drop fat',   rota: ['C', 'S', 'C', 'S', 'C', 'K'], line: 'Conditioning-led' },
+    endure: { label: 'Go longer',  rota: ['C', 'C', 'S', 'C', 'K', 'C'], line: 'Engine-led' },
+    fight:  { label: 'Fight fit',  rota: ['K', 'C', 'S', 'K', 'C', 'S'], line: 'Skill-led' }
+  };
+  var POOL = {
+    S: ['Barbell Club'],
+    C: ['Engine Room', 'Sled & Carry'],
+    K: ['Olympic Lifting', 'Bag Work', 'Reset']
+  };
+  var FOCUS = {
+    S: ['Squat', 'Press', 'Pull', 'Deadlift'],
+    C: ['Intervals', 'Carries', 'Erg pyramid'],
+    K: ['Snatch', 'Bag rounds', 'Mobility']
+  };
+  var BURN = { S: 7.5, C: 12, K: 8.5 };
+  /* Where the training days land, so rest is spread rather than stacked */
+  var SPREAD = { 2: [0, 3], 3: [0, 2, 4], 4: [0, 1, 3, 5], 5: [0, 1, 2, 4, 5], 6: [0, 1, 2, 3, 4, 5] };
+
+  var plan = { goal: 'strong', days: 4, len: 60 };
+
+  function chipRow(host, items, current, onPick, extraClass) {
+    host.innerHTML = '';
+    items.forEach(function (it) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'opt' + (extraClass ? ' ' + extraClass : '');
+      b.textContent = it.label;
+      b.setAttribute('aria-pressed', it.value === current ? 'true' : 'false');
+      b.addEventListener('click', function () { onPick(it.value); });
+      host.appendChild(b);
+    });
+  }
+
+  function drawPlan() {
+    chipRow($('#goalOpts'), Object.keys(GOALS).map(function (k) {
+      return { value: k, label: GOALS[k].label };
+    }), plan.goal, function (v) { plan.goal = v; drawPlan(); });
+
+    chipRow($('#dayOpts'), [2, 3, 4, 5, 6].map(function (n) {
+      return { value: n, label: String(n) };
+    }), plan.days, function (v) { plan.days = v; drawPlan(); }, 'opt--n');
+
+    chipRow($('#lenOpts'), [30, 45, 60, 75].map(function (n) {
+      return { value: n, label: n + ' min' };
+    }), plan.len, function (v) { plan.len = v; drawPlan(); });
+
+    var g = GOALS[plan.goal], slots = SPREAD[plan.days], week = $('#week');
+    var byDay = {}, k = 0;
+    slots.forEach(function (idx) { byDay[idx] = g.rota[k % g.rota.length]; k++; });
+
+    week.innerHTML = '';
+    var sessions = 0, minutes = 0, kcal = 0, seen = { S: 0, C: 0, K: 0 };
+    for (var i = 0; i < 7; i++) {
+      var type = byDay[i] || 'R';
+      var cell = document.createElement('div');
+      cell.className = 'wd wd--' + type;
+      var head = '<p class="wd__h">' + SHORT[(i + 1) % 7] + '</p>';
+      if (type === 'R') {
+        cell.innerHTML = head + '<div class="wd__s"><span class="wd__name">Rest</span></div>';
+      } else {
+        var names = POOL[type], focus = FOCUS[type];
+        var name = names[seen[type] % names.length];
+        var foc = focus[seen[type] % focus.length];
+        seen[type]++;
+        sessions++; minutes += plan.len; kcal += Math.round(BURN[type] * plan.len);
+        cell.innerHTML = head +
+          '<div class="wd__s"><span class="wd__type">' + foc + '</span>' +
+          '<span class="wd__name">' + name + '</span>' +
+          '<span class="wd__min">' + plan.len + "'</span></div>";
+      }
+      week.appendChild(cell);
+    }
+    $('#totSess').textContent = sessions;
+    $('#totMin').textContent = minutes;
+    $('#totKcal').textContent = kcal.toLocaleString('en-GB');
+    $('#planGoal').textContent = g.line + ' · ' + plan.days + ' days';
+  }
+  drawPlan();
+
+  $('#lockIn').addEventListener('click', function () {
+    var sel = $('#jGoal');
+    if (sel) sel.value = plan.goal;
+  });
+
+  /* ─────────────────────────────────────────────────────────
+     5. Booking
+     ───────────────────────────────────────────────────────── */
+  var CREW = [
+    { id: 'nils', name: 'Nils Adebayo', role: 'Powerlifting', bg: '#1F3BEB', fg: '#FFD400', ini: 'NA' },
+    { id: 'rada', name: 'Rada Petrović', role: 'Olympic', bg: '#FF4A1C', fg: '#0D0D12', ini: 'RP' },
+    { id: 'yasmin', name: 'Yasmin Kaya', role: 'Bag work', bg: '#FFD400', fg: '#0D0D12', ini: 'YK' }
+  ];
+  var PT_TIMES = ['07:00', '08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
+  var PT_FEE = 55;
+
+  var days7 = [];
+  (function () {
+    var base = new Date();
+    for (var i = 0; i < 7; i++) {
+      var d = new Date(base.getFullYear(), base.getMonth(), base.getDate() + i);
+      days7.push({
+        key: d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()),
+        dow: d.getDay(), num: d.getDate(),
+        label: i === 0 ? 'Today' : SHORT[d.getDay()],
+        long: d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })
+      });
+    }
+  })();
+
+  var held = [], cDay = 0, pDay = 0, pCoach = null;
+
+  function strip(host, active, onPick) {
+    host.innerHTML = '';
+    days7.forEach(function (d, i) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'dbtn'; b.setAttribute('role', 'tab');
+      b.setAttribute('aria-selected', i === active ? 'true' : 'false');
+      b.innerHTML = '<b>' + d.num + '</b><span>' + d.label + '</span>';
+      b.addEventListener('click', function () { onPick(i); });
+      host.appendChild(b);
+    });
+  }
+  function markStrip(sel, i) {
+    $$(sel + ' .dbtn').forEach(function (b, k) {
+      b.setAttribute('aria-selected', k === i ? 'true' : 'false');
+    });
+  }
+
+  function drawRows() {
+    var d = days7[cDay], list = WEEK[d.dow] || [], host = $('#cRows');
+    host.innerHTML = '';
+    if (!list.length) {
+      host.innerHTML = '<p class="rows__empty">No classes on ' + d.long +
+        '. The floor is open anyway — come and train on your own.</p>';
+      return;
+    }
+    list.forEach(function (c) {
+      var id = d.key + '|' + c[0] + '|' + c[1];
+      var cap = CAP[c[1]] || 12;
+      var taken = Math.floor(seed(id) * (cap + 1));
+      var mine = held.some(function (h) { return h.id === id; });
+      if (mine) taken = Math.min(cap, taken + 1);
+      var left = cap - taken;
+
+      var row = document.createElement('div');
+      row.className = 'row' + (left <= 0 ? ' is-full' : (left <= 2 ? ' is-low' : '')) + (mine ? ' is-on' : '');
+      var cta = left <= 0 && !mine
+        ? '<button class="btn btn--sm" type="button" data-wait="1">Waiting list</button>'
+        : (mine
+          ? '<button class="btn btn--sm" type="button" data-off="' + id + '">Drop</button>'
+          : '<button class="btn btn--sm btn--volt" type="button" data-on="' + id + '">Take it</button>');
+      row.innerHTML =
+        '<span class="row__t">' + c[0] + '</span>' +
+        '<span><span class="row__n">' + c[1] + '</span><span class="row__m">' + c[2] + ' · ' + c[3] + '</span></span>' +
+        '<span class="row__s">' + (left <= 0 ? 'Full' : '<b>' + left + '</b>/' + cap + ' free') + '</span>' + cta;
+      host.appendChild(row);
+    });
+
+    $$('[data-on]', host).forEach(function (b) {
+      b.addEventListener('click', function () {
+        var p = b.dataset.on.split('|');
+        add({ id: b.dataset.on, name: p[2], when: days7[cDay].label + ' ' + p[1], fee: 0 });
+      });
+    });
+    $$('[data-off]', host).forEach(function (b) {
+      b.addEventListener('click', function () { drop(b.dataset.off); });
+    });
+    $$('[data-wait]', host).forEach(function (b) {
+      b.addEventListener('click', function () { b.textContent = 'On the list'; b.disabled = true; });
+    });
+  }
+
+  function drawCrew() {
+    var host = $('#pCoaches');
+    host.innerHTML = '';
+    CREW.forEach(function (c) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'cbtn';
+      b.setAttribute('aria-pressed', pCoach === c.id ? 'true' : 'false');
+      b.innerHTML = '<span class="cbtn__av" aria-hidden="true" style="background:' + c.bg + ';color:' + c.fg + '">' +
+        c.ini + '</span><span><b>' + c.name + '</b><i>' + c.role + '</i></span>';
+      b.addEventListener('click', function () { pCoach = c.id; drawCrew(); drawSlots(); });
+      host.appendChild(b);
+    });
+  }
+
+  function drawSlots() {
+    var host = $('#pSlots');
+    host.innerHTML = '';
+    if (!pCoach) {
+      host.innerHTML = '<p class="rows__empty" style="grid-column:1/-1">Pick a coach and their free hours turn up here.</p>';
+      return;
+    }
+    var d = days7[pDay];
+    PT_TIMES.forEach(function (t) {
+      var id = 'pt|' + pCoach + '|' + d.key + '|' + t;
+      var mine = held.some(function (h) { return h.id === id; });
+      var busy = seed(id) > 0.58;
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'sbtn'; b.textContent = t;
+      b.setAttribute('aria-pressed', mine ? 'true' : 'false');
+      if (busy && !mine) b.disabled = true;
+      b.addEventListener('click', function () {
+        if (mine) { drop(id); return; }
+        var c = CREW.filter(function (x) { return x.id === pCoach; })[0];
+        add({ id: id, name: 'Hour with ' + c.name.split(' ')[0], when: d.label + ' ' + t, fee: PT_FEE });
+      });
+      host.appendChild(b);
+    });
+  }
+
+  function drawHeld() {
+    var chips = $('#heldChips'), none = $('#heldNone'), go = $('#heldGo');
+    $('#heldOk').classList.remove('is-on');
+    chips.innerHTML = '';
+    if (!held.length) {
+      none.hidden = false; go.disabled = true; go.textContent = 'Confirm';
+      return;
+    }
+    none.hidden = true; go.disabled = false;
+    held.forEach(function (h) {
+      var el = document.createElement('span');
+      el.className = 'hchip';
+      el.innerHTML = h.name + ' <span>' + h.when + (h.fee ? ' · €' + h.fee : '') + '</span>' +
+        '<button type="button" aria-label="Drop ' + h.name + '" data-x="' + h.id + '">&times;</button>';
+      chips.appendChild(el);
+    });
+    $$('[data-x]', chips).forEach(function (b) {
+      b.addEventListener('click', function () { drop(b.dataset.x); });
+    });
+    var fee = held.reduce(function (a, b) { return a + b.fee; }, 0);
+    go.textContent = 'Confirm ' + held.length + (fee ? ' · €' + fee : '');
+  }
+
+  function add(item) {
+    if (held.some(function (h) { return h.id === item.id; })) return;
+    held.push(item); drawRows(); drawSlots(); drawHeld();
+  }
+  function drop(id) {
+    held = held.filter(function (h) { return h.id !== id; });
+    drawRows(); drawSlots(); drawHeld();
+  }
+
+  strip($('#cDays'), cDay, function (i) { cDay = i; markStrip('#cDays', i); drawRows(); });
+  strip($('#pDays'), pDay, function (i) { pDay = i; markStrip('#pDays', i); drawSlots(); });
+  drawRows(); drawCrew(); drawSlots(); drawHeld();
+
+  var tabC = $('#tabC'), tabP = $('#tabP');
+  function setTab(isC) {
+    tabC.setAttribute('aria-selected', String(isC));
+    tabP.setAttribute('aria-selected', String(!isC));
+    $('#paneC').hidden = !isC;
+    $('#paneP').hidden = isC;
+  }
+  tabC.addEventListener('click', function () { setTab(true); });
+  tabP.addEventListener('click', function () { setTab(false); });
+
+  $('#heldGo').addEventListener('click', function () {
+    var fee = held.reduce(function (a, b) { return a + b.fee; }, 0);
+    $('#heldOk').textContent = held.length + (held.length === 1 ? ' spot held.' : ' spots held.') +
+      (fee ? ' €' + fee + ' payable at the desk.' : ' Nothing to pay.') +
+      ' Confirmation is on its way to your inbox.';
+    $('#heldOk').classList.add('is-on');
+    this.disabled = true; this.textContent = 'Done';
+  });
+
+  /* ─────────────────────────────────────────────────────────
+     6. Membership toggle
+     ───────────────────────────────────────────────────────── */
+  var payM = $('#payM'), payY = $('#payY');
+  function setPay(monthly) {
+    payM.setAttribute('aria-pressed', String(monthly));
+    payY.setAttribute('aria-pressed', String(!monthly));
+    $$('.price').forEach(function (p) {
+      p.textContent = '€' + (monthly ? p.dataset.m : p.dataset.y);
+    });
+    $$('[data-per]').forEach(function (p) {
+      p.textContent = monthly ? 'per month' : 'per month, billed yearly';
+    });
+  }
+  payM.addEventListener('click', function () { setPay(true); });
+  payY.addEventListener('click', function () { setPay(false); });
+
+  /* ─────────────────────────────────────────────────────────
+     7. Header, spy, sheet, reveal, counters
+     ───────────────────────────────────────────────────────── */
+  var toTop = $('#toTop');
+  function onScroll() { toTop.classList.toggle('is-on', window.scrollY > 800); }
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  toTop.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: calm ? 'auto' : 'smooth' });
+  });
+
+  var navLinks = $$('#nav a');
+  var spy = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      navLinks.forEach(function (a) {
+        a.setAttribute('aria-current', a.getAttribute('href') === '#' + e.target.id ? 'true' : 'false');
+      });
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  navLinks.forEach(function (a) {
+    var s = document.getElementById(a.getAttribute('href').slice(1));
+    if (s) spy.observe(s);
+  });
+
+  var sheet = $('#sheet'), burger = $('#burger');
+  function setSheet(open) {
+    sheet.classList.toggle('is-open', open);
+    burger.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) $('.sheet__link', sheet).focus();
+  }
+  burger.addEventListener('click', function () { setSheet(!sheet.classList.contains('is-open')); });
+  $('#sheetClose').addEventListener('click', function () { setSheet(false); burger.focus(); });
+  $$('a', sheet).forEach(function (a) { a.addEventListener('click', function () { setSheet(false); }); });
+
+  var rv = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); rv.unobserve(e.target); }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  $$('.rv').forEach(function (n) { rv.observe(n); });
+
+  var cnt = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var n = e.target, to = +n.dataset.to, t0 = null;
+      cnt.unobserve(n);
+      if (calm) { n.textContent = to.toLocaleString('en-GB'); return; }
+      requestAnimationFrame(function step(ts) {
+        if (!t0) t0 = ts;
+        var p = Math.min(1, (ts - t0) / 1100), e2 = 1 - Math.pow(1 - p, 3);
+        n.textContent = Math.round(to * e2).toLocaleString('en-GB');
+        if (p < 1) requestAnimationFrame(step);
+      });
+    });
+  }, { threshold: 0.6 });
+  $$('.cnt').forEach(function (n) { cnt.observe(n); });
+
+  /* ─────────────────────────────────────────────────────────
+     8. Lightbox
+     ───────────────────────────────────────────────────────── */
+  var shots = $$('.floor button'), lb = $('#lb'), lbFig = $('#lbFig'), opener = null, cur = 0;
+  function show(i) {
+    cur = (i + shots.length) % shots.length;
+    var b = shots[cur];
+    lbFig.innerHTML = '<svg role="img" aria-label="' + b.dataset.c + '"><use href="#' +
+      b.dataset.a + '" width="100%" height="100%"/></svg>';
+    $('#lbCap').textContent = b.dataset.c;
+  }
+  function openLb(i) {
+    opener = shots[i]; show(i); lb.classList.add('is-on');
+    document.body.style.overflow = 'hidden'; $('#lbX').focus();
+  }
+  function closeLb() {
+    lb.classList.remove('is-on'); document.body.style.overflow = '';
+    if (opener) opener.focus();
+  }
+  shots.forEach(function (b, i) { b.addEventListener('click', function () { openLb(i); }); });
+  $('#lbX').addEventListener('click', closeLb);
+  $('#lbN').addEventListener('click', function (e) { e.stopPropagation(); show(cur + 1); });
+  $('#lbP').addEventListener('click', function (e) { e.stopPropagation(); show(cur - 1); });
+  lb.addEventListener('click', function (e) { if (e.target === lb || e.target === lbFig) closeLb(); });
+  document.addEventListener('keydown', function (e) {
+    if (!lb.classList.contains('is-on')) {
+      if (e.key === 'Escape' && sheet.classList.contains('is-open')) setSheet(false);
+      return;
+    }
+    if (e.key === 'Escape') closeLb();
+    if (e.key === 'ArrowRight') show(cur + 1);
+    if (e.key === 'ArrowLeft') show(cur - 1);
+  });
+
+  /* ─────────────────────────────────────────────────────────
+     9. Free-week form
+     ───────────────────────────────────────────────────────── */
+  var form = $('#joinForm');
+  if (form) {
+    var mark = function (el, bad) {
+      var f = el.closest('.fld');
+      if (f) f.classList.toggle('bad', bad);
+      return !bad;
+    };
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var ok = true, first = null;
+      var n = $('#jName'), p = $('#jPhone'), m = $('#jMail'), c = $('#jOk');
+      if (!mark(n, n.value.trim().length < 2)) { ok = false; first = first || n; }
+      if (!mark(p, p.value.replace(/[^\d]/g, '').length < 6)) { ok = false; first = first || p; }
+      if (!mark(m, !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(m.value.trim()))) { ok = false; first = first || m; }
+      $('#okErr').style.display = c.checked ? 'none' : 'block';
+      if (!c.checked) { ok = false; first = first || c; }
+      if (!ok) { first.focus(); return; }
+      form.style.display = 'none';
+      $('#joinOk').classList.add('is-on');
+      $('#joinOk').scrollIntoView({ block: 'center', behavior: calm ? 'auto' : 'smooth' });
+    });
+    $$('#joinForm input').forEach(function (i) {
+      i.addEventListener('input', function () {
+        var f = i.closest('.fld');
+        if (f) f.classList.remove('bad');
+        if (i === $('#jOk')) $('#okErr').style.display = 'none';
+      });
+    });
+  }
+
+  $('#yr').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>

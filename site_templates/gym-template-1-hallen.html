@@ -1,0 +1,2057 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HALLEN — Strength &amp; Conditioning in Copenhagen | Small groups, written programmes</title>
+<meta name="description" content="A members' strength and conditioning club on Refshaleøen, Copenhagen. Never more than six to a coach, a programme written for you, Eleiko platforms and a sauna. Book a free intro session.">
+<meta name="theme-color" content="#F0F1EE">
+<link rel="canonical" href="https://example.dk/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="HALLEN — Strength &amp; Conditioning, Copenhagen">
+<meta property="og:description" content="Small groups, serious equipment, a programme written for you. Refshalevej 163A, København K.">
+<meta property="og:locale" content="en_GB">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2314181A'/><path d='M7 16h18M9 11v10M23 11v10M6 13.5v5M26 13.5v5' stroke='%23C89B3C' stroke-width='2.6' stroke-linecap='round'/></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   TOKENS
+   Palette: chalk-dust ground, graphite ink, deep pine for
+   anything clickable, brass kept as a highlight thread that
+   never carries text.
+   ============================================================ */
+:root{
+  --chalk:#F0F1EE;      /* page ground — cool limestone */
+  --paper:#FFFFFF;      /* card surfaces */
+  --ink:#14181A;        /* graphite — all body text */
+  --stone:#5A6462;      /* secondary text */
+  --hair:#DEE1DD;       /* hairlines */
+  --pine:#24564A;       /* links, icons — AA on paper */
+  --jade:#2E9C7E;       /* graphics only */
+  --brass:#C89B3C;      /* highlight — never carries text */
+  --brass-wash:#F6EEDB; /* brass at 8% for chips and panels */
+  --brass-edge:#EADCB9;
+  --shadow-sm:0 1px 2px rgba(20,24,26,.06), 0 6px 16px -10px rgba(20,24,26,.20);
+  --shadow-md:0 2px 4px rgba(20,24,26,.05), 0 24px 48px -28px rgba(20,24,26,.34);
+  --r-sm:10px; --r-md:18px; --r-lg:28px; --r-xl:40px;
+  --pad:clamp(1.25rem,4vw,2.5rem);
+  --max:1200px;
+  --ease:cubic-bezier(.2,.7,.3,1);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:6.5rem;-webkit-text-size-adjust:100%}
+body{
+  background:var(--chalk);color:var(--ink);
+  font-family:'Inter Tight',system-ui,sans-serif;
+  font-size:clamp(1rem,.97rem + .15vw,1.0625rem);line-height:1.65;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+[hidden]{display:none !important}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+input,select,textarea{font:inherit;color:inherit}
+
+h1,h2,h3,h4,.display{
+  font-family:'Familjen Grotesk','Inter Tight',sans-serif;
+  font-weight:600;line-height:1.04;letter-spacing:-.028em;text-wrap:balance;
+}
+h1{font-size:clamp(2.6rem,1.7rem + 4.4vw,5rem);font-weight:700;letter-spacing:-.042em}
+h2{font-size:clamp(2rem,1.5rem + 2.2vw,3.25rem);letter-spacing:-.034em}
+h3{font-size:clamp(1.15rem,1.05rem + .4vw,1.4rem)}
+p{text-wrap:pretty}
+
+/* mono = measured data: times, loads, prices, spot counts */
+.mono{font-family:'DM Mono',ui-monospace,monospace;font-weight:400;
+  letter-spacing:.06em;text-transform:uppercase;font-size:.72rem}
+.eyebrow{display:inline-flex;align-items:center;gap:.6rem;color:var(--pine);
+  font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.16em;
+  text-transform:uppercase;margin-bottom:1.1rem}
+.eyebrow::before{content:"";width:1.6rem;height:2px;background:var(--brass)}
+.lead{font-size:clamp(1.06rem,1rem + .5vw,1.3rem);color:var(--stone);line-height:1.55}
+.muted{color:var(--stone)}
+
+:focus-visible{outline:3px solid var(--pine);outline-offset:3px;border-radius:4px}
+
+.skip{position:absolute;left:-9999px;top:0;z-index:300;background:var(--ink);
+  color:var(--chalk);padding:.9rem 1.4rem;border-radius:0 0 var(--r-sm) 0}
+.skip:focus{left:0}
+
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--pad)}
+.sec{padding-block:clamp(4rem,9vw,7.5rem)}
+.sec--tight{padding-block:clamp(3rem,6vw,5rem)}
+.sec--paper{background:var(--paper);border-block:1px solid var(--hair)}
+.sec-head{max-width:46ch;margin-bottom:clamp(2.5rem,5vw,4rem)}
+.sec-head--wide{max-width:58ch}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;
+  padding:.95rem 1.6rem;border-radius:999px;font-weight:600;font-size:.98rem;
+  text-decoration:none;white-space:nowrap;
+  transition:transform .18s var(--ease),background-color .18s,box-shadow .18s,border-color .18s,color .18s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.btn--solid{background:var(--ink);color:var(--chalk);box-shadow:var(--shadow-sm)}
+.btn--solid:hover{background:#1F2628;box-shadow:var(--shadow-md)}
+.btn--ghost{background:var(--paper);border:1px solid var(--hair);color:var(--ink)}
+.btn--ghost:hover{border-color:var(--ink)}
+.btn--brass{background:var(--brass);color:var(--ink)}
+.btn--brass:hover{background:#D6AB52}
+.btn--sm{padding:.65rem 1.15rem;font-size:.9rem}
+.btn--block{width:100%}
+.btn[disabled]{opacity:.45;pointer-events:none;transform:none}
+
+.card{background:var(--paper);border:1px solid var(--hair);border-radius:var(--r-lg);
+  box-shadow:var(--shadow-sm)}
+.chip{display:inline-flex;align-items:center;gap:.4rem;background:var(--chalk);
+  border:1px solid var(--hair);border-radius:999px;padding:.32rem .8rem;
+  font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase}
+.chip--brass{background:var(--brass-wash);border-color:var(--brass-edge)}
+
+/* ---------- header ---------- */
+.hdr{position:fixed;inset:0 0 auto;z-index:100;
+  background:rgba(240,241,238,.72);backdrop-filter:blur(14px) saturate(1.4);
+  -webkit-backdrop-filter:blur(14px) saturate(1.4);
+  border-bottom:1px solid transparent;transition:border-color .3s,box-shadow .3s,background-color .3s}
+.hdr.is-stuck{border-bottom-color:var(--hair);box-shadow:0 10px 30px -24px rgba(20,24,26,.5);
+  background:rgba(240,241,238,.93)}
+.hdr__in{max-width:var(--max);margin-inline:auto;padding:.85rem var(--pad);
+  display:flex;align-items:center;gap:1.5rem;transition:padding .3s var(--ease)}
+.hdr.is-stuck .hdr__in{padding-block:.55rem}
+.brand{display:flex;align-items:center;gap:.7rem;text-decoration:none;margin-right:auto}
+.brand__mark{width:2.4rem;height:2.4rem;border-radius:var(--r-sm);background:var(--ink);
+  display:grid;place-items:center;color:var(--brass);flex:none}
+.brand__name{font-family:'Familjen Grotesk',sans-serif;font-weight:700;
+  font-size:1.05rem;letter-spacing:.02em;line-height:1.15;text-transform:uppercase}
+.brand__sub{display:block;font-family:'DM Mono',monospace;font-size:.6rem;font-weight:400;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--stone);white-space:nowrap}
+.nav{display:flex;gap:clamp(1rem,1.6vw,1.9rem)}
+.nav a{position:relative;text-decoration:none;font-size:.95rem;font-weight:500;padding-block:.35rem;white-space:nowrap}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;
+  background:var(--brass);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease)}
+.nav a:hover::after,.nav a[aria-current="true"]::after{transform:scaleX(1)}
+.nav a[aria-current="true"]{color:var(--pine)}
+.hdr__cta{display:flex;align-items:center;gap:.7rem}
+.burger{display:none;width:2.75rem;height:2.75rem;border:1px solid var(--hair);
+  border-radius:50%;background:var(--paper);place-items:center}
+
+/* live open/closed pill */
+.status{display:inline-flex;align-items:center;gap:.45rem;font-family:'DM Mono',monospace;
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}
+.status__dot{width:.5rem;height:.5rem;border-radius:50%;background:var(--stone);flex:none}
+.status.is-open .status__dot{background:var(--jade);box-shadow:0 0 0 4px rgba(46,156,126,.2)}
+.status.is-open{color:var(--pine)}
+
+/* ---------- mobile sheet ---------- */
+.sheet{position:fixed;inset:0;z-index:200;background:var(--chalk);
+  padding:1.5rem var(--pad) 2rem;display:flex;flex-direction:column;gap:.25rem;
+  transform:translateY(-100%);transition:transform .4s var(--ease);visibility:hidden}
+.sheet.is-open{transform:none;visibility:visible}
+.sheet__top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.sheet a.sheet__link{font-family:'Familjen Grotesk',sans-serif;font-size:1.9rem;
+  font-weight:600;letter-spacing:-.03em;text-decoration:none;padding:.6rem 0;
+  border-bottom:1px solid var(--hair)}
+.sheet__foot{margin-top:auto;display:grid;gap:.6rem}
+
+/* ============================================================
+   HERO — headline left, interactive body map right
+   ============================================================ */
+.hero{padding-top:clamp(7.5rem,13vw,10rem);padding-bottom:clamp(3rem,6vw,5rem);
+  position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;z-index:-1;width:60vw;height:60vw;max-width:760px;max-height:760px;
+  right:-18vw;top:-14vw;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,rgba(46,156,126,.14),rgba(200,155,60,.07) 55%,transparent 70%)}
+.hero__grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,5vw,4.5rem);align-items:center}
+.hero h1 em{font-style:normal;color:var(--pine);position:relative;white-space:nowrap}
+.hero h1 em::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.14em;
+  background:var(--brass);z-index:-1;transform:scaleX(0);transform-origin:left;
+  animation:swipe .9s .6s var(--ease) forwards}
+@keyframes swipe{to{transform:scaleX(1)}}
+.hero__p{margin:1.6rem 0 2rem;max-width:47ch}
+.hero__actions{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+.hero__meta{display:flex;flex-wrap:wrap;gap:1.75rem;margin-top:2.5rem;
+  padding-top:1.75rem;border-top:1px solid var(--hair)}
+.hero__meta dt{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--stone);margin-bottom:.25rem}
+.hero__meta dd{font-family:'Familjen Grotesk',sans-serif;font-size:1.35rem;font-weight:600;letter-spacing:-.02em}
+.stars{color:var(--brass);letter-spacing:.1em;font-size:.9rem}
+
+/* ---------- SIGNATURE: the body map ---------- */
+.map3d{background:var(--paper);border:1px solid var(--hair);border-radius:var(--r-xl);
+  padding:clamp(1.25rem,3vw,2rem);box-shadow:var(--shadow-md);position:relative}
+.map3d__top{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin-bottom:.25rem}
+.map3d__hint{color:var(--stone);font-size:.85rem;white-space:nowrap}
+.figs{width:100%;height:auto;touch-action:manipulation}
+.zone{cursor:pointer}
+.zone__s{fill:#E7EBE8;stroke:#C9D2CE;stroke-width:1.3;
+  transition:fill .2s var(--ease),stroke .2s var(--ease)}
+.zone:hover .zone__s,.zone:focus-visible .zone__s{fill:#DDF0E8;stroke:var(--jade)}
+.zone.is-active .zone__s{fill:var(--brass);stroke:#A87D22}
+.body__base{fill:#F4F6F4;stroke:#D5DDD9;stroke-width:1.3}
+.figs__label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.22em;
+  fill:#9AA6A2;text-anchor:middle;text-transform:uppercase;pointer-events:none}
+.map3d__out{margin-top:.5rem;border-top:1px solid var(--hair);padding-top:1.1rem;
+  display:flex;gap:1rem;align-items:flex-start;min-height:7rem}
+.map3d__out h3{margin-bottom:.2rem}
+.map3d__out p{font-size:.92rem;color:var(--stone);margin-bottom:.6rem}
+.map3d__data{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink);display:flex;gap:1rem;flex-wrap:wrap}
+.map3d__go{flex:none}
+
+/* ---------- trust row ---------- */
+.trust{border-block:1px solid var(--hair);background:var(--paper)}
+.trust__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hair)}
+.trust__cell{background:var(--paper);padding:1.6rem clamp(.9rem,2vw,1.6rem)}
+.trust__n{font-family:'Familjen Grotesk',sans-serif;font-size:clamp(1.7rem,1.2rem + 1.4vw,2.5rem);
+  font-weight:700;letter-spacing:-.04em;line-height:1;color:var(--ink)}
+.trust__l{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--stone);margin-top:.5rem}
+
+/* ---------- promise cards ---------- */
+.promise{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1rem,2vw,1.5rem)}
+.pc{padding:clamp(1.5rem,3vw,2.1rem);display:flex;flex-direction:column;gap:.7rem}
+.pc__ico{width:2.9rem;height:2.9rem;border-radius:var(--r-sm);background:#E6F1EC;
+  display:grid;place-items:center;color:var(--pine);margin-bottom:.4rem}
+.pc p{color:var(--stone);font-size:.95rem}
+
+/* ---------- programmes ---------- */
+.progs{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1rem,2vw,1.4rem)}
+.pg{overflow:hidden;display:flex;flex-direction:column;
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+.pg:hover{transform:translateY(-6px);box-shadow:var(--shadow-md)}
+.pg__media{position:relative;overflow:hidden;aspect-ratio:4/3}
+.pg__badge{position:absolute;left:1rem;top:1rem;background:rgba(255,255,255,.93)}
+.pg__body{padding:clamp(1.1rem,2.4vw,1.6rem);display:flex;flex-direction:column;gap:.45rem;flex:1}
+.pg__body p{font-size:.93rem;color:var(--stone)}
+.pg__foot{margin-top:auto;padding-top:.9rem;display:flex;justify-content:space-between;
+  align-items:center;gap:.75rem;font-family:'DM Mono',monospace;font-size:.7rem;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--stone)}
+.pg__foot b{color:var(--ink);font-weight:500}
+.progs__note{margin-top:1.5rem;font-size:.9rem;color:var(--stone)}
+
+/* ============================================================
+   BOOKING — classes timetable + personal training
+   ============================================================ */
+.book{display:grid;grid-template-columns:1.45fr .55fr;gap:clamp(1.25rem,3vw,2rem);align-items:start}
+.book>*{min-width:0}
+.book__panel{padding:clamp(1.1rem,2.5vw,1.9rem)}
+.tabs{display:inline-flex;background:var(--chalk);border:1px solid var(--hair);
+  border-radius:999px;padding:.28rem;gap:.2rem;margin-bottom:1.5rem}
+.tab{border-radius:999px;padding:.55rem 1.15rem;font-size:.92rem;font-weight:500;
+  color:var(--stone);transition:background-color .2s,color .2s}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--chalk)}
+.days{display:flex;gap:.4rem;overflow-x:auto;-webkit-overflow-scrolling:touch;min-width:0;
+  padding-bottom:.6rem;margin-bottom:1.1rem;scrollbar-width:thin}
+.day{flex:none;border:1px solid var(--hair);background:var(--paper);border-radius:var(--r-sm);
+  padding:.55rem .85rem;text-align:center;min-width:4.1rem;line-height:1.25;
+  transition:border-color .2s,background-color .2s,color .2s}
+.day b{display:block;font-family:'Familjen Grotesk',sans-serif;font-size:1.05rem;font-weight:600}
+.day span{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--stone)}
+.day:hover{border-color:var(--ink)}
+.day[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.day[aria-selected="true"] span{color:var(--brass)}
+
+.slots{display:grid;gap:.55rem}
+.slot{display:grid;grid-template-columns:4.6rem 1fr auto auto;gap:1rem;align-items:center;
+  border:1px solid var(--hair);border-radius:var(--r-md);padding:.85rem 1rem;background:var(--paper);
+  transition:border-color .2s,background-color .2s}
+.slot:hover{border-color:#C3CBC7}
+.slot__t{font-family:'DM Mono',monospace;font-size:.9rem;font-weight:500}
+.slot__n{display:block;font-family:'Familjen Grotesk',sans-serif;font-weight:600;font-size:1.02rem;letter-spacing:-.015em}
+.slot__m{display:block;font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--stone);margin-top:.15rem}
+.slot__s{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--stone);white-space:nowrap}
+.slot__s b{color:var(--pine);font-weight:500}
+.slot.is-low .slot__s b{color:#A2561C}
+.slot.is-full{background:var(--chalk);border-style:dashed}
+.slot.is-full .slot__n{color:var(--stone)}
+.slot.is-on{border-color:var(--brass);background:var(--brass-wash)}
+.slots__empty{padding:2.5rem 1rem;text-align:center;color:var(--stone);font-size:.94rem;
+  border:1px dashed var(--hair);border-radius:var(--r-md)}
+
+/* personal training picker */
+.pt{display:none}
+.pt.is-on{display:block}
+.classes.is-off{display:none}
+.coaches-pick{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1.4rem}
+.cp{border:1px solid var(--hair);border-radius:var(--r-md);padding:.85rem;text-align:left;
+  display:flex;gap:.7rem;align-items:center;background:var(--paper);transition:border-color .2s,background-color .2s}
+.cp:hover{border-color:var(--ink)}
+.cp[aria-pressed="true"]{border-color:var(--brass);background:var(--brass-wash)}
+.cp__av{width:2.5rem;height:2.5rem;border-radius:50%;display:grid;place-items:center;flex:none;
+  font-family:'Familjen Grotesk',sans-serif;font-weight:600;font-size:.95rem}
+.cp b{display:block;font-family:'Familjen Grotesk',sans-serif;font-size:.95rem;font-weight:600;letter-spacing:-.01em;text-transform:none}
+.cp span{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--stone)}
+.times{display:grid;grid-template-columns:repeat(auto-fill,minmax(5.2rem,1fr));gap:.5rem}
+.time{border:1px solid var(--hair);border-radius:var(--r-sm);padding:.6rem .3rem;background:var(--paper);
+  font-family:'DM Mono',monospace;font-size:.82rem;transition:border-color .2s,background-color .2s,color .2s}
+.time:hover{border-color:var(--ink)}
+.time[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.time[disabled]{background:var(--chalk);color:#A9B2AF;text-decoration:line-through;pointer-events:none}
+.fieldset-lbl{font-family:'DM Mono',monospace;font-size:.64rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--stone);margin:0 0 .6rem}
+
+/* basket */
+.basket{padding:clamp(1.1rem,2.5vw,1.6rem);position:sticky;top:6.5rem}
+.basket h3{font-size:1.1rem;margin-bottom:.15rem}
+.basket__sub{font-size:.85rem;color:var(--stone);margin-bottom:1rem}
+.basket__list{list-style:none;display:grid;gap:.5rem;margin-bottom:1rem}
+.basket__list li{display:flex;justify-content:space-between;gap:.6rem;align-items:flex-start;
+  border-bottom:1px dashed var(--hair);padding-bottom:.5rem;font-size:.9rem}
+.basket__list li:last-child{border-bottom:0}
+.basket__when{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--stone);display:block;margin-top:.1rem}
+.basket__x{color:var(--stone);font-size:1.1rem;line-height:1;padding:.1rem .3rem;border-radius:4px}
+.basket__x:hover{color:#9C2B1F;background:#FBEDEB}
+.basket__none{font-size:.88rem;color:var(--stone);background:var(--chalk);border-radius:var(--r-md);
+  padding:1.1rem;margin-bottom:1rem}
+.basket__total{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;
+  font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding-top:.8rem;
+  border-top:1px solid var(--hair);margin-bottom:1rem}
+.basket__total b{font-weight:500}
+.basket__ok{display:none;background:#E9F4EF;border:1px solid #CBE5DA;border-radius:var(--r-md);
+  padding:1.1rem;font-size:.92rem}
+.basket__ok.is-on{display:block}
+.basket__ok b{display:block;font-family:'Familjen Grotesk',sans-serif;font-size:1.05rem;margin-bottom:.3rem}
+
+/* ---------- facility (dark panel) ---------- */
+.fac{background:var(--ink);color:var(--chalk);border-radius:var(--r-xl);
+  padding:clamp(2rem,5vw,4rem);position:relative;overflow:hidden}
+.fac::after{content:"";position:absolute;width:38rem;height:38rem;border-radius:50%;
+  right:-14rem;bottom:-20rem;background:radial-gradient(circle,rgba(46,156,126,.2),transparent 68%)}
+.fac .eyebrow{color:var(--brass)}
+.fac h2{color:var(--paper);max-width:34ch}
+.fac__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(240,241,238,.14);
+  margin-top:clamp(2rem,4vw,3rem);border-radius:var(--r-md);overflow:hidden;position:relative;z-index:1}
+.fac__cell{background:var(--ink);padding:clamp(1.25rem,2.5vw,1.8rem)}
+.fac__cell h3{color:var(--paper);margin:.9rem 0 .45rem;font-size:1.08rem}
+.fac__cell p{font-size:.88rem;color:#A3B2AE;line-height:1.55}
+.fac__cell .mono{color:var(--brass);display:block}
+
+/* ---------- first week steps ---------- */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(1rem,2vw,1.5rem);counter-reset:s}
+.step{position:relative;padding-top:2.6rem}
+.step::before{counter-increment:s;content:"0" counter(s);position:absolute;top:0;left:0;
+  font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;color:var(--pine)}
+.step::after{content:"";position:absolute;top:.42rem;left:2.4rem;right:0;height:1px;background:var(--hair)}
+.step:last-child::after{display:none}
+.step h3{margin-bottom:.5rem}
+.step p{font-size:.93rem;color:var(--stone)}
+
+/* ---------- coaches ---------- */
+.about{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(2rem,5vw,4.5rem);align-items:center}
+.about__media{position:relative}
+.about__quote{position:absolute;right:clamp(-1rem,-2vw,-2.5rem);bottom:1.5rem;max-width:17rem;
+  background:var(--paper);border:1px solid var(--hair);border-radius:var(--r-md);
+  padding:1.2rem 1.4rem;box-shadow:var(--shadow-md)}
+.about__quote p{font-family:'Familjen Grotesk',sans-serif;font-size:1.08rem;
+  letter-spacing:-.02em;line-height:1.25;margin-bottom:.5rem}
+.creds{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin:1.75rem 0 2rem}
+.creds li{list-style:none;display:flex;gap:.6rem;align-items:flex-start;font-size:.95rem}
+.creds svg{flex:none;margin-top:.3rem;color:var(--pine)}
+.team{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(1rem,2vw,1.5rem);margin-top:clamp(3rem,6vw,4.5rem)}
+.tm h3{font-size:1.05rem}
+.tm p{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--stone);margin-top:.25rem}
+
+/* monogram avatars — swap for real photographs when they arrive */
+.av{aspect-ratio:1;border-radius:var(--r-md);display:grid;place-items:center;
+  margin-bottom:.9rem;font-family:'Familjen Grotesk',sans-serif;
+  font-size:clamp(1.6rem,1.1rem + 2vw,2.4rem);font-weight:600;letter-spacing:-.03em}
+.av--1{background:#DCEAE4;color:var(--pine)}
+.av--2{background:var(--ink);color:var(--brass)}
+.av--3{background:var(--brass-wash);color:#8A6716}
+.av--4{background:#E2EAEE;color:#22525F}
+
+/* ---------- membership ---------- */
+.plans{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(2rem,4vw,3.5rem);align-items:start}
+.plans>*{min-width:0}
+.ptable{width:100%;border-collapse:collapse;background:var(--paper);
+  border:1px solid var(--hair);border-radius:var(--r-md);overflow:hidden}
+.ptable caption{text-align:left;font-family:'DM Mono',monospace;font-size:.68rem;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--stone);padding-bottom:.8rem}
+.ptable th,.ptable td{padding:.95rem 1.2rem;text-align:left;border-bottom:1px solid var(--hair);font-size:.95rem}
+.ptable thead th{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--stone);font-weight:400;background:var(--chalk)}
+.ptable tbody tr:last-child th,.ptable tbody tr:last-child td{border-bottom:0}
+.ptable td:last-child{font-family:'DM Mono',monospace;font-size:.85rem;white-space:nowrap}
+.ptable tbody th{font-weight:500}
+.ptable tbody th small{display:block;font-weight:400;color:var(--stone);font-size:.82rem;
+  font-family:'Inter Tight',sans-serif;text-transform:none;letter-spacing:0;margin-top:.2rem}
+.incl{padding:clamp(1.5rem,3vw,2rem)}
+.incl ul{margin:1.1rem 0 0;display:grid;gap:.8rem}
+.incl li{list-style:none;display:flex;gap:.6rem;font-size:.94rem;align-items:flex-start}
+.incl svg{flex:none;margin-top:.28rem;color:var(--pine)}
+
+/* ---------- reviews ---------- */
+.rev{position:relative;max-width:52rem;margin-inline:auto;text-align:center}
+.rev__slide{display:none}
+.rev__slide.is-on{display:block;animation:fade .45s var(--ease)}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.rev__q{font-family:'Familjen Grotesk',sans-serif;font-weight:400;
+  font-size:clamp(1.25rem,1rem + 1.3vw,1.95rem);letter-spacing:-.025em;line-height:1.3;margin:1.2rem 0 1.5rem}
+.rev__who{font-weight:600}
+.rev__meta{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--stone);margin-top:.2rem}
+.rev__nav{display:flex;justify-content:center;align-items:center;gap:.6rem;margin-top:2rem}
+.rev__dot{width:.5rem;height:.5rem;border-radius:50%;background:var(--hair);
+  transition:background-color .2s,width .2s}
+.rev__dot[aria-selected="true"]{background:var(--pine);width:1.6rem;border-radius:999px}
+.rev__arrow{width:2.6rem;height:2.6rem;border-radius:50%;border:1px solid var(--hair);
+  background:var(--paper);display:grid;place-items:center}
+.rev__arrow:hover{border-color:var(--ink)}
+
+/* ---------- faq ---------- */
+.faqs{max-width:52rem}
+.faq{border-bottom:1px solid var(--hair)}
+.faq summary{cursor:pointer;list-style:none;padding:1.25rem 2.5rem 1.25rem 0;position:relative;
+  font-family:'Familjen Grotesk',sans-serif;font-size:clamp(1.02rem,1rem + .3vw,1.2rem);
+  font-weight:600;letter-spacing:-.02em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";position:absolute;right:.35rem;top:1.55rem;width:.85rem;height:.85rem;
+  background:currentColor;color:var(--pine);transition:transform .3s var(--ease);
+  clip-path:polygon(45% 0,55% 0,55% 45%,100% 45%,100% 55%,55% 55%,55% 100%,45% 100%,45% 55%,0 55%,0 45%,45% 45%)}
+.faq[open] summary::after{transform:rotate(135deg)}
+.faq p{padding:0 3rem 1.4rem 0;color:var(--stone)}
+
+/* ---------- trial band ---------- */
+.trial{background:var(--brass);border-radius:var(--r-xl);padding:clamp(1.75rem,4vw,3rem);
+  display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.trial h2{font-size:clamp(1.5rem,1.2rem + 1.4vw,2.35rem);max-width:26ch}
+.trial p{margin-top:.6rem;font-size:.98rem;max-width:44ch}
+
+/* ---------- contact ---------- */
+.contact{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(1.5rem,3vw,2.5rem);align-items:start}
+.form{padding:clamp(1.5rem,3vw,2.4rem)}
+.field{margin-bottom:1.1rem}
+.field label{display:block;font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--stone);margin-bottom:.4rem}
+.field input,.field select,.field textarea{width:100%;background:var(--chalk);
+  border:1px solid var(--hair);border-radius:var(--r-sm);padding:.8rem .95rem;font-size:.98rem;
+  transition:border-color .2s,background-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{background:var(--paper);border-color:var(--pine)}
+.field--row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.field__err{display:none;color:#9C2B1F;font-size:.82rem;margin-top:.35rem}
+.field.is-bad input,.field.is-bad select{border-color:#9C2B1F}
+.field.is-bad .field__err{display:block}
+.consent{display:flex;gap:.7rem;align-items:flex-start;font-size:.85rem;color:var(--stone);margin:1.2rem 0}
+.consent input{width:1.15rem;height:1.15rem;margin-top:.15rem;flex:none;accent-color:var(--pine)}
+.form__note{font-size:.82rem;color:var(--stone);margin-top:.9rem;text-align:center}
+.form__ok{display:none;background:#E9F4EF;border:1px solid #CBE5DA;border-radius:var(--r-md);
+  padding:1.2rem;font-size:.95rem}
+.form__ok.is-on{display:block}
+.visit{padding:clamp(1.5rem,3vw,2.4rem)}
+.map{aspect-ratio:16/10;border-radius:var(--r-md);overflow:hidden;border:1px solid var(--hair);
+  margin-bottom:1.5rem;position:relative;background:#E5EBE8}
+.map iframe{width:100%;height:100%;border:0;filter:saturate(.8)}
+.hours{display:grid;gap:0;margin-top:.4rem}
+.hours__row{display:flex;justify-content:space-between;gap:1rem;padding:.55rem 0;
+  border-bottom:1px dashed var(--hair);font-size:.94rem}
+.hours__row:last-child{border-bottom:0}
+.hours__row.is-today{font-weight:600;color:var(--ink)}
+.hours__row.is-today .hours__d::before{content:"→ ";color:var(--pine)}
+.hours__t{font-family:'DM Mono',monospace;font-size:.82rem}
+.getting{display:grid;gap:.7rem;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--hair)}
+.getting li{list-style:none;display:flex;gap:.65rem;font-size:.92rem;color:var(--stone);align-items:flex-start}
+.getting svg{flex:none;margin-top:.25rem;color:var(--pine)}
+.contact__lines{display:grid;gap:.5rem;margin-bottom:1.5rem}
+.contact__lines a{text-decoration:none;font-weight:500;display:flex;gap:.6rem;align-items:center}
+.contact__lines a:hover{color:var(--pine)}
+
+/* ---------- footer ---------- */
+.ftr{background:var(--ink);color:#A3B2AE;padding-block:clamp(3rem,6vw,4.5rem) 2rem;margin-top:clamp(3rem,6vw,5rem)}
+.ftr__grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem}
+.ftr h4{color:var(--paper);font-family:'DM Mono',monospace;font-size:.66rem;
+  letter-spacing:.14em;text-transform:uppercase;font-weight:400;margin-bottom:1.1rem}
+.ftr a{text-decoration:none;font-size:.92rem;display:block;padding:.28rem 0}
+.ftr a:hover{color:var(--brass)}
+.ftr__brand{color:var(--paper);font-family:'Familjen Grotesk',sans-serif;
+  font-size:1.15rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.8rem}
+.ftr__bar{margin-top:clamp(2.5rem,5vw,3.5rem);padding-top:1.5rem;border-top:1px solid rgba(240,241,238,.12);
+  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.82rem}
+.ftr__bar a{display:inline;font-size:.82rem}
+
+/* ---------- gallery + lightbox ---------- */
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.6rem,1.5vw,1rem)}
+.gal button{border-radius:var(--r-md);overflow:hidden;aspect-ratio:4/3;padding:0;display:block;
+  border:1px solid var(--hair)}
+.lb{position:fixed;inset:0;z-index:250;background:rgba(20,24,26,.95);
+  display:none;place-items:center;padding:clamp(1rem,4vw,3rem)}
+.lb.is-on{display:grid}
+.lb__x,.lb__p,.lb__n{position:absolute;width:3rem;height:3rem;border-radius:50%;
+  background:rgba(240,241,238,.14);color:var(--paper);display:grid;place-items:center;font-size:1.5rem}
+.lb__x{top:1.25rem;right:1.25rem}
+.lb__p{left:1.25rem;top:50%;transform:translateY(-50%)}
+.lb__n{right:1.25rem;top:50%;transform:translateY(-50%)}
+.lb__fig{width:min(88vw,900px);aspect-ratio:4/3;border-radius:var(--r-md);
+  overflow:hidden;background:var(--chalk)}
+.lb__cap{position:absolute;bottom:1.5rem;left:0;right:0;text-align:center;
+  color:#A3B2AE;font-family:'DM Mono',monospace;font-size:.7rem;
+  letter-spacing:.12em;text-transform:uppercase}
+
+/* ---------- illustrations ---------- */
+.art{display:block;width:100%;height:100%}
+.art--portrait{aspect-ratio:4/5;border-radius:var(--r-lg)}
+.pg__media .art{transition:transform .6s var(--ease)}
+.pg:hover .pg__media .art{transform:scale(1.045)}
+.gal .art{transition:transform .5s var(--ease)}
+.gal button:hover .art{transform:scale(1.06)}
+
+/* ---------- sticky mobile bar + back to top ---------- */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:90;display:none;gap:.6rem;
+  padding:.65rem .8rem calc(.65rem + env(safe-area-inset-bottom));
+  background:rgba(240,241,238,.95);backdrop-filter:blur(12px);border-top:1px solid var(--hair)}
+.bar .btn{flex:1;padding-block:.85rem}
+.top{position:fixed;right:1.25rem;bottom:1.5rem;z-index:80;width:2.9rem;height:2.9rem;
+  border-radius:50%;background:var(--paper);border:1px solid var(--hair);box-shadow:var(--shadow-md);
+  display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.top.is-on{opacity:1;pointer-events:auto}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.rv.is-in{opacity:1;transform:none}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1000px){
+  .hero__grid,.about,.plans,.contact,.book{grid-template-columns:1fr}
+  .basket{position:static}
+  .about__quote{position:static;max-width:none;margin-top:-2rem;margin-inline:1rem 0}
+  .progs,.fac__grid,.steps,.team,.trust__grid,.coaches-pick{grid-template-columns:repeat(2,1fr)}
+  .step::after{display:none}
+  .promise{grid-template-columns:1fr}
+}
+@media (max-width:820px){
+  .nav,.hdr__cta .btn{display:none}
+  .burger{display:grid}
+  .bar{display:flex}
+  body{padding-bottom:4.5rem}
+  .top{bottom:5.5rem}
+  .gal{grid-template-columns:repeat(2,1fr)}
+  .ftr__grid{grid-template-columns:1fr 1fr}
+  .map3d__out{flex-direction:column;gap:.9rem}
+}
+@media (max-width:640px){
+  .status{display:none}
+  .slot{grid-template-columns:4.2rem 1fr;row-gap:.55rem}
+  .slot__s{grid-column:1/2}
+  .slot .btn{grid-column:2/3;justify-self:end}
+}
+@media (max-width:560px){
+  .ptable th,.ptable td{padding:.7rem .65rem;font-size:.87rem}
+  .ptable td:last-child{font-size:.78rem}
+  .ptable tbody th small{font-size:.76rem}
+  .progs,.fac__grid,.steps,.team,.trust__grid,.coaches-pick{grid-template-columns:1fr}
+  .creds,.field--row{grid-template-columns:1fr}
+  .trial{flex-direction:column;align-items:flex-start}
+  .ftr__grid{grid-template-columns:1fr}
+  .hero__meta{gap:1.25rem}
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;
+    transition-duration:.001ms !important}
+  .rv{opacity:1;transform:none}
+  .hero h1 em::after{transform:scaleX(1)}
+}
+@media print{
+  .hdr,.bar,.top,.sheet,.lb,.rev__nav{display:none !important}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ══ ILLUSTRATIONS ══ Drawn in SVG so nothing depends on an external
+     image host. To use a real photograph, replace the whole
+     <svg class="art">…</svg> block with <img src="…" alt="…">. -->
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden"><defs><filter id="soft" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="34"/></filter></defs>
+
+<symbol id="ill-strength" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#14181A"/><circle cx="310" cy="60" r="150" fill="#24564A" opacity=".85" filter="url(#soft)"/><circle cx="80" cy="260" r="120" fill="#2E9C7E" opacity=".2" filter="url(#soft)"/><rect x="52" y="140" width="296" height="12" rx="6" fill="#F0F1EE"/><rect x="86" y="106" width="26" height="80" rx="8" fill="#C89B3C"/><rect x="118" y="118" width="18" height="56" rx="6" fill="#F0F1EE" opacity=".85"/><rect x="288" y="106" width="26" height="80" rx="8" fill="#C89B3C"/><rect x="264" y="118" width="18" height="56" rx="6" fill="#F0F1EE" opacity=".85"/><path d="M60 176v54M340 176v54" stroke="#2E9C7E" stroke-width="7" stroke-linecap="round" opacity=".55"/><path d="M60 152v-40M340 152v-40" stroke="#2E9C7E" stroke-width="7" stroke-linecap="round" opacity=".55"/><text x="200" y="252" font-family="monospace" font-size="14" fill="#C89B3C" opacity=".8" text-anchor="middle">140 KG · 3 × 5</text></symbol>
+
+<symbol id="ill-hybrid" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#E6F1EC"/><circle cx="330" cy="70" r="130" fill="#2E9C7E" opacity=".26" filter="url(#soft)"/><path d="M20 240h360" stroke="#C9D8D2" stroke-width="4" stroke-linecap="round"/><path d="M40 240c30-96 76-144 138-144s108 48 138 144" fill="none" stroke="#24564A" stroke-width="5" stroke-dasharray="14 10" opacity=".55"/><rect x="60" y="212" width="180" height="16" rx="8" fill="#14181A"/><rect x="52" y="200" width="34" height="40" rx="10" fill="#24564A"/><circle cx="252" cy="220" r="26" fill="#FFFFFF" stroke="#24564A" stroke-width="5"/><path d="M252 200v20l14 10" stroke="#24564A" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M96 200l40-34 34 34" fill="none" stroke="#C89B3C" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="322" cy="146" r="7" fill="#C89B3C"/></symbol>
+
+<symbol id="ill-olympic" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#EFF3F1"/><circle cx="90" cy="70" r="126" fill="#2E9C7E" opacity=".2" filter="url(#soft)"/><rect x="0" y="244" width="400" height="56" fill="#DDE4E0"/><rect x="0" y="244" width="400" height="7" fill="#C89B3C" opacity=".7"/><rect x="70" y="86" width="260" height="11" rx="5.5" fill="#14181A"/><circle cx="92" cy="91" r="46" fill="#24564A"/><circle cx="92" cy="91" r="17" fill="#EFF3F1"/><circle cx="308" cy="91" r="46" fill="#24564A"/><circle cx="308" cy="91" r="17" fill="#EFF3F1"/><path d="M200 244v-64" stroke="#14181A" stroke-width="13" stroke-linecap="round"/><circle cx="200" cy="164" r="19" fill="#14181A"/><path d="M200 190l-30 54M200 190l30 54" stroke="#14181A" stroke-width="13" stroke-linecap="round"/><path d="M186 128l14 22 14-22" stroke="#14181A" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+
+<symbol id="ill-mobility" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#F5F1E6"/><circle cx="300" cy="240" r="140" fill="#C89B3C" opacity=".24" filter="url(#soft)"/><rect x="44" y="196" width="312" height="26" rx="13" fill="#24564A" opacity=".85"/><rect x="44" y="196" width="312" height="9" rx="4.5" fill="#2E9C7E" opacity=".6"/><circle cx="150" cy="120" r="21" fill="#14181A"/><path d="M150 144c34 0 58 22 62 52" stroke="#14181A" stroke-width="14" stroke-linecap="round" fill="none"/><path d="M212 196c-24-6-42-24-46-48" stroke="#14181A" stroke-width="13" stroke-linecap="round" fill="none"/><path d="M104 196c10-30 26-46 46-52" stroke="#14181A" stroke-width="13" stroke-linecap="round" fill="none"/><path d="M262 84c22 10 32 34 22 54" stroke="#C89B3C" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M290 66c30 16 42 52 28 80" stroke="#C89B3C" stroke-width="6" stroke-linecap="round" fill="none" opacity=".6"/></symbol>
+
+<symbol id="ill-pt" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#E9EFEC"/><circle cx="70" cy="250" r="130" fill="#24564A" opacity=".18" filter="url(#soft)"/><circle cx="132" cy="96" r="26" fill="#24564A"/><path d="M132 128c40 0 62 30 66 96h-132c4-66 26-96 66-96Z" fill="#24564A"/><circle cx="256" cy="108" r="22" fill="#14181A"/><path d="M256 136c34 0 52 26 56 88h-112c4-62 22-88 56-88Z" fill="#14181A"/><rect x="286" y="60" width="76" height="98" rx="9" fill="#FFFFFF" stroke="#C9D2CE" stroke-width="3"/><rect x="306" y="50" width="36" height="18" rx="9" fill="#C89B3C"/><path d="M300 92h48M300 110h48M300 128h30" stroke="#24564A" stroke-width="5" stroke-linecap="round" opacity=".55"/><path d="M170 176l16 16 30-32" stroke="#C89B3C" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+
+<symbol id="ill-return" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#EDF4F0"/><circle cx="320" cy="240" r="130" fill="#2E9C7E" opacity=".22" filter="url(#soft)"/><path d="M40 230c0-90 62-146 152-146" fill="none" stroke="#24564A" stroke-width="6" stroke-dasharray="12 10"/><circle cx="40" cy="230" r="12" fill="#24564A"/><circle cx="192" cy="84" r="16" fill="#C89B3C"/><rect x="230" y="150" width="130" height="80" rx="14" fill="#FFFFFF" stroke="#C9D2CE" stroke-width="3"/><path d="M252 196l20-22 18 20 20-30 24 32" fill="none" stroke="#2E9C7E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M96 246h84" stroke="#C9D2CE" stroke-width="6" stroke-linecap="round"/><path d="M120 262h130" stroke="#C9D2CE" stroke-width="6" stroke-linecap="round"/></symbol>
+
+<symbol id="ill-platform" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#14181A"/><circle cx="200" cy="150" r="160" fill="#24564A" opacity=".5" filter="url(#soft)"/><rect x="52" y="70" width="296" height="160" rx="8" fill="#3A2E1E"/><rect x="118" y="70" width="164" height="160" fill="#1C2426"/><path d="M60 78v144M76 78v144M92 78v144M108 78v144M292 78v144M308 78v144M324 78v144M340 78v144" stroke="#C89B3C" stroke-width="2" opacity=".3"/><rect x="70" y="140" width="260" height="10" rx="5" fill="#F0F1EE"/><circle cx="112" cy="145" r="34" fill="#2E9C7E"/><circle cx="112" cy="145" r="12" fill="#14181A"/><circle cx="288" cy="145" r="34" fill="#2E9C7E"/><circle cx="288" cy="145" r="12" fill="#14181A"/><text x="200" y="266" font-family="monospace" font-size="14" fill="#C89B3C" opacity=".7" text-anchor="middle">platform 04</text></symbol>
+
+<symbol id="ill-rig" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#E9EEEB"/><circle cx="330" cy="60" r="120" fill="#2E9C7E" opacity=".2" filter="url(#soft)"/><rect x="46" y="40" width="18" height="230" rx="4" fill="#14181A"/><rect x="336" y="40" width="18" height="230" rx="4" fill="#14181A"/><rect x="190" y="40" width="18" height="230" rx="4" fill="#14181A"/><rect x="46" y="40" width="308" height="16" rx="4" fill="#14181A"/><rect x="46" y="128" width="308" height="9" rx="4" fill="#24564A"/><path d="M92 56v52M140 56v52M254 56v52M300 56v52" stroke="#C89B3C" stroke-width="7" stroke-linecap="round"/><rect x="76" y="106" width="32" height="10" rx="5" fill="#14181A"/><rect x="124" y="106" width="32" height="10" rx="5" fill="#14181A"/><rect x="238" y="106" width="32" height="10" rx="5" fill="#14181A"/><rect x="284" y="106" width="32" height="10" rx="5" fill="#14181A"/><rect x="0" y="270" width="400" height="30" fill="#D5DDD9"/></symbol>
+
+<symbol id="ill-ergs" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#EFF3F1"/><circle cx="80" cy="70" r="120" fill="#24564A" opacity=".16" filter="url(#soft)"/><g><rect x="40" y="180" width="200" height="12" rx="6" fill="#14181A"/><circle cx="52" cy="164" r="34" fill="#24564A"/><circle cx="52" cy="164" r="13" fill="#EFF3F1"/><rect x="120" y="160" width="46" height="22" rx="8" fill="#C89B3C"/><path d="M240 186v34M40 192v28" stroke="#14181A" stroke-width="8" stroke-linecap="round"/></g><g transform="translate(150,66)"><rect x="40" y="180" width="200" height="12" rx="6" fill="#14181A" opacity=".65"/><circle cx="52" cy="164" r="30" fill="#24564A" opacity=".65"/><circle cx="52" cy="164" r="11" fill="#EFF3F1"/><rect x="120" y="160" width="46" height="22" rx="8" fill="#C89B3C" opacity=".7"/></g><path d="M0 276h400" stroke="#D5DDD9" stroke-width="10"/></symbol>
+
+<symbol id="ill-studio" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#F1F4F2"/><circle cx="200" cy="40" r="150" fill="#2E9C7E" opacity=".18" filter="url(#soft)"/><rect x="26" y="34" width="120" height="150" rx="8" fill="#FFFFFF" stroke="#C9D2CE" stroke-width="3"/><path d="M86 34v150M26 109h120" stroke="#C9D2CE" stroke-width="3"/><rect x="0" y="212" width="400" height="88" fill="#DDE4E0"/><rect x="0" y="212" width="400" height="7" fill="#C89B3C" opacity=".6"/><g><rect x="196" y="60" width="26" height="26" rx="7" fill="#24564A"/><rect x="240" y="60" width="26" height="26" rx="7" fill="#24564A" opacity=".7"/><rect x="284" y="60" width="26" height="26" rx="7" fill="#24564A" opacity=".45"/></g><rect x="178" y="176" width="180" height="16" rx="8" fill="#14181A"/><rect x="196" y="130" width="30" height="46" rx="9" fill="#C89B3C"/><rect x="244" y="142" width="30" height="34" rx="9" fill="#C89B3C" opacity=".75"/><rect x="292" y="152" width="30" height="24" rx="9" fill="#C89B3C" opacity=".5"/></symbol>
+
+<symbol id="ill-sauna" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#F3EEE2"/><circle cx="300" cy="240" r="140" fill="#C89B3C" opacity=".3" filter="url(#soft)"/><rect x="0" y="40" width="400" height="18" fill="#D8C49A"/><rect x="0" y="66" width="400" height="18" fill="#D8C49A" opacity=".8"/><rect x="0" y="92" width="400" height="18" fill="#D8C49A" opacity=".6"/><rect x="40" y="170" width="320" height="20" rx="6" fill="#B99B62"/><rect x="40" y="222" width="320" height="20" rx="6" fill="#B99B62"/><rect x="64" y="120" width="70" height="70" rx="8" fill="#14181A"/><circle cx="86" cy="140" r="9" fill="#C89B3C"/><circle cx="112" cy="146" r="7" fill="#C89B3C" opacity=".8"/><circle cx="94" cy="164" r="8" fill="#C89B3C" opacity=".6"/><path d="M84 108c-8-12 4-18 0-30M104 108c-8-12 4-18 0-30M124 108c-8-12 4-18 0-30" stroke="#24564A" stroke-width="4" stroke-linecap="round" fill="none" opacity=".6"/></symbol>
+
+<symbol id="ill-plunge" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#E7EFF2"/><circle cx="90" cy="70" r="130" fill="#2E9C7E" opacity=".22" filter="url(#soft)"/><rect x="90" y="94" width="220" height="150" rx="20" fill="#14181A"/><rect x="104" y="112" width="192" height="118" rx="14" fill="#9EC9D6"/><path d="M104 158c24-12 48 12 72 0s48-12 72 0 24 12 48 0v72H104Z" fill="#5FA5BC" opacity=".8"/><circle cx="150" cy="140" r="8" fill="#FFFFFF" opacity=".8"/><circle cx="196" cy="132" r="5" fill="#FFFFFF" opacity=".7"/><circle cx="242" cy="142" r="6" fill="#FFFFFF" opacity=".6"/><rect x="180" y="58" width="40" height="14" rx="7" fill="#C89B3C"/><text x="200" y="278" font-family="monospace" font-size="14" fill="#24564A" opacity=".7" text-anchor="middle">4 °C · 3 min</text></symbol>
+
+<symbol id="ill-lockers" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#EDF1EF"/><circle cx="330" cy="250" r="120" fill="#24564A" opacity=".16" filter="url(#soft)"/><g fill="#24564A"><rect x="36" y="46" width="78" height="100" rx="7"/><rect x="122" y="46" width="78" height="100" rx="7" opacity=".85"/><rect x="208" y="46" width="78" height="100" rx="7" opacity=".7"/><rect x="294" y="46" width="70" height="100" rx="7" opacity=".55"/><rect x="36" y="154" width="78" height="100" rx="7" opacity=".8"/><rect x="122" y="154" width="78" height="100" rx="7" opacity=".65"/><rect x="208" y="154" width="78" height="100" rx="7" opacity=".5"/><rect x="294" y="154" width="70" height="100" rx="7" opacity=".38"/></g><circle cx="102" cy="96" r="6" fill="#C89B3C"/><circle cx="188" cy="96" r="6" fill="#C89B3C"/><circle cx="274" cy="96" r="6" fill="#C89B3C"/><circle cx="102" cy="204" r="6" fill="#C89B3C"/><circle cx="188" cy="204" r="6" fill="#C89B3C"/></symbol>
+
+<symbol id="ill-cafe" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#F2F0E9"/><circle cx="86" cy="66" r="120" fill="#C89B3C" opacity=".28" filter="url(#soft)"/><rect x="40" y="190" width="320" height="80" rx="10" fill="#24564A"/><rect x="34" y="172" width="332" height="24" rx="12" fill="#14181A"/><path d="M150 172v-52c0-16 12-26 28-26h44c16 0 28 10 28 26v52Z" fill="#FFFFFF" stroke="#C9D2CE" stroke-width="3"/><path d="M250 106h22c10 0 16 8 16 18s-6 18-16 18h-22" fill="none" stroke="#C9D2CE" stroke-width="6"/><path d="M176 74c-6-10 4-16 0-26M200 74c-6-10 4-16 0-26M224 74c-6-10 4-16 0-26" stroke="#2E9C7E" stroke-width="4" stroke-linecap="round" fill="none" opacity=".7"/><circle cx="330" cy="128" r="26" fill="#2E9C7E" opacity=".35"/><rect x="316" y="106" width="28" height="44" rx="8" fill="#2E9C7E"/></symbol>
+
+<symbol id="ill-yard" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#E4EEF1"/><circle cx="300" cy="60" r="140" fill="#2E9C7E" opacity=".2" filter="url(#soft)"/><path d="M0 200h400v100H0z" fill="#9EC9D6" opacity=".55"/><path d="M0 200h400v10H0z" fill="#24564A" opacity=".3"/><rect x="40" y="90" width="90" height="110" fill="#24564A"/><rect x="140" y="120" width="70" height="80" fill="#14181A" opacity=".8"/><rect x="220" y="60" width="60" height="140" fill="#24564A" opacity=".7"/><rect x="290" y="110" width="80" height="90" fill="#14181A" opacity=".6"/><g fill="#C89B3C"><rect x="56" y="112" width="16" height="20"/><rect x="86" y="112" width="16" height="20"/><rect x="56" y="150" width="16" height="20"/><rect x="236" y="86" width="14" height="18"/><rect x="236" y="122" width="14" height="18"/></g><path d="M0 240c40-14 80 14 120 0s80-14 120 0 80 14 160 0" fill="none" stroke="#FFFFFF" stroke-width="4" opacity=".5"/></symbol>
+
+<symbol id="ill-portrait" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice"><rect width="400" height="500" fill="#E6F1EC"/><circle cx="316" cy="118" r="170" fill="#2E9C7E" opacity=".3" filter="url(#soft)"/><circle cx="200" cy="196" r="82" fill="#FFFFFF"/><path d="M118 182c4-52 40-76 82-76s78 24 82 76c-14-26-42-38-82-38s-68 12-82 38Z" fill="#14181A"/><path d="M200 294c80 0 130 56 136 206H64c6-150 56-206 136-206Z" fill="#24564A"/><rect x="150" y="330" width="100" height="12" rx="6" fill="#F0F1EE" opacity=".8"/><path d="M200 294l-42 44h84Z" fill="#FFFFFF"/><rect x="236" y="408" width="56" height="14" rx="7" fill="#C89B3C"/><path d="M108 386h-24M316 386h24" stroke="#C89B3C" stroke-width="7" stroke-linecap="round"/></symbol>
+
+</svg>
+
+<!-- ══ HEADER ══════════════════════════════════════════════ -->
+<header class="hdr" id="hdr">
+  <div class="hdr__in">
+    <a class="brand" href="#top">
+      <span class="brand__mark" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 16h18M9 11v10M23 11v10M5 13.5v5M27 13.5v5"/></svg>
+      </span>
+      <span class="brand__name">Hallen
+        <span class="brand__sub">Strength club · København</span>
+      </span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Sections">
+      <a href="#programmes">Programmes</a>
+      <a href="#booking">Book</a>
+      <a href="#facility">Facility</a>
+      <a href="#coaches">Coaches</a>
+      <a href="#membership">Membership</a>
+      <a href="#visit">Find us</a>
+    </nav>
+
+    <div class="hdr__cta">
+      <span class="status" id="status" aria-live="polite">
+        <span class="status__dot"></span><span id="statusText">Checking hours</span>
+      </span>
+      <a class="btn btn--solid btn--sm" href="#intro">Book a free intro</a>
+      <button class="burger" id="burger" aria-expanded="false" aria-controls="sheet" aria-label="Open menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ══ MOBILE SHEET ═══════════════════════════════════════ -->
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="sheet__top">
+    <span class="mono muted">Menu</span>
+    <button class="burger" id="sheetClose" aria-label="Close menu" style="display:grid">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <a class="sheet__link" href="#programmes">Programmes</a>
+  <a class="sheet__link" href="#booking">Book</a>
+  <a class="sheet__link" href="#facility">Facility</a>
+  <a class="sheet__link" href="#coaches">Coaches</a>
+  <a class="sheet__link" href="#membership">Membership</a>
+  <a class="sheet__link" href="#visit">Find us</a>
+  <div class="sheet__foot">
+    <a class="btn btn--solid btn--block" href="#intro">Book a free intro</a>
+    <a class="btn btn--ghost btn--block" href="tel:+4532964410">Call +45 32 96 44 10</a>
+  </div>
+</div>
+
+<main id="main">
+<span id="top"></span>
+
+<!-- ══ HERO ═══════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="wrap hero__grid">
+    <div>
+      <span class="eyebrow">Members' gym · Refshalevej 163A, København K</span>
+      <h1>Tell us what you<br>want to build.<br><em>We write the plan.</em></h1>
+      <p class="lead hero__p">A strength and conditioning club in an old shipyard hall on Refshaleøen.
+        Six people to a coach, never more. You get a written programme with your name on it, and a
+        room quiet enough to hear yourself count.</p>
+      <div class="hero__actions">
+        <a class="btn btn--solid" href="#intro">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/></svg>
+          Book a free intro
+        </a>
+        <a class="btn btn--ghost" href="#booking">See this week's timetable</a>
+      </div>
+
+      <dl class="hero__meta">
+        <div>
+          <dt>Member rating</dt>
+          <dd>4.9 <span class="stars" aria-hidden="true">★★★★★</span></dd>
+        </div>
+        <div>
+          <dt>Group size</dt>
+          <dd>Max 6</dd>
+        </div>
+        <div>
+          <dt>Coaching in</dt>
+          <dd style="font-size:1.05rem">Dansk · English</dd>
+        </div>
+      </dl>
+    </div>
+
+    <!-- signature element: the body map -->
+    <div class="map3d" id="bodyMap">
+      <div class="map3d__top">
+        <h2 style="font-size:1.15rem">What do you want to work on?</h2>
+        <p class="map3d__hint">Tap a group</p>
+      </div>
+
+      <svg class="figs" viewBox="34 2 332 342" role="group" aria-label="Interactive body map. Select a muscle group to see the programme we would put you on.">
+        <!-- ── FRONT ── -->
+        <g>
+          <ellipse class="body__base" cx="104" cy="32" rx="15" ry="18"/>
+          <rect class="body__base" x="96" y="46" width="16" height="14" rx="4"/>
+          <path class="body__base" d="M76 70Q76 58 90 57L118 57Q132 58 132 70L128 132Q126 152 122 170L86 170Q82 152 80 132Z"/>
+          <rect class="body__base" x="58" y="82" width="17" height="52" rx="8"/>
+          <rect class="body__base" x="133" y="82" width="17" height="52" rx="8"/>
+          <rect class="body__base" x="54" y="138" width="15" height="50" rx="7"/>
+          <rect class="body__base" x="139" y="138" width="15" height="50" rx="7"/>
+          <ellipse class="body__base" cx="61" cy="196" rx="8" ry="10"/>
+          <ellipse class="body__base" cx="147" cy="196" rx="8" ry="10"/>
+          <path class="body__base" d="M84 162h40l-4 22H88Z"/>
+          <rect class="body__base" x="85" y="244" width="15" height="52" rx="6"/>
+          <rect class="body__base" x="108" y="244" width="15" height="52" rx="6"/>
+          <rect class="body__base" x="81" y="298" width="21" height="10" rx="4"/>
+          <rect class="body__base" x="106" y="298" width="21" height="10" rx="4"/>
+
+          <g class="zone" data-zone="shoulders" tabindex="0" role="button" aria-label="Shoulders">
+            <ellipse class="zone__s" cx="72" cy="72" rx="14" ry="13"/>
+            <ellipse class="zone__s" cx="136" cy="72" rx="14" ry="13"/>
+          </g>
+          <g class="zone" data-zone="chest" tabindex="0" role="button" aria-label="Chest">
+            <rect class="zone__s" x="80" y="68" width="22" height="30" rx="9"/>
+            <rect class="zone__s" x="106" y="68" width="22" height="30" rx="9"/>
+          </g>
+          <g class="zone" data-zone="arms" tabindex="0" role="button" aria-label="Arms">
+            <rect class="zone__s" x="58" y="86" width="17" height="44" rx="8"/>
+            <rect class="zone__s" x="133" y="86" width="17" height="44" rx="8"/>
+            <rect class="zone__s" x="54" y="140" width="15" height="44" rx="7"/>
+            <rect class="zone__s" x="139" y="140" width="15" height="44" rx="7"/>
+          </g>
+          <g class="zone" data-zone="core" tabindex="0" role="button" aria-label="Core">
+            <rect class="zone__s" x="88" y="104" width="32" height="54" rx="11"/>
+          </g>
+          <g class="zone" data-zone="quads" tabindex="0" role="button" aria-label="Quads">
+            <rect class="zone__s" x="80" y="180" width="23" height="60" rx="9"/>
+            <rect class="zone__s" x="105" y="180" width="23" height="60" rx="9"/>
+          </g>
+          <text class="figs__label" x="104" y="332">Front</text>
+        </g>
+
+        <!-- ── BACK ── -->
+        <g>
+          <ellipse class="body__base" cx="296" cy="32" rx="15" ry="18"/>
+          <rect class="body__base" x="288" y="46" width="16" height="14" rx="4"/>
+          <path class="body__base" d="M268 70Q268 58 282 57L310 57Q324 58 324 70L320 132Q318 152 314 170L278 170Q274 152 272 132Z"/>
+          <rect class="body__base" x="250" y="82" width="17" height="52" rx="8"/>
+          <rect class="body__base" x="325" y="82" width="17" height="52" rx="8"/>
+          <rect class="body__base" x="246" y="138" width="15" height="50" rx="7"/>
+          <rect class="body__base" x="331" y="138" width="15" height="50" rx="7"/>
+          <ellipse class="body__base" cx="253" cy="196" rx="8" ry="10"/>
+          <ellipse class="body__base" cx="339" cy="196" rx="8" ry="10"/>
+          <rect class="body__base" x="277" y="292" width="15" height="14" rx="5"/>
+          <rect class="body__base" x="300" y="292" width="15" height="14" rx="5"/>
+          <rect class="body__base" x="273" y="306" width="21" height="10" rx="4"/>
+          <rect class="body__base" x="298" y="306" width="21" height="10" rx="4"/>
+
+          <g class="zone" data-zone="back" tabindex="0" role="button" aria-label="Upper back and lats">
+            <path class="zone__s" d="M272 72Q272 60 284 59L308 59Q320 60 320 72L316 140H276Z"/>
+          </g>
+          <g class="zone" data-zone="glutes" tabindex="0" role="button" aria-label="Glutes">
+            <ellipse class="zone__s" cx="285" cy="170" rx="13" ry="15"/>
+            <ellipse class="zone__s" cx="307" cy="170" rx="13" ry="15"/>
+          </g>
+          <g class="zone" data-zone="hamstrings" tabindex="0" role="button" aria-label="Hamstrings">
+            <rect class="zone__s" x="272" y="188" width="23" height="54" rx="9"/>
+            <rect class="zone__s" x="297" y="188" width="23" height="54" rx="9"/>
+          </g>
+          <g class="zone" data-zone="calves" tabindex="0" role="button" aria-label="Calves">
+            <rect class="zone__s" x="275" y="246" width="18" height="44" rx="7"/>
+            <rect class="zone__s" x="298" y="246" width="18" height="44" rx="7"/>
+          </g>
+          <text class="figs__label" x="296" y="332">Back</text>
+        </g>
+      </svg>
+
+      <div class="map3d__out" id="mapOut" aria-live="polite">
+        <div style="flex:1">
+          <h3 id="outName">Pick a muscle group to start</h3>
+          <p id="outText">Most people arrive with one thing in mind — a back that aches by Friday, a
+            squat that stalled, a first pull-up. Choose where you'd start and we'll show the programme
+            we'd put you on.</p>
+          <div class="map3d__data" id="outMeta" hidden>
+            <span id="outFreq"></span>
+            <span>From <b id="outPrice"></b></span>
+          </div>
+        </div>
+        <a class="btn btn--brass btn--sm map3d__go" id="outGo" href="#intro" hidden>Start here</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TRUST ROW ══════════════════════════════════════════ -->
+<section class="trust">
+  <div class="wrap">
+    <div class="trust__grid">
+      <div class="trust__cell">
+        <div class="trust__n"><span class="count" data-to="12">0</span></div>
+        <div class="trust__l">Years on Refshaleøen</div>
+      </div>
+      <div class="trust__cell">
+        <div class="trust__n"><span class="count" data-to="480">0</span></div>
+        <div class="trust__l">Members, capped</div>
+      </div>
+      <div class="trust__cell">
+        <div class="trust__n">1<span style="font-size:.55em;font-weight:600">:</span>6</div>
+        <div class="trust__l">Coach to floor, maximum</div>
+      </div>
+      <div class="trust__cell">
+        <div class="trust__n"><span class="count" data-to="9">0</span></div>
+        <div class="trust__l">Full-time coaches</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROMISES ═══════════════════════════════════════════ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Why members stay</span>
+      <h2>Three things we won't trade away.</h2>
+    </div>
+    <div class="promise">
+      <article class="card pc rv">
+        <span class="pc__ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+        </span>
+        <h3>Never more than six</h3>
+        <p>Group sessions are capped at six. If a class fills, it fills — we don't squeeze in a seventh
+          person and we don't add a second row behind the rack.</p>
+      </article>
+      <article class="card pc rv">
+        <span class="pc__ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg>
+        </span>
+        <h3>A programme, not a playlist</h3>
+        <p>After your movement screen a coach writes twelve weeks with your name on it — loads, sets,
+          progressions. You can read it, question it, and take it with you if you leave.</p>
+      </article>
+      <article class="card pc rv">
+        <span class="pc__ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.7 9.7 0 0 0-6.7 2.8L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg>
+        </span>
+        <h3>Leave on 30 days' notice</h3>
+        <p>No twelve-month lock-in, no joining fee, no cancellation phone tree. Write to us and the
+          membership ends at the close of the following month.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROGRAMMES ═════════════════════════════════════════ -->
+<section class="sec sec--paper" id="programmes">
+  <div class="wrap">
+    <div class="sec-head sec-head--wide">
+      <span class="eyebrow">Six ways in</span>
+      <h2>Programmes, not classes you drop into and forget.</h2>
+      <p class="lead" style="margin-top:1rem">Each one runs in twelve-week blocks with a test week at
+        either end, so you can see on paper whether it worked.</p>
+    </div>
+
+    <div class="progs">
+      <article class="card pg rv">
+        <div class="pg__media"><svg class="art" role="img" aria-label="Illustration: a loaded barbell resting in a rack"><use href="#ill-strength" width="100%" height="100%"/></svg></div>
+        <span class="chip pg__badge">Most popular</span>
+        <div class="pg__body">
+          <h3>Strength Foundations</h3>
+          <p>Squat, hinge, press, pull. You learn five lifts properly and then add weight to them for
+            twelve weeks. Suits anyone who has never held a barbell and anyone who has stalled.</p>
+          <div class="pg__foot"><span>3 × week · 60 min</span><span>From <b>949 kr</b>/mo</span></div>
+        </div>
+      </article>
+
+      <article class="card pg rv">
+        <div class="pg__media"><svg class="art" role="img" aria-label="Illustration: rowing machine and a running curve"><use href="#ill-hybrid" width="100%" height="100%"/></svg></div>
+        <div class="pg__body">
+          <h3>Hybrid Conditioning</h3>
+          <p>Strength on the platform, then intervals on the rower, bike or SkiErg. Built for people who
+            want to lift and still run a half marathon in the spring.</p>
+          <div class="pg__foot"><span>3 × week · 55 min</span><span>From <b>949 kr</b>/mo</span></div>
+        </div>
+      </article>
+
+      <article class="card pg rv">
+        <div class="pg__media"><svg class="art" role="img" aria-label="Illustration: a lifter under a loaded bar"><use href="#ill-olympic" width="100%" height="100%"/></svg></div>
+        <div class="pg__body">
+          <h3>Olympic Lifting</h3>
+          <p>Snatch and clean &amp; jerk on Eleiko platforms, filmed every session so you can see the
+            bar path rather than guess at it. Technique first, load second.</p>
+          <div class="pg__foot"><span>2 × week · 75 min</span><span>From <b>1.095 kr</b>/mo</span></div>
+        </div>
+      </article>
+
+      <article class="card pg rv">
+        <div class="pg__media"><svg class="art" role="img" aria-label="Illustration: a mat and a figure stretching"><use href="#ill-mobility" width="100%" height="100%"/></svg></div>
+        <div class="pg__body">
+          <h3>Mobility &amp; Restore</h3>
+          <p>Slow, unglamorous and the reason most members stop losing weeks to a bad back. Loaded
+            stretching, breathing, and the sauna afterwards.</p>
+          <div class="pg__foot"><span>2 × week · 45 min</span><span>From <b>649 kr</b>/mo</span></div>
+        </div>
+      </article>
+
+      <article class="card pg rv">
+        <div class="pg__media"><svg class="art" role="img" aria-label="Illustration: a coach with a clipboard beside a lifter"><use href="#ill-pt" width="100%" height="100%"/></svg></div>
+        <span class="chip chip--brass pg__badge">One to one</span>
+        <div class="pg__body">
+          <h3>Personal Training</h3>
+          <p>The whole hour is yours. Most members use one session a fortnight alongside a group
+            programme to keep technique honest; some train only this way.</p>
+          <div class="pg__foot"><span>60 min · 1:1</span><span>From <b>695 kr</b>/session</span></div>
+        </div>
+      </article>
+
+      <article class="card pg rv">
+        <div class="pg__media"><svg class="art" role="img" aria-label="Illustration: a recovery curve rising towards a target"><use href="#ill-return" width="100%" height="100%"/></svg></div>
+        <div class="pg__body">
+          <h3>Return to Sport</h3>
+          <p>The bridge between finishing physiotherapy and training normally again. We work from your
+            physio's notes and send them a progress report every four weeks.</p>
+          <div class="pg__foot"><span>2 × week · 60 min</span><span>From <b>1.295 kr</b>/mo</span></div>
+        </div>
+      </article>
+    </div>
+
+    <p class="progs__note">Every programme includes the movement screen, the written plan, InBody
+      scanning each block, and unlimited open-gym access. Prices are per month, excluding VAT-free
+      Danish public-holiday closures.</p>
+  </div>
+</section>
+
+<!-- ══ BOOKING ════════════════════════════════════════════ -->
+<section class="sec" id="booking">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Book online</span>
+      <h2>Reserve a class or an hour with a coach.</h2>
+      <p class="lead" style="margin-top:1rem">Spots update live. Members book 14 days ahead; on a free
+        intro you can hold one class and one coaching hour.</p>
+    </div>
+
+    <div class="book">
+      <div class="card book__panel">
+        <div class="tabs" role="tablist" aria-label="What would you like to book?">
+          <button class="tab" id="tabClasses" role="tab" aria-selected="true" aria-controls="paneClasses">Classes</button>
+          <button class="tab" id="tabPt" role="tab" aria-selected="false" aria-controls="panePt">Personal training</button>
+        </div>
+
+        <!-- classes -->
+        <div class="classes" id="paneClasses" role="tabpanel" aria-labelledby="tabClasses">
+          <div class="days" id="days" role="tablist" aria-label="Choose a day"></div>
+          <div class="slots" id="slots"></div>
+        </div>
+
+        <!-- personal training -->
+        <div class="pt" id="panePt" role="tabpanel" aria-labelledby="tabPt">
+          <p class="fieldset-lbl">1 — Choose a coach</p>
+          <div class="coaches-pick" id="coachPick"></div>
+          <p class="fieldset-lbl">2 — Choose a day</p>
+          <div class="days" id="ptDays" role="tablist" aria-label="Choose a day for personal training"></div>
+          <p class="fieldset-lbl">3 — Choose a time</p>
+          <div class="times" id="ptTimes"></div>
+        </div>
+      </div>
+
+      <aside class="card basket" id="basket" aria-label="Your booking">
+        <h3>Your booking</h3>
+        <p class="basket__sub">Nothing is charged now. We confirm by email within the hour.</p>
+
+        <p class="basket__none" id="basketNone">Pick a class or a coaching hour and it will appear here.</p>
+        <ul class="basket__list" id="basketList" hidden></ul>
+
+        <div class="basket__total" id="basketTotal" hidden>
+          <span>Due at the desk</span><b id="basketSum">0 kr</b>
+        </div>
+
+        <button class="btn btn--solid btn--block" id="basketGo" disabled>Confirm booking</button>
+
+        <div class="basket__ok" id="basketOk" role="status">
+          <b>Booked.</b>
+          <span id="basketOkText"></span>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FACILITY ═══════════════════════════════════════════ -->
+<section class="sec--tight" id="facility">
+  <div class="wrap">
+    <div class="fac rv">
+      <span class="eyebrow">The hall</span>
+      <h2>1,400 m² of shipyard, kitted out for lifting rather than for photographs.</h2>
+      <div class="fac__grid">
+        <div class="fac__cell">
+          <span class="mono">Platforms</span>
+          <h3>Eight Eleiko platforms</h3>
+          <p>Competition bars, calibrated plates and jerk blocks. Nobody has to wait behind three
+            people to squat at 18:00.</p>
+        </div>
+        <div class="fac__cell">
+          <span class="mono">Conditioning</span>
+          <h3>Concept2 &amp; Assault</h3>
+          <p>Twelve rowers, six SkiErgs, eight bikes, and a 30 m turf lane down the middle of the hall
+            for sleds and carries.</p>
+        </div>
+        <div class="fac__cell">
+          <span class="mono">Recovery</span>
+          <h3>Sauna and cold plunge</h3>
+          <p>Harbour-facing sauna at 85 °C and a 4 °C plunge. Included in every membership, towels
+            included too.</p>
+        </div>
+        <div class="fac__cell">
+          <span class="mono">Measurement</span>
+          <h3>InBody 970 scanning</h3>
+          <p>A scan at the start and end of each block, read back to you by a coach so the numbers mean
+            something.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FIRST WEEK ═════════════════════════════════════════ -->
+<section class="sec sec--paper">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Your first week</span>
+      <h2>Four steps, and none of them is a sales meeting.</h2>
+    </div>
+    <div class="steps">
+      <div class="step rv">
+        <h3>Free intro</h3>
+        <p>Forty minutes with a coach. You walk the hall, say what you want, and ask whatever you
+          like. No card needed.</p>
+      </div>
+      <div class="step rv">
+        <h3>Movement screen</h3>
+        <p>We film a squat, a hinge and an overhead reach, then talk through what we saw. Old injuries
+          go on the record here.</p>
+      </div>
+      <div class="step rv">
+        <h3>Your programme</h3>
+        <p>Written within two days and sent to you as a PDF. Twelve weeks, with the reasoning next to
+          each block.</p>
+      </div>
+      <div class="step rv">
+        <h3>First session</h3>
+        <p>A coach walks the first session with you start to finish, then hands it over. Most people
+          are training alone by week three.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COACHES ════════════════════════════════════════════ -->
+<section class="sec" id="coaches">
+  <div class="wrap">
+    <div class="about">
+      <div class="about__media rv">
+        <svg class="art art--portrait" role="img" aria-label="Illustration: portrait of the head coach"><use href="#ill-portrait" width="100%" height="100%"/></svg>
+        <div class="about__quote">
+          <p>“If you can't explain why a member is doing an exercise, take it out of the programme.”</p>
+          <span class="mono muted">Mette Krogh · Head coach</span>
+        </div>
+      </div>
+      <div class="rv">
+        <span class="eyebrow">Who you'll train with</span>
+        <h2>Nine coaches. All of them still lift.</h2>
+        <p class="lead" style="margin-top:1rem">Hallen was started in 2014 by two former national-team
+          rowers who wanted somewhere to train after the boat. Everyone who coaches here is employed
+          full time — nobody is paid per session, so nobody has a reason to sell you one.</p>
+        <ul class="creds">
+          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Danish Strength &amp; Conditioning certified</li>
+          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Two physiotherapists on staff</li>
+          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Pre- and postnatal qualified</li>
+          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> IWF Level 2 weightlifting</li>
+        </ul>
+        <a class="btn btn--solid" href="#intro">Meet a coach this week</a>
+      </div>
+    </div>
+
+    <div class="team">
+      <article class="tm rv"><div class="av av--1" aria-hidden="true">MK</div><h3>Mette Krogh</h3><p>Head coach · Weightlifting</p></article>
+      <article class="tm rv"><div class="av av--2" aria-hidden="true">JB</div><h3>Jonas Bek</h3><p>Strength · Return to sport</p></article>
+      <article class="tm rv"><div class="av av--3" aria-hidden="true">AS</div><h3>Amina Sørensen</h3><p>Conditioning · Rowing</p></article>
+      <article class="tm rv"><div class="av av--4" aria-hidden="true">PL</div><h3>Peter Lind</h3><p>Physiotherapist · Mobility</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ══ GALLERY ════════════════════════════════════════════ -->
+<section class="sec--tight" id="gallery">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">The space</span>
+      <h2>Have a look before you come.</h2>
+    </div>
+    <div class="gal">
+      <button data-ill="ill-platform" data-cap="Platform 04, oak and rubber"><svg class="art" role="img" aria-label="Illustration: a lifting platform with a loaded bar"><use href="#ill-platform" width="100%" height="100%"/></svg></button>
+      <button data-ill="ill-rig" data-cap="The main rig, eight stations"><svg class="art" role="img" aria-label="Illustration: a squat rig with racked bars"><use href="#ill-rig" width="100%" height="100%"/></svg></button>
+      <button data-ill="ill-ergs" data-cap="Rowing bay, twelve Concept2"><svg class="art" role="img" aria-label="Illustration: a row of rowing machines"><use href="#ill-ergs" width="100%" height="100%"/></svg></button>
+      <button data-ill="ill-studio" data-cap="Studio, mobility and warm-ups"><svg class="art" role="img" aria-label="Illustration: a mobility studio with kettlebells"><use href="#ill-studio" width="100%" height="100%"/></svg></button>
+      <button data-ill="ill-sauna" data-cap="Sauna, 85 °C, harbour side"><svg class="art" role="img" aria-label="Illustration: a wood-lined sauna"><use href="#ill-sauna" width="100%" height="100%"/></svg></button>
+      <button data-ill="ill-plunge" data-cap="Cold plunge, held at 4 °C"><svg class="art" role="img" aria-label="Illustration: a cold plunge tub"><use href="#ill-plunge" width="100%" height="100%"/></svg></button>
+      <button data-ill="ill-lockers" data-cap="Changing rooms, towels included"><svg class="art" role="img" aria-label="Illustration: a wall of lockers"><use href="#ill-lockers" width="100%" height="100%"/></svg></button>
+      <button data-ill="ill-yard" data-cap="Refshaleøen, two minutes from the door"><svg class="art" role="img" aria-label="Illustration: the harbour outside the hall"><use href="#ill-yard" width="100%" height="100%"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MEMBERSHIP ═════════════════════════════════════════ -->
+<section class="sec sec--paper" id="membership">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Membership</span>
+      <h2>One page of prices. No joining fee.</h2>
+    </div>
+
+    <div class="plans">
+      <div class="rv">
+        <table class="ptable">
+          <caption>Monthly, in Danish kroner, VAT included</caption>
+          <thead>
+            <tr><th scope="col">Membership</th><th scope="col">Includes</th><th scope="col">Price</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Free intro<small>Everyone starts here</small></th>
+              <td>Hall tour, movement screen, one class</td><td>0 kr</td>
+            </tr>
+            <tr>
+              <th scope="row">Open gym<small>Train your own way</small></th>
+              <td>Full access, sauna, plunge, InBody</td><td>649 kr</td>
+            </tr>
+            <tr>
+              <th scope="row">One programme<small>The usual choice</small></th>
+              <td>Open gym + one coached programme</td><td>949 kr</td>
+            </tr>
+            <tr>
+              <th scope="row">Two programmes</th>
+              <td>Open gym + any two programmes</td><td>1.295 kr</td>
+            </tr>
+            <tr>
+              <th scope="row">Unlimited</th>
+              <td>Every group session on the timetable</td><td>1.595 kr</td>
+            </tr>
+            <tr>
+              <th scope="row">Personal training<small>Buy as a block of ten</small></th>
+              <td>10 × 60 min, valid twelve months</td><td>6.450 kr</td>
+            </tr>
+            <tr>
+              <th scope="row">Day pass</th>
+              <td>One visit, sauna included</td><td>145 kr</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <aside class="card incl rv">
+        <span class="eyebrow">In every membership</span>
+        <h3>Things other gyms charge extra for.</h3>
+        <ul>
+          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Sauna, cold plunge and towels</li>
+          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> InBody scan at the start and end of each block</li>
+          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Your written programme as a PDF, yours to keep</li>
+          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Freeze for up to eight weeks a year, free</li>
+          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Bring a guest once a month</li>
+        </ul>
+        <p style="margin-top:1.4rem;font-size:.88rem;color:var(--stone)">Students and anyone over 65
+          take 20 % off any membership. Ask at the desk — we don't make you fill in a form.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ══ REVIEWS ════════════════════════════════════════════ -->
+<section class="sec" id="reviews">
+  <div class="wrap">
+    <div class="rev rv" id="rev">
+      <span class="eyebrow" style="justify-content:center">What members say</span>
+      <div id="revTrack">
+        <blockquote class="rev__slide is-on">
+          <p class="rev__q">“I joined to fix a back that hurt every Friday afternoon. Eight months
+            later I deadlift more than I weigh and I've stopped thinking about my back at all.”</p>
+          <p class="rev__who">Louise H.</p>
+          <p class="rev__meta">Member since 2023 · Strength Foundations</p>
+        </blockquote>
+        <blockquote class="rev__slide">
+          <p class="rev__q">“The first thing they did was tell me to stop doing something I'd paid
+            another gym to teach me. That's when I knew I'd stay.”</p>
+          <p class="rev__who">Anders V.</p>
+          <p class="rev__meta">Member since 2021 · Olympic Lifting</p>
+        </blockquote>
+        <blockquote class="rev__slide">
+          <p class="rev__q">“Six people, one coach, and someone actually watches your third set. I've
+            never trained anywhere where the coaching was this specific.”</p>
+          <p class="rev__who">Sofia M.</p>
+          <p class="rev__meta">Member since 2022 · Hybrid Conditioning</p>
+        </blockquote>
+        <blockquote class="rev__slide">
+          <p class="rev__q">“Came back after a knee reconstruction. They talked to my physio, read the
+            surgical notes, and built up over five months. No hero sessions.”</p>
+          <p class="rev__who">Kasper N.</p>
+          <p class="rev__meta">Member since 2024 · Return to Sport</p>
+        </blockquote>
+      </div>
+      <div class="rev__nav">
+        <button class="rev__arrow" id="revPrev" aria-label="Previous review">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <div id="revDots" role="tablist" aria-label="Choose a review" style="display:flex;gap:.45rem;align-items:center;padding:0 .5rem"></div>
+        <button class="rev__arrow" id="revNext" aria-label="Next review">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FAQ ════════════════════════════════════════════════ -->
+<section class="sec sec--paper">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Before you ask</span>
+      <h2>The questions we get at the desk.</h2>
+    </div>
+    <div class="faqs">
+      <details class="faq">
+        <summary>I've never lifted a barbell. Will I be the worst one there?</summary>
+        <p>About a third of our members had never touched a barbell before they joined. Strength
+          Foundations exists for exactly this, and the six-person cap means a coach sees every rep
+          rather than every third one.</p>
+      </details>
+      <details class="faq">
+        <summary>Do I have to sign up for a year?</summary>
+        <p>No. Memberships run month to month with 30 days' notice, and there is no joining fee. You
+          can also freeze for up to eight weeks a year without paying.</p>
+      </details>
+      <details class="faq">
+        <summary>Can I train without joining a programme?</summary>
+        <p>Yes — Open gym gives you the full hall, the sauna and the plunge. You just won't have a
+          coach writing for you or a reserved spot in group sessions.</p>
+      </details>
+      <details class="faq">
+        <summary>Is there parking on Refshaleøen?</summary>
+        <p>There is free parking on Refshalevej directly outside, and covered bike parking for about
+          120 bikes. Bus 2A stops 200 m away and the harbour bus 991 lands at the quay.</p>
+      </details>
+      <details class="faq">
+        <summary>I'm pregnant, or recently gave birth. Can I still train?</summary>
+        <p>Yes. Two of our coaches are pre- and postnatal qualified and will adjust your programme
+          each trimester. Bring your midwife's or physio's notes to the intro if you have them.</p>
+      </details>
+      <details class="faq">
+        <summary>What if I book a class and can't make it?</summary>
+        <p>Cancel in the app up to two hours before and the spot goes back to the waiting list at no
+          cost. After that it counts as used, because someone else could have taken it.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TRIAL BAND ═════════════════════════════════════════ -->
+<section class="sec--tight">
+  <div class="wrap">
+    <div class="trial rv">
+      <div>
+        <h2>The intro is free, and it's genuinely just a conversation.</h2>
+        <p>Forty minutes, no card, no pitch. If we're not the right gym for what you want, we'll
+          tell you which one is.</p>
+      </div>
+      <div style="display:flex;gap:.7rem;flex-wrap:wrap">
+        <a class="btn btn--solid" href="#intro">Book a free intro</a>
+        <a class="btn btn--ghost" href="tel:+4532964410">+45 32 96 44 10</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT & VISIT ════════════════════════════════════ -->
+<section class="sec" id="visit">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Find us</span>
+      <h2>Refshalevej 163A, in the old plate shop.</h2>
+    </div>
+
+    <div class="contact">
+      <div class="card form" id="intro">
+        <form id="introForm" novalidate>
+          <h3 style="margin-bottom:1.2rem">Book your free intro</h3>
+          <div class="field--row">
+            <div class="field">
+              <label for="fName">Name</label>
+              <input id="fName" name="name" type="text" autocomplete="name" required>
+              <span class="field__err">Please tell us your name.</span>
+            </div>
+            <div class="field">
+              <label for="fPhone">Phone</label>
+              <input id="fPhone" name="phone" type="tel" autocomplete="tel" required placeholder="+45 …">
+              <span class="field__err">A number we can reach you on.</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="fEmail">Email</label>
+            <input id="fEmail" name="email" type="email" autocomplete="email" required>
+            <span class="field__err">Check the email address.</span>
+          </div>
+          <div class="field--row">
+            <div class="field">
+              <label for="fProgramme">What interests you</label>
+              <select id="fProgramme" name="programme">
+                <option value="">Not sure yet</option>
+                <option value="strength">Strength Foundations</option>
+                <option value="hybrid">Hybrid Conditioning</option>
+                <option value="olympic">Olympic Lifting</option>
+                <option value="mobility">Mobility &amp; Restore</option>
+                <option value="pt">Personal training</option>
+                <option value="return">Return to Sport</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="fWhen">Best time to come in</label>
+              <select id="fWhen" name="when">
+                <option value="early">Before 08:00</option>
+                <option value="day">During the day</option>
+                <option value="evening">After 17:00</option>
+                <option value="weekend">Weekend</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="fMsg">Anything we should know</label>
+            <textarea id="fMsg" name="message" rows="3" placeholder="Old injuries, a race you're training for, coming back after a break…"></textarea>
+          </div>
+          <label class="consent" for="fConsent">
+            <input id="fConsent" type="checkbox" required>
+            <span>You may contact me about this booking. We keep your details for 12 months and
+              never pass them on.</span>
+          </label>
+          <span class="field__err" id="consentErr" style="margin:-.7rem 0 1rem">Please tick the box so we may reply.</span>
+          <button class="btn btn--solid btn--block" type="submit">Request my intro</button>
+          <p class="form__note">Or just turn up — the desk is staffed all day.</p>
+        </form>
+
+        <div class="form__ok" id="introOk" role="status">
+          <b style="font-family:'Familjen Grotesk',sans-serif;font-size:1.1rem;display:block;margin-bottom:.4rem">Thanks — that's with us.</b>
+          A coach will call you within one working day to fix a time. If it's urgent, ring
+          <a href="tel:+4532964410" style="color:var(--pine)">+45 32 96 44 10</a>.
+        </div>
+      </div>
+
+      <div class="card visit">
+        <div class="map">
+          <iframe title="Map showing Hallen at Refshalevej 163A, Copenhagen" loading="lazy"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=12.5985%2C55.6862%2C12.6265%2C55.6994&amp;layer=mapnik&amp;marker=55.6928%2C12.6114"></iframe>
+        </div>
+
+        <div class="contact__lines">
+          <a href="tel:+4532964410">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--pine)"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>
+            +45 32 96 44 10
+          </a>
+          <a href="mailto:hej@example.dk">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--pine)"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+            hej@example.dk
+          </a>
+          <a href="https://maps.google.com/?q=Refshalevej+163A+Copenhagen" target="_blank" rel="noopener">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--pine)"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            Refshalevej 163A, 1432 København K
+          </a>
+        </div>
+
+        <h3 style="margin-bottom:.4rem">Opening hours</h3>
+        <div class="hours" id="hours">
+          <div class="hours__row" data-day="1"><span class="hours__d">Monday</span><span class="hours__t">05:30 – 22:00</span></div>
+          <div class="hours__row" data-day="2"><span class="hours__d">Tuesday</span><span class="hours__t">05:30 – 22:00</span></div>
+          <div class="hours__row" data-day="3"><span class="hours__d">Wednesday</span><span class="hours__t">05:30 – 22:00</span></div>
+          <div class="hours__row" data-day="4"><span class="hours__d">Thursday</span><span class="hours__t">05:30 – 22:00</span></div>
+          <div class="hours__row" data-day="5"><span class="hours__d">Friday</span><span class="hours__t">05:30 – 21:00</span></div>
+          <div class="hours__row" data-day="6"><span class="hours__d">Saturday</span><span class="hours__t">07:00 – 19:00</span></div>
+          <div class="hours__row" data-day="0"><span class="hours__d">Sunday</span><span class="hours__t">08:00 – 19:00</span></div>
+        </div>
+
+        <ul class="getting">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="14" rx="3"/><path d="M4 11h16M7 21l2-4M17 21l-2-4"/></svg> Bus 2A stops at Refshalevej, 200 m from the door.</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a4 4 0 1 0 8 0 4 4 0 0 0-8 0ZM13 17a4 4 0 1 0 8 0 4 4 0 0 0-8 0ZM7 17l4-9h5"/></svg> Covered parking for 120 bikes; 18 minutes from Nørreport.</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17c2 1.5 4 1.5 6 0s4-1.5 6 0 4 1.5 6 0M5 17V9l7-4 7 4v8"/></svg> Harbour bus 991 and 992 land at the quay behind us.</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6"/></svg> Step-free entrance and an accessible changing room.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ══ FOOTER ═════════════════════════════════════════════ -->
+<footer class="ftr">
+  <div class="wrap">
+    <div class="ftr__grid">
+      <div>
+        <p class="ftr__brand">Hallen</p>
+        <p style="font-size:.92rem;max-width:30ch">A members' strength and conditioning club in the old
+          plate shop on Refshaleøen. Since 2014.</p>
+      </div>
+      <div>
+        <h4>Train</h4>
+        <a href="#programmes">Programmes</a>
+        <a href="#booking">Class timetable</a>
+        <a href="#booking">Personal training</a>
+        <a href="#membership">Membership</a>
+      </div>
+      <div>
+        <h4>The club</h4>
+        <a href="#coaches">Coaches</a>
+        <a href="#facility">Facility</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#reviews">Member reviews</a>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <a href="#visit">Refshalevej 163A</a>
+        <a href="tel:+4532964410">+45 32 96 44 10</a>
+        <a href="mailto:hej@example.dk">hej@example.dk</a>
+        <a href="#intro">Book a free intro</a>
+      </div>
+    </div>
+    <div class="ftr__bar">
+      <span>© <span id="yr">2026</span> Hallen ApS · CVR 12 34 56 78 · København</span>
+      <span><a href="#">Terms</a> · <a href="#">Privacy</a> · <a href="#">House rules</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ LIGHTBOX ═══════════════════════════════════════════ -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <div class="lb__fig" id="lbFig"></div>
+  <p class="lb__cap" id="lbCap"></p>
+  <button class="lb__x" id="lbX" aria-label="Close">&times;</button>
+  <button class="lb__p" id="lbP" aria-label="Previous photo">‹</button>
+  <button class="lb__n" id="lbN" aria-label="Next photo">›</button>
+</div>
+
+<!-- ══ STICKY MOBILE ACTIONS ══════════════════════════════ -->
+<div class="bar">
+  <a class="btn btn--ghost" href="tel:+4532964410">Call</a>
+  <a class="btn btn--solid" href="#intro">Book a free intro</a>
+</div>
+<button class="top" id="toTop" aria-label="Back to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"HealthClub",
+  "name":"Hallen — Strength & Conditioning",
+  "description":"A members' strength and conditioning club on Refshaleøen, Copenhagen. Group sessions capped at six, individually written programmes, Eleiko platforms, sauna and cold plunge.",
+  "telephone":"+4532964410",
+  "email":"hej@example.dk",
+  "address":{
+    "@type":"PostalAddress",
+    "streetAddress":"Refshalevej 163A",
+    "postalCode":"1432",
+    "addressLocality":"København K",
+    "addressCountry":"DK"
+  },
+  "geo":{"@type":"GeoCoordinates","latitude":55.6928,"longitude":12.6114},
+  "areaServed":"Copenhagen",
+  "availableLanguage":["da","en"],
+  "currenciesAccepted":"DKK",
+  "priceRange":"649–1595 DKK / month",
+  "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"312","bestRating":"5"},
+  "openingHoursSpecification":[
+    {"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday"],"opens":"05:30","closes":"22:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Friday","opens":"05:30","closes":"21:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"07:00","closes":"19:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Sunday","opens":"08:00","closes":"19:00"}
+  ],
+  "amenityFeature":[
+    {"@type":"LocationFeatureSpecification","name":"Sauna","value":true},
+    {"@type":"LocationFeatureSpecification","name":"Cold plunge","value":true},
+    {"@type":"LocationFeatureSpecification","name":"Step-free access","value":true},
+    {"@type":"LocationFeatureSpecification","name":"Covered bicycle parking","value":true}
+  ],
+  "makesOffer":[
+    {"@type":"Offer","name":"Strength Foundations","price":"949","priceCurrency":"DKK"},
+    {"@type":"Offer","name":"Hybrid Conditioning","price":"949","priceCurrency":"DKK"},
+    {"@type":"Offer","name":"Olympic Lifting","price":"1095","priceCurrency":"DKK"},
+    {"@type":"Offer","name":"Mobility & Restore","price":"649","priceCurrency":"DKK"},
+    {"@type":"Offer","name":"Personal training, 60 minutes","price":"695","priceCurrency":"DKK"},
+    {"@type":"Offer","name":"Return to Sport","price":"1295","priceCurrency":"DKK"}
+  ]
+}
+</script>
+
+<script>
+(function () {
+  'use strict';
+  var calm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  /* Very old browsers: no IntersectionObserver. Show everything at once
+     rather than leaving the page half invisible. */
+  if (!('IntersectionObserver' in window)) {
+    window.IntersectionObserver = function (cb) {
+      this.observe = function (n) { cb([{ isIntersecting: true, target: n }], this); };
+      this.unobserve = function () {};
+      this.disconnect = function () {};
+    };
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     1. Opening hours: live status pill + today's row
+     ───────────────────────────────────────────────────────── */
+  var HOURS = { 0: [480, 1140], 1: [330, 1320], 2: [330, 1320], 3: [330, 1320], 4: [330, 1320], 5: [330, 1260], 6: [420, 1140] };
+  var DAYNAME = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  var SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  function cphNow() {
+    var p = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/Copenhagen', hour12: false,
+      weekday: 'short', hour: '2-digit', minute: '2-digit'
+    }).formatToParts(new Date()).reduce(function (o, x) { o[x.type] = x.value; return o; }, {});
+    var idx = SHORT.indexOf(p.weekday);
+    return { day: idx < 0 ? new Date().getDay() : idx, mins: (+p.hour % 24) * 60 + (+p.minute) };
+  }
+  function hhmm(m) { return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); }
+
+  function paintHours() {
+    var now = cphNow(), slot = HOURS[now.day], open = !!slot && now.mins >= slot[0] && now.mins < slot[1];
+    var pill = $('#status'), txt = $('#statusText');
+    if (pill) {
+      pill.classList.toggle('is-open', open);
+      if (open) {
+        txt.textContent = 'Open until ' + hhmm(slot[1]);
+      } else {
+        var d = now.day, hop = 0;
+        while (hop < 8 && !(HOURS[d] && (d !== now.day || now.mins < HOURS[d][0]))) { d = (d + 1) % 7; hop++; }
+        var when = d === now.day ? 'today' : (hop === 1 ? 'tomorrow' : DAYNAME[d]);
+        txt.textContent = HOURS[d] ? 'Opens ' + when + ' ' + hhmm(HOURS[d][0]) : 'Closed';
+      }
+    }
+    $$('#hours .hours__row').forEach(function (r) {
+      r.classList.toggle('is-today', +r.dataset.day === now.day);
+    });
+  }
+  paintHours();
+  setInterval(paintHours, 60000);
+
+  /* ─────────────────────────────────────────────────────────
+     2. The body map (signature element)
+     ───────────────────────────────────────────────────────── */
+  var ZONES = {
+    shoulders: {
+      name: 'Overhead strength',
+      text: 'Shoulders that ache usually mean a stiff upper back rather than a weak shoulder. We build the press from the floor up, and most of the early work is not pressing at all.',
+      freq: '2 × week · 60 min', price: '949 kr/mo', prog: 'strength'
+    },
+    chest: {
+      name: 'Pressing strength',
+      text: 'Bench, floor press and dips, programmed against your pulling volume so the two stay in balance. This is where most desk-bound members see the fastest numbers.',
+      freq: '3 × week · 60 min', price: '949 kr/mo', prog: 'strength'
+    },
+    arms: {
+      name: 'Arms and grip',
+      text: 'Grip is the first thing to fail on a heavy deadlift and the last thing anyone trains. Loaded carries, rows and direct arm work, tacked onto the end of the main session.',
+      freq: '3 × week · 60 min', price: '949 kr/mo', prog: 'strength'
+    },
+    core: {
+      name: 'Midline and breathing',
+      text: 'Not sit-ups. Bracing under load, anti-rotation and breathing mechanics — the part of the programme that quietly makes every other lift heavier.',
+      freq: '2 × week · 45 min', price: '649 kr/mo', prog: 'mobility'
+    },
+    quads: {
+      name: 'Squat mechanics',
+      text: 'We film your squat at the intro and work backwards from what we see: ankle range, bar position, depth. Front squats, split squats and a lot of patient loading.',
+      freq: '3 × week · 60 min', price: '949 kr/mo', prog: 'strength'
+    },
+    back: {
+      name: 'Pulling and posture',
+      text: 'The single most requested thing at the desk. Rows, pull-ups and carries, built up over twelve weeks — this is the programme that ends most people\u2019s Friday backache.',
+      freq: '3 × week · 60 min', price: '949 kr/mo', prog: 'strength'
+    },
+    glutes: {
+      name: 'Hip strength',
+      text: 'Hip thrusts, bridges and single-leg work. If you sit for a living, weak hips are why your lower back does the job they should be doing.',
+      freq: '3 × week · 60 min', price: '949 kr/mo', prog: 'strength'
+    },
+    hamstrings: {
+      name: 'Posterior chain',
+      text: 'Deadlifts, Romanian deadlifts and Nordic curls. The programme runners come for, and the one that keeps hamstrings intact through a race build.',
+      freq: '3 × week · 55 min', price: '949 kr/mo', prog: 'hybrid'
+    },
+    calves: {
+      name: 'Running durability',
+      text: 'Calves and feet take the load first when your weekly mileage climbs. Tendon work, hops and slow-tempo raises, alongside conditioning on the ergs.',
+      freq: '3 × week · 55 min', price: '949 kr/mo', prog: 'hybrid'
+    }
+  };
+
+  var zones = $$('.zone'), outGo = $('#outGo'), chosenProg = '';
+  function pickZone(g) {
+    var key = g.dataset.zone, z = ZONES[key];
+    if (!z) return;
+    zones.forEach(function (n) { n.classList.remove('is-active'); });
+    g.classList.add('is-active');
+    $('#outName').textContent = z.name;
+    $('#outText').textContent = z.text;
+    $('#outFreq').textContent = z.freq;
+    $('#outPrice').textContent = z.price;
+    $('#outMeta').hidden = false;
+    outGo.hidden = false;
+    chosenProg = z.prog;
+  }
+  zones.forEach(function (g) {
+    g.addEventListener('click', function () { pickZone(g); });
+    g.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pickZone(g); }
+    });
+  });
+  outGo.addEventListener('click', function () {
+    var sel = $('#fProgramme');
+    if (sel && chosenProg) {
+      if ($$('option', sel).some(function (o) { return o.value === chosenProg; })) sel.value = chosenProg;
+    }
+  });
+
+  /* ─────────────────────────────────────────────────────────
+     3. Header state + scroll spy
+     ───────────────────────────────────────────────────────── */
+  var hdr = $('#hdr'), toTop = $('#toTop');
+  function onScroll() {
+    var y = window.scrollY;
+    hdr.classList.toggle('is-stuck', y > 24);
+    toTop.classList.toggle('is-on', y > 900);
+  }
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  toTop.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: calm ? 'auto' : 'smooth' });
+  });
+
+  var links = $$('#nav a');
+  var spy = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (a) {
+        a.setAttribute('aria-current', a.getAttribute('href') === '#' + e.target.id ? 'true' : 'false');
+      });
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  links.forEach(function (a) {
+    var s = document.getElementById(a.getAttribute('href').slice(1));
+    if (s) spy.observe(s);
+  });
+
+  /* ─────────────────────────────────────────────────────────
+     4. Mobile sheet
+     ───────────────────────────────────────────────────────── */
+  var sheet = $('#sheet'), burger = $('#burger');
+  function setSheet(open) {
+    sheet.classList.toggle('is-open', open);
+    burger.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) $('.sheet__link', sheet).focus();
+  }
+  burger.addEventListener('click', function () { setSheet(!sheet.classList.contains('is-open')); });
+  $('#sheetClose').addEventListener('click', function () { setSheet(false); burger.focus(); });
+  $$('a', sheet).forEach(function (a) { a.addEventListener('click', function () { setSheet(false); }); });
+
+  /* ─────────────────────────────────────────────────────────
+     5. Reveal on scroll + counters
+     ───────────────────────────────────────────────────────── */
+  var rv = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); rv.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  $$('.rv').forEach(function (n) { rv.observe(n); });
+
+  var cnt = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var n = e.target, to = +n.dataset.to, t0 = null, dur = 1100;
+      cnt.unobserve(n);
+      if (calm) { n.textContent = to.toLocaleString('en-GB'); return; }
+      requestAnimationFrame(function step(ts) {
+        if (!t0) t0 = ts;
+        var p = Math.min(1, (ts - t0) / dur), e2 = 1 - Math.pow(1 - p, 3);
+        n.textContent = Math.round(to * e2).toLocaleString('en-GB');
+        if (p < 1) requestAnimationFrame(step);
+      });
+    });
+  }, { threshold: 0.6 });
+  $$('.count').forEach(function (n) { cnt.observe(n); });
+
+  /* ─────────────────────────────────────────────────────────
+     6. Booking — classes timetable and personal training
+     ───────────────────────────────────────────────────────── */
+  var WEEK = {
+    1: [['06:00','Strength Foundations','Jonas','Platforms'],['07:15','Hybrid Conditioning','Amina','Turf lane'],['12:10','Lunch Lift','Mette','Platforms'],['16:30','Olympic Lifting','Mette','Platforms'],['17:45','Strength Foundations','Jonas','Rig'],['19:00','Mobility & Restore','Peter','Studio']],
+    2: [['06:00','Hybrid Conditioning','Amina','Turf lane'],['07:15','Strength Foundations','Jonas','Rig'],['12:10','Row 45','Amina','Rowing bay'],['16:30','Return to Sport','Peter','Studio'],['17:45','Olympic Lifting','Mette','Platforms'],['19:00','Strength Foundations','Jonas','Rig']],
+    3: [['06:00','Strength Foundations','Mette','Platforms'],['07:15','Mobility & Restore','Peter','Studio'],['12:10','Lunch Lift','Jonas','Rig'],['16:30','Hybrid Conditioning','Amina','Turf lane'],['17:45','Strength Foundations','Mette','Platforms'],['19:00','Row 45','Amina','Rowing bay']],
+    4: [['06:00','Hybrid Conditioning','Amina','Turf lane'],['07:15','Strength Foundations','Jonas','Rig'],['12:10','Mobility & Restore','Peter','Studio'],['16:30','Olympic Lifting','Mette','Platforms'],['17:45','Return to Sport','Peter','Studio'],['19:00','Strength Foundations','Jonas','Platforms']],
+    5: [['06:00','Strength Foundations','Jonas','Platforms'],['07:15','Row 45','Amina','Rowing bay'],['12:10','Lunch Lift','Mette','Rig'],['16:00','Hybrid Conditioning','Amina','Turf lane'],['17:15','Friday Heavy','Mette','Platforms']],
+    6: [['08:00','Strength Foundations','Mette','Platforms'],['09:15','Hybrid Conditioning','Amina','Turf lane'],['10:30','Olympic Lifting','Mette','Platforms'],['11:45','Mobility & Restore','Peter','Studio']],
+    0: [['09:00','Mobility & Restore','Peter','Studio'],['10:15','Strength Foundations','Jonas','Rig'],['11:30','Row 45','Amina','Rowing bay']]
+  };
+  var CAP = 6;
+
+  /* A stable pseudo-random number from a string, so the same slot always
+     shows the same number of spots left within a session. */
+  function seed(str) {
+    var h = 2166136261, i;
+    for (i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = (h * 16777619) >>> 0; }
+    return (h % 1000) / 1000;
+  }
+
+  var COACHES = [
+    { id: 'mette', name: 'Mette Krogh', role: 'Weightlifting', av: 'av--2', ini: 'MK' },
+    { id: 'jonas', name: 'Jonas Bek', role: 'Strength', av: 'av--1', ini: 'JB' },
+    { id: 'amina', name: 'Amina Sørensen', role: 'Conditioning', av: 'av--3', ini: 'AS' }
+  ];
+  var PT_TIMES = ['07:00','08:00','09:00','10:00','11:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
+  var PT_PRICE = 695;
+
+  var next7 = [];
+  (function buildDays() {
+    var base = new Date();
+    for (var i = 0; i < 7; i++) {
+      var d = new Date(base.getFullYear(), base.getMonth(), base.getDate() + i);
+      next7.push({
+        date: d,
+        key: d.toISOString().slice(0, 10),
+        dow: d.getDay(),
+        num: d.getDate(),
+        label: i === 0 ? 'Today' : SHORT[d.getDay()],
+        long: d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })
+      });
+    }
+  })();
+
+  var basket = [], dayAt = 0, ptDayAt = 0, ptCoach = null, ptTime = null;
+
+  function renderDayStrip(host, active, onPick) {
+    host.innerHTML = '';
+    next7.forEach(function (d, i) {
+      var b = document.createElement('button');
+      b.className = 'day';
+      b.type = 'button';
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-selected', i === active ? 'true' : 'false');
+      b.innerHTML = '<b>' + d.num + '</b><span>' + d.label + '</span>';
+      b.addEventListener('click', function () { onPick(i); });
+      host.appendChild(b);
+    });
+  }
+
+  function renderSlots() {
+    var d = next7[dayAt], list = WEEK[d.dow] || [], host = $('#slots');
+    host.innerHTML = '';
+    if (!list.length) {
+      host.innerHTML = '<p class="slots__empty">No group sessions on ' + d.long + '. The hall is still open for training on your own.</p>';
+      return;
+    }
+    list.forEach(function (c, i) {
+      var id = d.key + '|' + c[0] + '|' + c[1];
+      var taken = Math.floor(seed(id) * (CAP + 1));
+      var mine = basket.some(function (b) { return b.id === id; });
+      if (mine) taken = Math.min(CAP, taken + 1);
+      var left = CAP - taken;
+
+      var row = document.createElement('div');
+      row.className = 'slot' + (left <= 0 ? ' is-full' : (left <= 2 ? ' is-low' : '')) + (mine ? ' is-on' : '');
+
+      var cta = left <= 0 && !mine
+        ? '<button class="btn btn--ghost btn--sm" type="button" data-join="' + id + '">Join waiting list</button>'
+        : (mine
+          ? '<button class="btn btn--ghost btn--sm" type="button" data-drop="' + id + '">Remove</button>'
+          : '<button class="btn btn--solid btn--sm" type="button" data-add="' + id + '">Reserve</button>');
+
+      row.innerHTML =
+        '<span class="slot__t">' + c[0] + '</span>' +
+        '<span><span class="slot__n">' + c[1] + '</span>' +
+        '<span class="slot__m">' + c[2] + ' · ' + c[3] + '</span></span>' +
+        '<span class="slot__s">' + (left <= 0 ? 'Full' : '<b>' + left + '</b> of ' + CAP + ' left') + '</span>' +
+        cta;
+      host.appendChild(row);
+    });
+
+    $$('[data-add]', host).forEach(function (b) {
+      b.addEventListener('click', function () {
+        var parts = b.dataset.add.split('|');
+        addToBasket({
+          id: b.dataset.add, kind: 'class', title: parts[2],
+          when: next7[dayAt].long + ', ' + parts[1], price: 0
+        });
+      });
+    });
+    $$('[data-drop]', host).forEach(function (b) {
+      b.addEventListener('click', function () { removeFromBasket(b.dataset.drop); });
+    });
+    $$('[data-join]', host).forEach(function (b) {
+      b.addEventListener('click', function () {
+        b.textContent = 'On the list';
+        b.disabled = true;
+      });
+    });
+  }
+
+  function renderCoaches() {
+    var host = $('#coachPick');
+    host.innerHTML = '';
+    COACHES.forEach(function (c) {
+      var b = document.createElement('button');
+      b.className = 'cp';
+      b.type = 'button';
+      b.setAttribute('aria-pressed', ptCoach === c.id ? 'true' : 'false');
+      b.innerHTML = '<span class="cp__av av ' + c.av + '" aria-hidden="true" style="margin:0">' + c.ini + '</span>' +
+        '<span><b>' + c.name + '</b><span>' + c.role + '</span></span>';
+      b.addEventListener('click', function () {
+        ptCoach = c.id; ptTime = null; renderCoaches(); renderTimes();
+      });
+      host.appendChild(b);
+    });
+  }
+
+  function renderTimes() {
+    var host = $('#ptTimes');
+    host.innerHTML = '';
+    if (!ptCoach) {
+      host.innerHTML = '<p class="slots__empty" style="grid-column:1/-1">Choose a coach first and their free hours will appear here.</p>';
+      return;
+    }
+    var d = next7[ptDayAt];
+    PT_TIMES.forEach(function (t) {
+      var id = 'pt|' + ptCoach + '|' + d.key + '|' + t;
+      var busy = seed(id) > 0.55 || basket.some(function (b) { return b.id === id; });
+      var mine = basket.some(function (b) { return b.id === id; });
+      var b = document.createElement('button');
+      b.className = 'time';
+      b.type = 'button';
+      b.textContent = t;
+      b.setAttribute('aria-pressed', mine ? 'true' : 'false');
+      if (busy && !mine) b.disabled = true;
+      b.addEventListener('click', function () {
+        if (mine) { removeFromBasket(id); return; }
+        var c = COACHES.filter(function (x) { return x.id === ptCoach; })[0];
+        addToBasket({
+          id: id, kind: 'pt', title: 'Personal training · ' + c.name,
+          when: d.long + ', ' + t, price: PT_PRICE
+        });
+      });
+      host.appendChild(b);
+    });
+  }
+
+  function money(n) { return n === 0 ? 'Included' : n.toLocaleString('da-DK') + ' kr'; }
+
+  function renderBasket() {
+    var list = $('#basketList'), none = $('#basketNone'), tot = $('#basketTotal'), go = $('#basketGo');
+    $('#basketOk').classList.remove('is-on');
+    if (!basket.length) {
+      list.hidden = true; tot.hidden = true; none.hidden = false;
+      go.disabled = true; go.textContent = 'Confirm booking';
+      return;
+    }
+    none.hidden = true; list.hidden = false; tot.hidden = false; go.disabled = false;
+    list.innerHTML = '';
+    basket.forEach(function (b) {
+      var li = document.createElement('li');
+      li.innerHTML = '<span><b style="font-weight:600">' + b.title + '</b>' +
+        '<span class="basket__when">' + b.when + ' · ' + money(b.price) + '</span></span>' +
+        '<button class="basket__x" type="button" aria-label="Remove ' + b.title + '" data-rm="' + b.id + '">&times;</button>';
+      list.appendChild(li);
+    });
+    $$('[data-rm]', list).forEach(function (x) {
+      x.addEventListener('click', function () { removeFromBasket(x.dataset.rm); });
+    });
+    var sum = basket.reduce(function (a, b) { return a + b.price; }, 0);
+    $('#basketSum').textContent = sum.toLocaleString('da-DK') + ' kr';
+    go.textContent = 'Confirm ' + basket.length + (basket.length === 1 ? ' booking' : ' bookings');
+  }
+
+  function addToBasket(item) {
+    if (basket.some(function (b) { return b.id === item.id; })) return;
+    basket.push(item);
+    renderSlots(); renderTimes(); renderBasket();
+  }
+  function removeFromBasket(id) {
+    basket = basket.filter(function (b) { return b.id !== id; });
+    renderSlots(); renderTimes(); renderBasket();
+  }
+
+  function markDay(sel, index) {
+    $$(sel + ' .day').forEach(function (b, k) {
+      b.setAttribute('aria-selected', k === index ? 'true' : 'false');
+    });
+  }
+  renderDayStrip($('#days'), dayAt, function (i) {
+    dayAt = i; markDay('#days', dayAt); renderSlots();
+  });
+  renderDayStrip($('#ptDays'), ptDayAt, function (i) {
+    ptDayAt = i; ptTime = null; markDay('#ptDays', ptDayAt); renderTimes();
+  });
+  renderSlots(); renderCoaches(); renderTimes(); renderBasket();
+
+  /* tabs */
+  var tabC = $('#tabClasses'), tabP = $('#tabPt');
+  function setTab(which) {
+    var isC = which === 'classes';
+    tabC.setAttribute('aria-selected', String(isC));
+    tabP.setAttribute('aria-selected', String(!isC));
+    $('#paneClasses').classList.toggle('is-off', !isC);
+    $('#panePt').classList.toggle('is-on', !isC);
+  }
+  tabC.addEventListener('click', function () { setTab('classes'); });
+  tabP.addEventListener('click', function () { setTab('pt'); });
+
+  $('#basketGo').addEventListener('click', function () {
+    if (!basket.length) return;
+    var n = basket.length;
+    $('#basketOkText').textContent = n === 1
+      ? 'We\u2019ve held your spot. Check your email for the confirmation — it usually lands within the hour.'
+      : 'We\u2019ve held all ' + n + ' spots. Check your email for the confirmation — it usually lands within the hour.';
+    $('#basketOk').classList.add('is-on');
+    this.disabled = true;
+    this.textContent = 'Booked';
+  });
+
+  /* ─────────────────────────────────────────────────────────
+     7. Reviews
+     ───────────────────────────────────────────────────────── */
+  var slides = $$('.rev__slide'), dots = $('#revDots'), auto;
+  if (slides.length) {
+    var at = 0;
+    slides.forEach(function (_, i) {
+      var b = document.createElement('button');
+      b.className = 'rev__dot';
+      b.type = 'button';
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-label', 'Review ' + (i + 1));
+      b.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+      b.addEventListener('click', function () { go(i); });
+      dots.appendChild(b);
+    });
+    var allDots = $$('.rev__dot');
+    function go(i) {
+      at = (i + slides.length) % slides.length;
+      slides.forEach(function (s, k) { s.classList.toggle('is-on', k === at); });
+      allDots.forEach(function (d, k) { d.setAttribute('aria-selected', k === at ? 'true' : 'false'); });
+    }
+    function rest() { clearInterval(auto); if (!calm) auto = setInterval(function () { go(at + 1); }, 7000); }
+    $('#revNext').addEventListener('click', function () { go(at + 1); rest(); });
+    $('#revPrev').addEventListener('click', function () { go(at - 1); rest(); });
+    rest();
+    var revBox = $('#rev');
+    revBox.addEventListener('mouseenter', function () { clearInterval(auto); });
+    revBox.addEventListener('mouseleave', rest);
+    revBox.addEventListener('focusin', function () { clearInterval(auto); });
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     8. Lightbox
+     ───────────────────────────────────────────────────────── */
+  var shots = $$('.gal button'), lb = $('#lb'), lbFig = $('#lbFig'), opener = null, cur = 0;
+  function show(i) {
+    cur = (i + shots.length) % shots.length;
+    var b = shots[cur];
+    lbFig.innerHTML = '<svg class="art" role="img" aria-label="' + b.dataset.cap +
+      '"><use href="#' + b.dataset.ill + '" width="100%" height="100%"/></svg>';
+    $('#lbCap').textContent = b.dataset.cap;
+  }
+  function openLb(i) {
+    opener = shots[i]; show(i);
+    lb.classList.add('is-on');
+    document.body.style.overflow = 'hidden';
+    $('#lbX').focus();
+  }
+  function closeLb() {
+    lb.classList.remove('is-on');
+    document.body.style.overflow = '';
+    if (opener) opener.focus();
+  }
+  shots.forEach(function (b, i) { b.addEventListener('click', function () { openLb(i); }); });
+  $('#lbX').addEventListener('click', closeLb);
+  $('#lbN').addEventListener('click', function (e) { e.stopPropagation(); show(cur + 1); });
+  $('#lbP').addEventListener('click', function (e) { e.stopPropagation(); show(cur - 1); });
+  lb.addEventListener('click', function (e) { if (e.target === lb || e.target === lbFig) closeLb(); });
+  document.addEventListener('keydown', function (e) {
+    if (!lb.classList.contains('is-on')) {
+      if (e.key === 'Escape' && sheet.classList.contains('is-open')) setSheet(false);
+      return;
+    }
+    if (e.key === 'Escape') closeLb();
+    if (e.key === 'ArrowRight') show(cur + 1);
+    if (e.key === 'ArrowLeft') show(cur - 1);
+  });
+
+  /* ─────────────────────────────────────────────────────────
+     9. Intro form
+     ───────────────────────────────────────────────────────── */
+  var form = $('#introForm');
+  if (form) {
+    var mark = function (input, bad) {
+      var f = input.closest('.field');
+      if (f) f.classList.toggle('is-bad', bad);
+      return !bad;
+    };
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var ok = true, first = null;
+      var name = $('#fName'), phone = $('#fPhone'), mail = $('#fEmail'), consent = $('#fConsent');
+
+      if (!mark(name, name.value.trim().length < 2)) { ok = false; first = first || name; }
+      if (!mark(phone, phone.value.replace(/[^\d]/g, '').length < 6)) { ok = false; first = first || phone; }
+      if (!mark(mail, !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(mail.value.trim()))) { ok = false; first = first || mail; }
+      $('#consentErr').style.display = consent.checked ? 'none' : 'block';
+      if (!consent.checked) { ok = false; first = first || consent; }
+
+      if (!ok) { first.focus(); return; }
+      form.style.display = 'none';
+      $('#introOk').classList.add('is-on');
+      $('#introOk').scrollIntoView({ block: 'center', behavior: calm ? 'auto' : 'smooth' });
+    });
+    $$('#introForm input').forEach(function (i) {
+      i.addEventListener('input', function () {
+        var f = i.closest('.field');
+        if (f) f.classList.remove('is-bad');
+        if (i === $('#fConsent')) $('#consentErr').style.display = 'none';
+      });
+    });
+  }
+
+  $('#yr').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>

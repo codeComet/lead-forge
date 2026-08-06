@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getUserAndOrg } from "@/lib/org";
 import { enqueueWebsite } from "@/lib/queue";
 import { availableProviders } from "@leadforge/shared/providers";
+import { STATIC_TEMPLATES } from "@leadforge/shared/constants";
 
 export const runtime = "nodejs";
 
@@ -25,10 +26,17 @@ export async function POST(request) {
   }
   const { supabase, orgId, user } = session;
 
-  const { businessId, provider, force, customPrompt } = await request.json().catch(() => ({}));
+  const { businessId, provider, force, customPrompt, template } =
+    await request.json().catch(() => ({}));
   if (!businessId) {
     return NextResponse.json({ error: "businessId is required" }, { status: 400 });
   }
+  // Optional explicit static template chosen in the UI. Accept only known ids;
+  // anything else is dropped so the worker auto-detects from business_type.
+  const templateId =
+    typeof template === "string" && STATIC_TEMPLATES.some((t) => t.id === template)
+      ? template
+      : undefined;
   // Optional custom / redesign prompt. When present the worker skips the industry
   // template cache and builds a one-off site — so a custom build is always fresh.
   const customText = typeof customPrompt === "string" ? customPrompt.trim().slice(0, 4000) : "";
@@ -93,7 +101,7 @@ export async function POST(request) {
 
   let queued = false;
   try {
-    queued = await enqueueWebsite(demo.id, businessId, orgId, providerOverride, forceBuild, customText);
+    queued = await enqueueWebsite(demo.id, businessId, orgId, providerOverride, forceBuild, customText, templateId);
   } catch (e) {
     console.error("[website] enqueue failed:", e.message);
   }

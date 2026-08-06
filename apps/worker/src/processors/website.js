@@ -4,7 +4,7 @@ import { supabase } from "../lib/supabase.js";
 import { generateWebsiteHtml } from "../lib/website-model.js";
 import { extractUrl, scrapeHomepage } from "../lib/scrape-page.js";
 import { extractBrandColor } from "../lib/extract-brand-color.js";
-import { staticTemplateFor, buildStaticSite } from "../lib/static-template.js";
+import { staticTemplateFor, staticTemplateById, buildStaticSite } from "../lib/static-template.js";
 
 // Strip accidental markdown fences / prose the model may wrap around the HTML.
 function cleanHtml(raw) {
@@ -79,19 +79,22 @@ export async function processGenerateWebsite(job) {
   }
 
   // Static pre-built template (e.g. dentists): serve the hand-designed file
-  // verbatim, swapping only title + header brand name. No model call, no tokens,
-  // no industry cache. Runs even for a forced rebuild — this industry never uses
-  // AI. A custom prompt (handled above) is the only way to bypass it.
-  const staticFile = staticTemplateFor(business);
-  if (staticFile) {
-    const html = await buildStaticSite(staticFile, business);
+  // verbatim, swapping the business name in throughout. No model call, no
+  // tokens, no industry cache. An explicit template picked in the UI wins; with
+  // none picked we auto-detect from the business_type keyword. A custom prompt
+  // (handled above) is the only way to bypass it.
+  const templateId = job.data.template
+    ? staticTemplateById(job.data.template)
+    : staticTemplateFor(business);
+  if (templateId) {
+    const html = await buildStaticSite(templateId, business);
     if (!isHtml(html)) {
       await markFailed(demoId, "static template produced invalid HTML");
       throw new Error("invalid HTML output");
     }
     await supabase
       .from("website_demos")
-      .update({ status: "done", html, model: `template:static/${staticFile}`, tokens: 0, error: null })
+      .update({ status: "done", html, model: `template:static/${templateId}`, tokens: 0, error: null })
       .eq("id", demoId);
     return { demoId, businessId, bytes: html.length, static: true };
   }
