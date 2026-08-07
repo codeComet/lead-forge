@@ -223,7 +223,7 @@ export function SearchClient({ orgId }) {
           </div>
           <LeadFilters value={filters} onChange={setFilters} count={filtered.length} total={businesses.length} />
           {checkedCount > 0 && (
-            <div className="flex items-center justify-between rounded-xl border border-border bg-accent/40 px-4 py-2.5">
+            <div className="sticky top-2 z-30 flex items-center justify-between rounded-xl border border-border bg-accent/95 px-4 py-2.5 shadow-lg backdrop-blur supports-[backdrop-filter]:bg-accent/80">
               <span className="text-sm font-medium">{checkedCount} selected</span>
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="sm" onClick={() => toggleAll(false)}>
