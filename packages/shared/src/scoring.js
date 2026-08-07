@@ -32,21 +32,32 @@ const RULES = [
   },
   {
     key: "not-responsive",
-    weight: 8,
+    weight: 12,
     reason: "Layout not responsive",
     test: (a) => a?.website?.exists && a.website.responsive === false,
   },
   {
     key: "slow",
-    weight: 8,
+    weight: 14,
     reason: "Slow page load",
     test: (a) => a?.website?.exists && a.website.fast === false,
   },
+  // — Design & modernity (the clearest "needs a redesign" signal) —
+  // A dated-looking site is the single strongest reason an existing business is
+  // worth pitching a rebuild, so it carries real weight rather than a token
+  // penalty. `modern` comes from tech detection (no modern framework/builder →
+  // legacy hand-coded or very old CMS), which the audit reports reliably.
   {
     key: "outdated-design",
-    weight: 8,
-    reason: "Outdated design",
+    weight: 28,
+    reason: "Outdated / dated design",
     test: (a) => a?.website?.exists && a.website.modern === false,
+  },
+  {
+    key: "outdated-tech",
+    weight: 14,
+    reason: "Obsolete technology (e.g. old Bootstrap / CMS)",
+    test: (a) => a?.website?.exists && a?.tech?.obsolete === true,
   },
   {
     key: "broken-pages",
