@@ -3,7 +3,8 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Lightbulb, TrendingDown, Users, Pencil, Plus, X, Save, Loader2 } from "lucide-react";
+import { Lightbulb, TrendingDown, Users, Pencil, Plus, X, Save, Loader2, GripVertical } from "lucide-react";
+import { Reorder, useDragControls } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -66,37 +67,69 @@ function toNumberOrNull(v) {
   return Number.isFinite(n) ? n : null;
 }
 
-// An editable list of one-line items (problems / improvements) with add + remove.
+// Stable per-item ids so drag reordering has a reference-stable identity even
+// while the text is empty or duplicated. Ids live only in edit-mode state and
+// are dropped on save (we persist bare strings).
+let _uid = 0;
+const uid = () => `pt-${++_uid}`;
+
+// Seed an editable item list ({id, text}[]) from stored insight values.
+function asItemList(value) {
+  return asStringList(value).map((text) => ({ id: uid(), text }));
+}
+
+// One draggable row: a grip handle (the only drag surface, so typing in the
+// input never starts a drag), the text input, and a remove button.
+function EditableRow({ item, placeholder, onEdit, onRemove }) {
+  const controls = useDragControls();
+  return (
+    <Reorder.Item
+      value={item}
+      dragListener={false}
+      dragControls={controls}
+      className="flex items-center gap-2 rounded-lg bg-background"
+    >
+      <button
+        type="button"
+        onPointerDown={(e) => controls.start(e)}
+        className="shrink-0 cursor-grab touch-none text-muted-foreground hover:text-foreground active:cursor-grabbing"
+        aria-label="Drag to reorder"
+      >
+        <GripVertical className="h-4 w-4" />
+      </button>
+      <Input value={item.text} placeholder={placeholder} onChange={(e) => onEdit(e.target.value)} />
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        className="shrink-0 text-muted-foreground hover:text-destructive"
+        onClick={onRemove}
+        aria-label="Remove"
+      >
+        <X className="h-4 w-4" />
+      </Button>
+    </Reorder.Item>
+  );
+}
+
+// An editable, drag-reorderable list of one-line items (problems / improvements)
+// with add + remove. `items` is an {id, text}[]; order is the array order.
 function EditableList({ label, items, onChange, placeholder }) {
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
-      <div className="space-y-2">
-        {items.map((item, i) => (
-          <div key={i} className="flex items-center gap-2">
-            <Input
-              value={item}
-              placeholder={placeholder}
-              onChange={(e) => {
-                const next = items.slice();
-                next[i] = e.target.value;
-                onChange(next);
-              }}
-            />
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="shrink-0 text-muted-foreground hover:text-destructive"
-              onClick={() => onChange(items.filter((_, j) => j !== i))}
-              aria-label="Remove"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
+      <Reorder.Group axis="y" values={items} onReorder={onChange} className="space-y-2">
+        {items.map((item) => (
+          <EditableRow
+            key={item.id}
+            item={item}
+            placeholder={placeholder}
+            onEdit={(text) => onChange(items.map((it) => (it.id === item.id ? { ...it, text } : it)))}
+            onRemove={() => onChange(items.filter((it) => it.id !== item.id))}
+          />
         ))}
-      </div>
-      <Button type="button" variant="outline" size="sm" onClick={() => onChange([...items, ""])}>
+      </Reorder.Group>
+      <Button type="button" variant="outline" size="sm" onClick={() => onChange([...items, { id: uid(), text: "" }])}>
         <Plus className="mr-1 h-4 w-4" /> Add
       </Button>
     </div>
@@ -125,8 +158,8 @@ export function InsightPanel({ leadId, insight }) {
   // Seed edit fields from the current insight when entering edit mode.
   function startEditing() {
     setSummary(insight?.summary ?? "");
-    setProblems(asStringList(insight?.problems));
-    setImprovements(asStringList(insight?.improvements));
+    setProblems(asItemList(insight?.problems));
+    setImprovements(asItemList(insight?.improvements));
     setMissed(insight?.estimatedMissedCustomersPerMonth ?? "");
     setLost(insight?.estimatedLostRevenuePerMonth ?? "");
     setEditing(true);
@@ -138,8 +171,8 @@ export function InsightPanel({ leadId, insight }) {
       // Preserve any fields we don't surface in the editor.
       ...(insight ?? {}),
       summary: summary.trim(),
-      problems: problems.map((p) => p.trim()).filter(Boolean),
-      improvements: improvements.map((p) => p.trim()).filter(Boolean),
+      problems: problems.map((p) => p.text.trim()).filter(Boolean),
+      improvements: improvements.map((p) => p.text.trim()).filter(Boolean),
       estimatedMissedCustomersPerMonth: toNumberOrNull(missed),
       estimatedLostRevenuePerMonth: toNumberOrNull(lost),
     };

@@ -218,10 +218,32 @@ function extraPointsBlock(instructions) {
   );
 }
 
+// The problem points that steer the proposal's issue bullets. The user's own
+// hand-edited insight problems come FIRST and in their chosen order (the
+// InsightPanel lets them add / reorder points) — a manually added point like
+// "outdated design" must lead, not get lost behind the rule-based reasons.
+// Rule-based `lead.reasons` follow as a backfill. Deduped case-insensitively.
+function problemPoints(lead) {
+  const fromInsight = Array.isArray(lead?.insight?.problems)
+    ? lead.insight.problems.filter((p) => typeof p === "string" && p.trim())
+    : [];
+  const fromReasons = (lead?.reasons ?? []).map((r) => r.reason || r);
+  const seen = new Set();
+  const out = [];
+  for (const p of [...fromInsight, ...fromReasons]) {
+    const text = String(p).trim();
+    const key = text.toLowerCase();
+    if (!text || seen.has(key)) continue;
+    seen.add(key);
+    out.push(text);
+  }
+  return out;
+}
+
 export function buildProposalRequest(business, audit, lead, demoUrl = null, channel = "email", instructions = "") {
   if (channel === "instagram") return buildInstagramProposalRequest(business, audit, lead, demoUrl, instructions);
 
-  const reasons = (lead?.reasons ?? []).map((r) => r.reason || r).join(", ");
+  const reasons = problemPoints(lead).join(", ");
   const demoRules = demoUrl
     ? " I have ALREADY built them a free demo of how their new website could look — " +
       "step 7 of the structure is built around it. Put the demo link on its own line, " +
@@ -281,7 +303,7 @@ export function buildProposalRequest(business, audit, lead, demoUrl = null, chan
 // Instagram, and the full email proposal is far too long for a DM. This writes a
 // tight, punchy DM built around the free demo preview link.
 export function buildInstagramProposalRequest(business, audit, lead, demoUrl = null, instructions = "") {
-  const reasons = (lead?.reasons ?? []).map((r) => r.reason || r).join(", ");
+  const reasons = problemPoints(lead).join(", ");
   const linkRules = demoUrl
     ? "The message is built around a free demo I ALREADY made for them. At step 4, tell them " +
       "I built a quick free demo of how their site could look and invite them to tap the " +
