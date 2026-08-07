@@ -5,6 +5,7 @@ import { generateWebsiteHtml } from "../lib/website-model.js";
 import { extractUrl, scrapeHomepage } from "../lib/scrape-page.js";
 import { extractBrandColor } from "../lib/extract-brand-color.js";
 import { staticTemplateFor, staticTemplateById, buildStaticSite } from "../lib/static-template.js";
+import { AI_TEMPLATE_ID } from "@leadforge/shared/constants";
 
 // Strip accidental markdown fences / prose the model may wrap around the HTML.
 function cleanHtml(raw) {
@@ -78,14 +79,21 @@ export async function processGenerateWebsite(job) {
     return await processCustomWebsite(job, { demoId, businessId, orgId, business, customPrompt });
   }
 
+  // "Generate brand new (AI)" picked in the UI: skip every template (both the
+  // explicit static pick and the industry auto-detect) and fall through to a
+  // fresh model generation below.
+  const forceAi = job.data.template === AI_TEMPLATE_ID;
+
   // Static pre-built template (e.g. dentists): serve the hand-designed file
   // verbatim, swapping the business name in throughout. No model call, no
   // tokens, no industry cache. An explicit template picked in the UI wins; with
   // none picked we auto-detect from the business_type keyword. A custom prompt
-  // (handled above) is the only way to bypass it.
-  const templateId = job.data.template
-    ? staticTemplateById(job.data.template)
-    : staticTemplateFor(business);
+  // or the AI sentinel is the only way to bypass it.
+  const templateId = forceAi
+    ? null
+    : job.data.template
+      ? staticTemplateById(job.data.template)
+      : staticTemplateFor(business);
   if (templateId) {
     const html = await buildStaticSite(templateId, business);
     if (!isHtml(html)) {
@@ -108,7 +116,7 @@ export async function processGenerateWebsite(job) {
   // "Rebuild" button) or by picking a specific provider. Without this, the
   // cache below returns old HTML and the build finishes instantly with no
   // visible change.
-  const force = job.data.force || !!job.data.provider;
+  const force = job.data.force || !!job.data.provider || forceAi;
 
   // 1. Reuse this industry+variant template if it already exists (no model call)
   //    — unless this is a forced rebuild.

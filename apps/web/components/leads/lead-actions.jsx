@@ -18,7 +18,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { LEAD_STATUSES, LEAD_STATUS_LABELS, STATIC_TEMPLATES } from "@leadforge/shared/constants";
+import { LEAD_STATUSES, LEAD_STATUS_LABELS, STATIC_TEMPLATES, AI_TEMPLATE_ID } from "@leadforge/shared/constants";
 import { ProviderSelect } from "@/components/providers/provider-select";
 
 export function LeadActions({ lead, business }) {
@@ -167,6 +167,7 @@ export function LeadActions({ lead, business }) {
           className="h-9 rounded-lg border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <option value="">Auto template</option>
+          <option value={AI_TEMPLATE_ID}>Generate brand new (AI)</option>
           {STATIC_TEMPLATES.map((t) => (
             <option key={t.id} value={t.id}>{t.label}</option>
           ))}

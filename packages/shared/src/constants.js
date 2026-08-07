@@ -49,6 +49,13 @@ export const STATIC_TEMPLATES = [
   { id: "gym-volt", label: "Gym — Volt" },
 ];
 
+// Sentinel template id meaning "ignore all templates, generate a brand-new AI
+// site". Not a real template — it's allow-listed through the API and makes the
+// worker skip both the explicit static pick and industry auto-detect, forcing a
+// fresh model generation. Kept distinct from STATIC_TEMPLATES so it never lands
+// in the static-template registry.
+export const AI_TEMPLATE_ID = "ai";
+
 // Audit / job lifecycle status.
 export const AUDIT_STATUSES = {
   pending: "pending",

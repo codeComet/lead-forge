@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getUserAndOrg } from "@/lib/org";
 import { enqueueWebsite } from "@/lib/queue";
 import { availableProviders } from "@leadforge/shared/providers";
-import { STATIC_TEMPLATES } from "@leadforge/shared/constants";
+import { STATIC_TEMPLATES, AI_TEMPLATE_ID } from "@leadforge/shared/constants";
 
 export const runtime = "nodejs";
 
@@ -31,10 +31,12 @@ export async function POST(request) {
   if (!businessId) {
     return NextResponse.json({ error: "businessId is required" }, { status: 400 });
   }
-  // Optional explicit static template chosen in the UI. Accept only known ids;
-  // anything else is dropped so the worker auto-detects from business_type.
+  // Template chosen in the UI. Accept known static ids and the AI sentinel
+  // ("generate brand new, ignore templates"); anything else is dropped so the
+  // worker auto-detects from business_type.
   const templateId =
-    typeof template === "string" && STATIC_TEMPLATES.some((t) => t.id === template)
+    typeof template === "string" &&
+    (template === AI_TEMPLATE_ID || STATIC_TEMPLATES.some((t) => t.id === template))
       ? template
       : undefined;
   // Optional custom / redesign prompt. When present the worker skips the industry
