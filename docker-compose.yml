@@ -300,6 +300,13 @@ services:
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASS: ${SMTP_PASS:-}
       EMAIL_FROM: ${EMAIL_FROM:-}
+      # IMAP — writes a copy of each sent email to the mailbox Sent folder.
+      # Optional; falls back to SMTP host/user/pass when blank.
+      IMAP_HOST: ${IMAP_HOST:-}
+      IMAP_PORT: ${IMAP_PORT:-993}
+      IMAP_USER: ${IMAP_USER:-}
+      IMAP_PASS: ${IMAP_PASS:-}
+      IMAP_SENT_FOLDER: ${IMAP_SENT_FOLDER:-Sent}
 
   # ── BullMQ worker (audit / insight / proposal / email / website) ────
   worker:

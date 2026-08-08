@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { ImapFlow } from "imapflow";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 const FROM = process.env.EMAIL_FROM || `Redwan <${process.env.SMTP_USER || ""}>`;
@@ -42,10 +43,53 @@ export function instrument(rawBody, trackingId, toEmail) {
   return `<div style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.6;color:#222">${html}${footer}${pixel}</div>`;
 }
 
-/** Send via Gmail SMTP. Returns { id } or throws. Returns null id if not configured. */
+// Build the full raw MIME message (Buffer) for a mail, so an identical copy can
+// be appended to the mailbox's Sent folder. streamTransport just renders the
+// message — it doesn't send anything.
+async function buildRaw(opts) {
+  const s = nodemailer.createTransport({ streamTransport: true, buffer: true, newline: "\r\n" });
+  const built = await s.sendMail(opts);
+  return built.message; // Buffer
+}
+
+// SMTP only relays outbound mail — it never writes to the mailbox's Sent folder
+// (that's IMAP-managed, done by webmail/clients). So drop a copy in Sent over
+// IMAP ourselves. Best-effort: if IMAP isn't configured or fails, the send
+// still succeeds. Creds fall back to the SMTP ones (same mailbox in most setups).
+async function appendToSent(raw) {
+  const host = process.env.IMAP_HOST || process.env.SMTP_HOST;
+  const user = process.env.IMAP_USER || process.env.SMTP_USER;
+  const pass = process.env.IMAP_PASS || process.env.SMTP_PASS;
+  if (!host || !user || !pass) return; // IMAP not configured → skip silently
+  const port = Number(process.env.IMAP_PORT) || 993;
+  const mailbox = process.env.IMAP_SENT_FOLDER || "Sent";
+  const client = new ImapFlow({
+    host,
+    port,
+    secure: process.env.IMAP_SECURE ? process.env.IMAP_SECURE === "true" : port === 993,
+    auth: { user, pass },
+    logger: false,
+  });
+  try {
+    await client.connect();
+    await client.append(mailbox, raw, ["\\Seen"]);
+  } finally {
+    await client.logout().catch(() => {});
+  }
+}
+
+/** Send via SMTP + drop a copy in the mailbox Sent folder over IMAP. Returns { id } or throws. */
 export async function sendEmail({ to, subject, html }) {
   const t = getTransporter();
   if (!t) return { id: null, skipped: "SMTP_USER/SMTP_PASS not configured" };
   const info = await t.sendMail({ from: FROM, to, subject, html });
+  // Best-effort Sent-folder copy — reuse the delivered Message-ID so the copy
+  // matches. Never let an IMAP failure fail the (already-delivered) send.
+  try {
+    const raw = await buildRaw({ from: FROM, to, subject, html, messageId: info?.messageId || undefined });
+    await appendToSent(raw);
+  } catch (e) {
+    console.error("IMAP append to Sent failed:", e.message);
+  }
   return { id: info?.messageId ?? null };
 }
