@@ -79,14 +79,26 @@ async function appendToSent(raw) {
 }
 
 /** Send via SMTP + drop a copy in the mailbox Sent folder over IMAP. Returns { id } or throws. */
-export async function sendEmail({ to, subject, html }) {
+export async function sendEmail({ to, subject, html, unsubscribeUrl }) {
   const t = getTransporter();
   if (!t) return { id: null, skipped: "SMTP_USER/SMTP_PASS not configured" };
-  const info = await t.sendMail({ from: FROM, to, subject, html });
-  // Best-effort Sent-folder copy — reuse the delivered Message-ID so the copy
-  // matches. Never let an IMAP failure fail the (already-delivered) send.
+
+  const mailOpts = { from: FROM, to, subject, html };
+  // List-Unsubscribe (+ RFC 8058 one-click) — improves inbox placement and
+  // shows the native "Unsubscribe" link in Gmail/Outlook.
+  if (unsubscribeUrl) {
+    const mailto = `mailto:${process.env.SMTP_USER || ""}?subject=Unsubscribe`;
+    mailOpts.headers = {
+      "List-Unsubscribe": `<${unsubscribeUrl}>, <${mailto}>`,
+      "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+    };
+  }
+
+  const info = await t.sendMail(mailOpts);
+  // Best-effort Sent-folder copy — reuse the delivered Message-ID + headers so
+  // the copy matches. Never let an IMAP failure fail the (already-delivered) send.
   try {
-    const raw = await buildRaw({ from: FROM, to, subject, html, messageId: info?.messageId || undefined });
+    const raw = await buildRaw({ ...mailOpts, messageId: info?.messageId || undefined });
     await appendToSent(raw);
   } catch (e) {
     console.error("IMAP append to Sent failed:", e.message);

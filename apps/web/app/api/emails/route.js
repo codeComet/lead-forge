@@ -43,9 +43,11 @@ export async function POST(request) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   const html = instrument(body, email.tracking_id, email.to_email);
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const unsubscribeUrl = `${appUrl}/api/unsubscribe?email=${encodeURIComponent(email.to_email)}&id=${email.tracking_id}`;
 
   try {
-    const { id, skipped } = await sendEmail({ to: email.to_email, subject: email.subject, html });
+    const { id, skipped } = await sendEmail({ to: email.to_email, subject: email.subject, html, unsubscribeUrl });
     if (skipped) {
       await supabase.from("emails").update({ status: "failed", error: skipped }).eq("id", email.id);
       return NextResponse.json({ queued: false, warning: skipped, emailId: email.id });

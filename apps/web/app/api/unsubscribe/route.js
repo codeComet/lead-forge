@@ -16,12 +16,10 @@ function page(message) {
   );
 }
 
-export async function GET(request) {
-  const { searchParams } = new URL(request.url);
-  const email = searchParams.get("email");
-  const id = searchParams.get("id");
-  if (!email) return page("Invalid unsubscribe link");
-
+// Suppress the address (scoped to the org resolved from the tracking id) and
+// mark the lead opted-out. Shared by the GET (link click) and POST (one-click).
+async function suppress(email, id) {
+  if (!email) return;
   try {
     const supabase = createServiceClient();
     // Resolve org from the tracking id so the suppression is scoped correctly.
@@ -46,6 +44,21 @@ export async function GET(request) {
   } catch {
     /* ignore */
   }
+}
 
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const email = searchParams.get("email");
+  const id = searchParams.get("id");
+  if (!email) return page("Invalid unsubscribe link");
+  await suppress(email, id);
   return page("You've been unsubscribed");
+}
+
+// RFC 8058 one-click unsubscribe: Gmail/Outlook POST here directly from the
+// List-Unsubscribe-Post header. No HTML — just a 200.
+export async function POST(request) {
+  const { searchParams } = new URL(request.url);
+  await suppress(searchParams.get("email"), searchParams.get("id"));
+  return new Response(null, { status: 200 });
 }
