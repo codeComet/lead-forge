@@ -2,16 +2,41 @@
 
 import * as React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Mail, MailOpen, MousePointerClick } from "lucide-react";
+import { toast } from "sonner";
+import { Mail, MailOpen, MousePointerClick, Trash2, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { EmptyState } from "@/components/empty-state";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Send } from "lucide-react";
 
 export function CampaignList({ orgId }) {
   const supabase = React.useMemo(() => createClient(), []);
   const queryClient = useQueryClient();
+  // id currently being deleted, or "all" while clearing the table.
+  const [deleting, setDeleting] = React.useState(null);
+
+  // Delete one email (email_events cascade via FK). RLS scopes to the org.
+  async function deleteOne(id) {
+    if (!window.confirm("Delete this email from the campaign log?")) return;
+    setDeleting(id);
+    const { error } = await supabase.from("emails").delete().eq("id", id);
+    setDeleting(null);
+    if (error) return toast.error(error.message);
+    toast.success("Email deleted.");
+    queryClient.invalidateQueries({ queryKey: ["emails", orgId] });
+  }
+
+  async function clearAll() {
+    if (!window.confirm("Delete ALL emails in the campaign log? This can't be undone.")) return;
+    setDeleting("all");
+    const { error } = await supabase.from("emails").delete().eq("org_id", orgId);
+    setDeleting(null);
+    if (error) return toast.error(error.message);
+    toast.success("Campaign log cleared.");
+    queryClient.invalidateQueries({ queryKey: ["emails", orgId] });
+  }
 
   const { data: emails = [], isLoading } = useQuery({
     queryKey: ["emails", orgId],
@@ -56,40 +81,67 @@ export function CampaignList({ orgId }) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-border">
-      <table className="w-full text-sm">
-        <thead className="border-b border-border bg-muted/40 text-left text-xs text-muted-foreground">
-          <tr>
-            <th className="px-4 py-3 font-medium">Recipient</th>
-            <th className="px-4 py-3 font-medium">Subject</th>
-            <th className="px-4 py-3 font-medium">Status</th>
-            <th className="px-4 py-3 font-medium">Activity</th>
-          </tr>
-        </thead>
-        <tbody>
-          {emails.map((e) => {
-            const types = new Set((e.email_events ?? []).map((x) => x.type));
-            return (
-              <tr key={e.id} className="border-b border-border/60">
-                <td className="px-4 py-3 font-medium">{e.to_email}</td>
-                <td className="max-w-xs truncate px-4 py-3 text-muted-foreground">{e.subject}</td>
-                <td className="px-4 py-3">
-                  <Badge variant={e.status === "sent" ? "green" : e.status === "failed" ? "red" : "secondary"}>
-                    {e.status}
-                  </Badge>
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <span className="inline-flex items-center gap-1"><Mail className="h-3.5 w-3.5" /> Sent</span>
-                    {types.has("opened") && <span className="inline-flex items-center gap-1 text-success"><MailOpen className="h-3.5 w-3.5" /> Opened</span>}
-                    {types.has("clicked") && <span className="inline-flex items-center gap-1 text-primary"><MousePointerClick className="h-3.5 w-3.5" /> Clicked</span>}
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+    <div className="space-y-3">
+      <div className="flex justify-end">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={clearAll}
+          disabled={deleting === "all"}
+          className="text-muted-foreground hover:text-destructive"
+        >
+          {deleting === "all" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+          Clear all
+        </Button>
+      </div>
+      <div className="overflow-x-auto rounded-xl border border-border">
+        <table className="w-full text-sm">
+          <thead className="border-b border-border bg-muted/40 text-left text-xs text-muted-foreground">
+            <tr>
+              <th className="px-4 py-3 font-medium">Recipient</th>
+              <th className="px-4 py-3 font-medium">Subject</th>
+              <th className="px-4 py-3 font-medium">Status</th>
+              <th className="px-4 py-3 font-medium">Activity</th>
+              <th className="px-4 py-3 font-medium"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {emails.map((e) => {
+              const types = new Set((e.email_events ?? []).map((x) => x.type));
+              return (
+                <tr key={e.id} className="border-b border-border/60">
+                  <td className="px-4 py-3 font-medium">{e.to_email}</td>
+                  <td className="max-w-xs truncate px-4 py-3 text-muted-foreground">{e.subject}</td>
+                  <td className="px-4 py-3">
+                    <Badge variant={e.status === "sent" ? "green" : e.status === "failed" ? "red" : "secondary"}>
+                      {e.status}
+                    </Badge>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      <span className="inline-flex items-center gap-1"><Mail className="h-3.5 w-3.5" /> Sent</span>
+                      {types.has("opened") && <span className="inline-flex items-center gap-1 text-success"><MailOpen className="h-3.5 w-3.5" /> Opened</span>}
+                      {types.has("clicked") && <span className="inline-flex items-center gap-1 text-primary"><MousePointerClick className="h-3.5 w-3.5" /> Clicked</span>}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => deleteOne(e.id)}
+                      disabled={deleting === e.id}
+                      aria-label="Delete email"
+                      className="text-muted-foreground hover:text-destructive"
+                    >
+                      {deleting === e.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
