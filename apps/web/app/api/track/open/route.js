@@ -3,6 +3,11 @@ import { createServiceClient } from "@/lib/supabase/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// Legacy open pixel. New outreach no longer embeds it (the image was a Gmail
+// Promotions signal, and Apple/Gmail image proxies made the data unreliable) —
+// this route stays so mail sent before that change still resolves. 'opened' is
+// now inferred from clicks; see packages/shared/src/email-render.js.
+
 // 1x1 transparent GIF.
 const PIXEL = Buffer.from(
   "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",

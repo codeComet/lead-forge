@@ -58,9 +58,42 @@ Then edit `.env` and set:
 - `ADDITIONAL_REDIRECT_URLS=https://app.example.com/**`
 - `ANTHROPIC_API_KEY`, `GOOGLE_MAPS_API_KEY`, `NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY`, `PAGESPEED_API_KEY`
 - `SMTP_*` + `EMAIL_FROM` (outbound outreach email)
+- `TRACKING_URL=https://track.example.com` (optional but recommended — see
+  [Email deliverability](#email-deliverability))
 
 > `NEXT_PUBLIC_*` values are baked into the web image **at build time**. Change a
 > domain or the anon key ⇒ rebuild `web` (`docker compose up -d --build web`).
+> Plain env vars (`EMAIL_FROM`, `SMTP_*`, `TRACKING_URL`) are read at runtime —
+> but a running container keeps the values it started with, so recreate it after
+> an edit: `docker compose up -d --force-recreate web worker`.
+
+---
+
+## Email deliverability
+
+Cold outreach lands in Gmail's **Promotions** tab when the message carries
+bulk-mail markers. The send path avoids them: no open-tracking pixel, a
+`text/plain` part alongside the HTML, a plain `--` signature instead of a styled
+marketing footer, and no `List-Unsubscribe` headers by default. Two things still
+have to be configured on the domain:
+
+1. **Link domain alignment.** Tracked links (click tracker + unsubscribe) point
+   at `TRACKING_URL`. If that's the app domain while mail comes `From` a
+   different domain, the mismatch is a promotions/spam signal. Set
+   `TRACKING_URL=https://track.<sending-domain>` and route that hostname to
+   `web:3000` (same target as `SITE_URL`). Unset ⇒ falls back to `SITE_URL`.
+2. **SPF, DKIM, DMARC** on the sending domain. Without them Gmail distrusts the
+   `From` display name (it shows the local part instead of the name in
+   `EMAIL_FROM`) and filters harder.
+
+`EMAIL_LIST_UNSUBSCRIBE=true` re-enables the RFC 8058 one-click headers. Only
+worth it above ~5k messages/day, where Gmail requires them — below that they
+just mark the mail as bulk. The unsubscribe link in the body keeps the opt-out
+compliant either way.
+
+Open tracking is intentionally gone: Apple Mail Privacy Protection preloads
+images (phantom opens) and Gmail blocks or proxies them (missed opens). Clicks,
+demo-preview views (`website_demos.views`) and replies are the real signals.
 
 ---
 

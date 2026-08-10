@@ -780,7 +780,24 @@ supabase/        SQL migrations (schema + RLS + storage + realtime + demos)
 * `apps/worker/src/processors/` — one processor per queue: `audit`, `website`,
   `insight`, `proposal`, `email`.
 * `packages/shared/src/` — `scoring.js` (lead score), `prompts.js` (all Claude
-  prompts), `images.js` (demo image host rewriting), `constants.js`.
+  prompts), `images.js` (demo image host rewriting), `constants.js`,
+  `email-render.js` (outreach body rendering — click tracking, plain-text part).
+
+## Email deliverability
+
+Outreach is 1:1 cold email, so the send path is tuned for Gmail's Primary tab
+rather than for bulk metrics. `packages/shared/src/email-render.js` renders the
+body for both send paths (`apps/web/lib/email.js`, the worker's `email`
+processor): **no open pixel**, links rewritten through the click tracker at
+`TRACKING_URL` (set it to a subdomain of the *sending* domain so the link domain
+matches the `From` domain), a plain `--` signature carrying the unsubscribe
+link, and a `text/plain` alternative on every send. `List-Unsubscribe` /
+`List-Unsubscribe-Post` are off unless `EMAIL_LIST_UNSUBSCRIBE=true` — those
+headers tell Gmail "bulk" and route outreach to Promotions; they only pay off
+above ~5k msgs/day. Open events now come from clicks (a click implies an open);
+`api/track/open` remains only for mail sent before this change. SPF/DKIM/DMARC
+on the sending domain are still required — without them Gmail drops the `From`
+display name and filters harder. Details in `DEPLOY.md`.
 
 ## Website demo images
 

@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { instrument, toPlainText } from "@leadforge/shared/email-render";
 import { supabase } from "../lib/supabase.js";
 
 const SMTP_PORT = Number(process.env.SMTP_PORT) || 465;
@@ -13,28 +14,7 @@ const transporter =
         auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
       })
     : null;
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 const FROM = process.env.EMAIL_FROM || `Redwan <${process.env.SMTP_USER || ""}>`;
-
-// Rewrite links for click tracking and append an open pixel + compliant footer.
-function instrument(rawBody, trackingId, toEmail) {
-  // Plain-text bodies: linkify bare URLs (so the demo link is clickable +
-  // tracked) and convert newlines before rewriting links for click tracking.
-  const looksHtml = /<[a-z][\s\S]*>/i.test(rawBody);
-  const html = looksHtml
-    ? rawBody
-    : rawBody
-        .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1">$1</a>')
-        .replace(/\n/g, "<br>");
-
-  const clickBase = `${APP_URL}/api/track/click?id=${trackingId}&url=`;
-  let out = html.replace(/href="(https?:\/\/[^"]+)"/gi, (_, url) => `href="${clickBase}${encodeURIComponent(url)}"`);
-
-  const pixel = `<img src="${APP_URL}/api/track/open?id=${trackingId}" width="1" height="1" style="display:none" alt=""/>`;
-  const unsub = `${APP_URL}/api/unsubscribe?email=${encodeURIComponent(toEmail)}&id=${trackingId}`;
-  const footer = `<div style="margin-top:24px;font-size:12px;color:#888">You're receiving this because we thought it was relevant to your business. <a href="${unsub}">Unsubscribe</a>.</div>`;
-  return `${out}${footer}${pixel}`;
-}
 
 export async function processEmail(job) {
   const { emailId } = job.data;
@@ -68,6 +48,7 @@ export async function processEmail(job) {
       to: email.to_email,
       subject: email.subject,
       html,
+      text: toPlainText(html),
     });
 
     await supabase
@@ -82,7 +63,7 @@ export async function processEmail(job) {
       await supabase.from("leads").update({ status: "contacted" }).eq("id", email.lead_id).eq("status", "new");
     }
 
-    return { emailId, providerId: data?.id };
+    return { emailId, providerId: info?.messageId ?? null };
   } catch (e) {
     await supabase.from("emails").update({ status: "failed", error: e.message }).eq("id", emailId);
     throw e;

@@ -300,6 +300,14 @@ services:
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASS: ${SMTP_PASS:-}
       EMAIL_FROM: ${EMAIL_FROM:-}
+      # Base URL for tracked links (click tracker + unsubscribe). Point this at a
+      # subdomain of the sending domain (https://track.<sending-domain>) routed to
+      # web:3000 — a link domain that differs from the From domain reads as bulk
+      # mail. Falls back to SITE_URL.
+      TRACKING_URL: ${TRACKING_URL:-}
+      # List-Unsubscribe headers mark mail as bulk → Gmail Promotions. Only turn
+      # on for true bulk sending (5k+/day, where Gmail requires them).
+      EMAIL_LIST_UNSUBSCRIBE: ${EMAIL_LIST_UNSUBSCRIBE:-}
       # IMAP — writes a copy of each sent email to the mailbox Sent folder.
       # Optional; falls back to SMTP host/user/pass when blank.
       IMAP_HOST: ${IMAP_HOST:-}
@@ -347,6 +355,7 @@ services:
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASS: ${SMTP_PASS:-}
       EMAIL_FROM: ${EMAIL_FROM:-}
+      TRACKING_URL: ${TRACKING_URL:-}
 
   # ── Optional: Supabase Studio admin UI (profile: studio) ────────────
   meta:
