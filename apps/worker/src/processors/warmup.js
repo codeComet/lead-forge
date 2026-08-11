@@ -10,7 +10,7 @@
 // Graduation is checked here too: once the configured number of days has
 // passed, the org flips to 'live' and cold outreach unlocks.
 
-import { isWarmupComplete, rampDay, warmupDaysLeft } from "@leadforge/shared/send-schedule";
+import { isWarmupComplete, rampDay, warmupDaysLeft, dailyCap, startOfLocalDay } from "@leadforge/shared/send-schedule";
 import { planNextSend } from "@leadforge/shared/send-planner";
 import { warmupEmail } from "@leadforge/shared/warmup-content";
 import { supabase } from "../lib/supabase.js";
@@ -20,12 +20,67 @@ import { sendMail, transporter, FROM } from "../lib/mailer.js";
 // so treat anything landing inside the next interval as now.
 const DUE_WINDOW_MS = 6 * 60_000;
 
-async function graduate(orgId) {
+// One warm-up email per contact per day. With a short seed list the ramp cap
+// would otherwise mail the same few people 8× a day, which is neither natural
+// nor useful — the cap is a ceiling, not a target.
+const MAX_PER_CONTACT_PER_DAY = Number(process.env.WARMUP_MAX_PER_CONTACT_PER_DAY) || 1;
+
+/** Address to notify the operator on — the mailbox we send from. */
+function operatorAddress() {
+  return (
+    process.env.WARMUP_NOTIFY_EMAIL ||
+    process.env.SMTP_USER ||
+    (FROM.match(/<([^>]+)>/)?.[1] ?? "").trim() ||
+    null
+  );
+}
+
+// Graduation is easy to miss (it's just a state flip), so mail the operator a
+// summary. Best-effort: never let a failed notification block the flip.
+async function notifyGraduated(settings, now) {
+  const to = operatorAddress();
+  if (!to) return;
+
+  const { data: contacts } = await supabase
+    .from("warmup_contacts")
+    .select("email, replied_at")
+    .eq("org_id", settings.org_id);
+  const seeds = contacts?.length ?? 0;
+  const replied = contacts?.filter((c) => c.replied_at).length ?? 0;
+  // Day after the ramp's warm-up phase → the cap that applies from now on.
+  const cap = dailyCap({ ...settings, mode: "live" }, now);
+
+  const lines = [
+    "Warm-up finished — cold outreach is unlocked.",
+    "",
+    `Seed contacts: ${seeds}`,
+    `Replied: ${replied} of ${seeds}`,
+    `Daily cap from now: ${cap} emails/day (it keeps ramping to 50)`,
+    `Send window: ${String(settings.window_start_hour).padStart(2, "0")}:00–${String(settings.window_end_hour).padStart(2, "0")}:00 ${settings.timezone}, Mon–Fri`,
+    "",
+    replied < Math.ceil(seeds / 2)
+      ? "Heads up: fewer than half your seeds replied, so the reputation signal is thin. Consider adding contacts and running another warm-up before sending at volume."
+      : "Reply rate looks healthy. Ramp into real outreach gradually and watch Google Postmaster Tools.",
+  ];
+
+  try {
+    await sendMail({
+      to,
+      subject: "Warm-up complete — outreach unlocked",
+      html: lines.join("\n").replace(/\n/g, "<br>"),
+    });
+  } catch (e) {
+    console.error("[warmup] graduation notice failed:", e.message);
+  }
+}
+
+async function graduate(settings, now) {
   await supabase
     .from("email_settings")
     .update({ mode: "live", updated_at: new Date().toISOString() })
-    .eq("org_id", orgId);
-  console.log(`[warmup] org ${orgId} graduated → cold outreach unlocked`);
+    .eq("org_id", settings.org_id);
+  console.log(`[warmup] org ${settings.org_id} graduated → cold outreach unlocked`);
+  await notifyGraduated(settings, now);
 }
 
 async function sendOne(settings, now) {
@@ -40,6 +95,21 @@ async function sendOne(settings, now) {
     .limit(1)
     .maybeSingle();
   if (!contact) return { skipped: "no warm-up contacts" };
+
+  // The least recently mailed contact has already had its share today → the
+  // whole list has, so there's nothing to send until tomorrow.
+  const dayStart = startOfLocalDay(now, settings.timezone).toISOString();
+  const { count: sentToContactToday } = await supabase
+    .from("emails")
+    .select("id", { count: "exact", head: true })
+    .eq("org_id", orgId)
+    .eq("kind", "warmup")
+    .eq("to_email", contact.email)
+    .eq("status", "sent")
+    .gte("sent_at", dayStart);
+  if ((sentToContactToday || 0) >= MAX_PER_CONTACT_PER_DAY) {
+    return { skipped: "every contact already mailed today" };
+  }
 
   const { subject, body } = warmupEmail({ name: contact.name, from: FROM });
 
@@ -90,7 +160,7 @@ export async function processWarmupTick() {
   for (const settings of orgs) {
     try {
       if (isWarmupComplete(settings, now)) {
-        await graduate(settings.org_id);
+        await graduate(settings, now);
         results.push({ org: settings.org_id, graduated: true });
         continue;
       }

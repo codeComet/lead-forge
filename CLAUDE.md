@@ -814,8 +814,12 @@ Headers alone don't win the inbox, so sending is also **paced** (migration
   **scheduled sends need Redis + the worker**, else the route 503s.
 * While `mode = 'warming'`, only `warmup_contacts` addresses are mailable
   (`isRecipientAllowed`); the `warmup` queue mails one seed per due slot with a
-  varied personal note (`warmup-content.js`) and graduates the org to `live`
-  after `warmup_days`.
+  varied personal note (`warmup-content.js`), at most once per contact per day
+  (`WARMUP_MAX_PER_CONTACT_PER_DAY`), and graduates the org to `live` after
+  `warmup_days`. Graduation is *computed* (`isWarmupComplete`), so leads unlock at
+  local midnight on day N+1 even before the tick flips `mode`; the tick also
+  emails a summary (`WARMUP_NOTIFY_EMAIL`, defaults to the sending mailbox) and
+  the dashboard shows `components/dashboard/warmup-banner.jsx`.
 * The `inbox` queue polls IMAP every 5 min, matches `In-Reply-To`/`References`
   against `emails.provider_id`, records `replied` events, advances leads and
   marks seed contacts answered. Worker sends now also write the Sent folder

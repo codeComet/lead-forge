@@ -269,7 +269,9 @@ export function WarmupCard() {
         </div>
         <p className="text-xs text-muted-foreground">
           Sends only go out Mon–Fri inside this window, spaced with random gaps. Ramp: 8/day in week
-          1, 15 in week 2, then 25 → 40 → 50/day.
+          1, 15 in week 2, then 25 → 40 → 50/day — and at most one warm-up email per contact per
+          day, so a short list isn&apos;t mailed repeatedly. You&apos;ll get an email when warm-up
+          finishes.
         </p>
 
         {/* ── actions ───────────────────────────────────────────────── */}

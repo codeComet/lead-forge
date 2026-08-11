@@ -366,6 +366,10 @@ services:
       IMAP_PASS: ${IMAP_PASS:-}
       IMAP_SENT_FOLDER: ${IMAP_SENT_FOLDER:-Sent}
       IMAP_INBOX_FOLDER: ${IMAP_INBOX_FOLDER:-INBOX}
+      # Warm-up: where the "warm-up finished" notice goes (defaults to the
+      # sending mailbox), and how often one seed contact may be mailed per day.
+      WARMUP_NOTIFY_EMAIL: ${WARMUP_NOTIFY_EMAIL:-}
+      WARMUP_MAX_PER_CONTACT_PER_DAY: ${WARMUP_MAX_PER_CONTACT_PER_DAY:-1}
 
   # ── Optional: Supabase Studio admin UI (profile: studio) ────────────
   meta:

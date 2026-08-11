@@ -104,7 +104,11 @@ So sending is metered (Settings → **Domain warm-up & send pacing**):
 * **Warm-up** — only addresses on the warm-up contact list are mailable; sends to
   real leads are refused with "warm-up in progress". The worker mails one seed
   contact per due slot with a short personal note asking for a reply, and flips
-  the org to `live` after `warmup_days` (default 14).
+  the org to `live` after `warmup_days` (default 14). Each contact gets at most
+  one warm-up email per day (`WARMUP_MAX_PER_CONTACT_PER_DAY`), so 5 seeds means
+  5 emails/day even when the cap allows 8 — 6–10 seeds across different providers
+  is a good list. Graduation emails a summary to `WARMUP_NOTIFY_EMAIL` (defaults
+  to the sending mailbox) and the dashboard shows a banner.
 * **Daily cap** — ramps 8/day (week 1) → 15 → 25 → 40 → 50 ceiling, counted per
   org per local day, warm-up mail included. `daily_cap_override` pins it.
 * **Window** — sends only Mon–Fri inside the configured local hours, spaced with

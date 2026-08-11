@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatNumber, formatPercent } from "@/lib/utils";
 import { PipelineChart } from "@/components/dashboard/pipeline-chart";
+import { WarmupBanner } from "@/components/dashboard/warmup-banner";
 import { LEAD_STATUSES, LEAD_STATUS_LABELS } from "@leadforge/shared/constants";
 
 export const metadata = { title: "Dashboard — LeadForge" };
@@ -62,6 +63,8 @@ export default async function DashboardPage() {
           </Link>
         </Button>
       </PageHeader>
+
+      <WarmupBanner />
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard label="Businesses scanned" value={formatNumber(stats.businesses)} icon={Building2} />
