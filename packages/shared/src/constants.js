@@ -7,6 +7,9 @@ export const QUEUE_NAMES = {
   proposal: "proposal",
   email: "email",
   website: "website",
+  // Recurring maintenance queues (BullMQ job schedulers, not user-triggered).
+  warmup: "warmup",
+  inbox: "inbox",
 };
 
 export const JOB_NAMES = {
@@ -15,6 +18,8 @@ export const JOB_NAMES = {
   generateProposal: "generate-proposal",
   sendEmail: "send-email",
   generateWebsite: "generate-website",
+  warmupTick: "warmup-tick",
+  pollReplies: "poll-replies",
 };
 
 // CRM pipeline stages (order matters for the board).

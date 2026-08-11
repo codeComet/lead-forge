@@ -71,10 +71,15 @@ export async function enqueueProposal(leadId, orgId, opts = {}) {
   return true;
 }
 
-export async function enqueueEmail(emailId, orgId) {
+/**
+ * `delay` (ms) holds the job until its scheduled slot — send pacing is enforced
+ * by BullMQ's delayed set rather than a polling loop. The worker re-checks the
+ * cap and window when the job fires, so a stale delay can't blow the quota.
+ */
+export async function enqueueEmail(emailId, orgId, delay = 0) {
   const q = getQueue(QUEUE_NAMES.email);
   if (!q) return false;
-  await q.add(JOB_NAMES.sendEmail, { emailId, orgId }, DEFAULT_JOB_OPTS);
+  await q.add(JOB_NAMES.sendEmail, { emailId, orgId }, { ...DEFAULT_JOB_OPTS, delay: Math.max(0, Math.round(delay)) });
   return true;
 }
 

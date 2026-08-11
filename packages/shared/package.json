@@ -11,6 +11,9 @@
     "./prompts": "./src/prompts.js",
     "./images": "./src/images.js",
     "./email-render": "./src/email-render.js",
+    "./send-schedule": "./src/send-schedule.js",
+    "./send-planner": "./src/send-planner.js",
+    "./warmup-content": "./src/warmup-content.js",
     "./template": "./src/template.js",
     "./providers": "./src/providers.js"
   }

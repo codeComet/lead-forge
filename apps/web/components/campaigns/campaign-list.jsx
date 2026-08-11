@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Mail, MailOpen, MousePointerClick, Trash2, Loader2 } from "lucide-react";
+import { Mail, MailOpen, MousePointerClick, Reply, Trash2, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { EmptyState } from "@/components/empty-state";
 import { Badge } from "@/components/ui/badge";
@@ -43,7 +43,7 @@ export function CampaignList({ orgId }) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("emails")
-        .select("id, to_email, subject, status, sent_at, created_at, email_events(type)")
+        .select("id, to_email, subject, status, kind, scheduled_at, sent_at, created_at, email_events(type)")
         .eq("org_id", orgId)
         .order("created_at", { ascending: false })
         .limit(200);
@@ -113,15 +113,29 @@ export function CampaignList({ orgId }) {
                   <td className="px-4 py-3 font-medium">{e.to_email}</td>
                   <td className="max-w-xs truncate px-4 py-3 text-muted-foreground">{e.subject}</td>
                   <td className="px-4 py-3">
-                    <Badge variant={e.status === "sent" ? "green" : e.status === "failed" ? "red" : "secondary"}>
-                      {e.status}
-                    </Badge>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <Badge variant={e.status === "sent" ? "green" : e.status === "failed" ? "red" : "secondary"}>
+                        {e.status}
+                      </Badge>
+                      {e.kind === "warmup" && <Badge variant="outline">warm-up</Badge>}
+                    </div>
+                    {/* Sends are paced, so a queued row is waiting on its slot. */}
+                    {e.status === "queued" && e.scheduled_at && (
+                      <div className="mt-1 text-xs text-muted-foreground">
+                        {new Date(e.scheduled_at).toLocaleString(undefined, {
+                          weekday: "short",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </div>
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <span className="inline-flex items-center gap-1"><Mail className="h-3.5 w-3.5" /> Sent</span>
+                      {e.status === "sent" && <span className="inline-flex items-center gap-1"><Mail className="h-3.5 w-3.5" /> Sent</span>}
                       {types.has("opened") && <span className="inline-flex items-center gap-1 text-success"><MailOpen className="h-3.5 w-3.5" /> Opened</span>}
                       {types.has("clicked") && <span className="inline-flex items-center gap-1 text-primary"><MousePointerClick className="h-3.5 w-3.5" /> Clicked</span>}
+                      {types.has("replied") && <span className="inline-flex items-center gap-1 text-success"><Reply className="h-3.5 w-3.5" /> Replied</span>}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-right">

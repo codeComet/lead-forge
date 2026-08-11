@@ -799,6 +799,30 @@ above ~5k msgs/day. Open events now come from clicks (a click implies an open);
 on the sending domain are still required — without them Gmail drops the `From`
 display name and filters harder. Details in `DEPLOY.md`.
 
+Headers alone don't win the inbox, so sending is also **paced** (migration
+`0011_email_warmup`, `packages/shared/src/send-schedule.js` + `send-planner.js`):
+
+* `email_settings` (per org) holds mode (`idle` | `warming` | `live`), warm-up
+  start/length, timezone, send window and weekdays, optional cap override.
+  `warmup_contacts` is the seed list.
+* Ramp: 8/day week 1 → 15 → 25 → 40 → 50 ceiling, counted per local day across
+  both outreach and warm-up mail. `nextSendSlot()` places each send inside the
+  window with jittered gaps; overflow rolls to the next allowed day.
+* `api/emails` no longer blasts: it plans a slot, writes `emails.scheduled_at`,
+  and enqueues with a BullMQ `delay` (only sends inline when the slot is *now*).
+  The worker re-plans on arrival, so drift and restarts self-correct — meaning
+  **scheduled sends need Redis + the worker**, else the route 503s.
+* While `mode = 'warming'`, only `warmup_contacts` addresses are mailable
+  (`isRecipientAllowed`); the `warmup` queue mails one seed per due slot with a
+  varied personal note (`warmup-content.js`) and graduates the org to `live`
+  after `warmup_days`.
+* The `inbox` queue polls IMAP every 5 min, matches `In-Reply-To`/`References`
+  against `emails.provider_id`, records `replied` events, advances leads and
+  marks seed contacts answered. Worker sends now also write the Sent folder
+  (`apps/worker/src/lib/mailer.js`), which previously only the web path did.
+* UI: Settings → `components/settings/warmup-card.jsx`; compose surfaces report
+  "Scheduled for …" via `lib/send-result.js`.
+
 ## Website demo images
 
 The AI website generator (`packages/shared/src/prompts.js`) emits keyword-based

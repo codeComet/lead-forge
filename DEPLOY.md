@@ -95,6 +95,35 @@ Open tracking is intentionally gone: Apple Mail Privacy Protection preloads
 images (phantom opens) and Gmail blocks or proxies them (missed opens). Clicks,
 demo-preview views (`website_demos.views`) and replies are the real signals.
 
+### Warm-up and send pacing
+
+Clean headers don't buy inbox placement on their own — Gmail scores the *sender*,
+and a domain with no history that suddenly emits cold mail gets spam-foldered.
+So sending is metered (Settings → **Domain warm-up & send pacing**):
+
+* **Warm-up** — only addresses on the warm-up contact list are mailable; sends to
+  real leads are refused with "warm-up in progress". The worker mails one seed
+  contact per due slot with a short personal note asking for a reply, and flips
+  the org to `live` after `warmup_days` (default 14).
+* **Daily cap** — ramps 8/day (week 1) → 15 → 25 → 40 → 50 ceiling, counted per
+  org per local day, warm-up mail included. `daily_cap_override` pins it.
+* **Window** — sends only Mon–Fri inside the configured local hours, spaced with
+  randomized gaps. Anything that doesn't fit rolls to the next day's window.
+* **Replies** — the worker polls INBOX every 5 min, matches `In-Reply-To` /
+  `References` against `emails.provider_id`, records a `replied` event, moves the
+  lead to *Replied*, and marks the warm-up contact as having answered.
+
+Requires the **worker + Redis**: scheduled sends live in BullMQ's delayed set, so
+a send that isn't due immediately returns 503 if the worker is down. Reply
+detection and the Sent-folder copy need `IMAP_*` set on the worker (falls back to
+the SMTP credentials — same mailbox in most setups). `IMAP_INBOX_FOLDER` defaults
+to `INBOX`.
+
+Warm-up contacts must be real people who will actually reply and drag the message
+out of spam if it lands there — that engagement is what moves reputation. Google
+Postmaster Tools (add `devbishal.com`, verify by TXT) is the only way to see
+whether it's working.
+
 ---
 
 ## 3A. Deploy with Dokploy (recommended)

@@ -316,7 +316,8 @@ services:
       IMAP_PASS: ${IMAP_PASS:-}
       IMAP_SENT_FOLDER: ${IMAP_SENT_FOLDER:-Sent}
 
-  # ── BullMQ worker (audit / insight / proposal / email / website) ────
+  # ── BullMQ worker (audit / insight / proposal / email / website /
+  #    warm-up ticks / inbox reply polling) ───────────────────────────
   worker:
     build:
       context: .
@@ -356,6 +357,15 @@ services:
       SMTP_PASS: ${SMTP_PASS:-}
       EMAIL_FROM: ${EMAIL_FROM:-}
       TRACKING_URL: ${TRACKING_URL:-}
+      # IMAP — the worker needs it for two things now: the Sent-folder copy of
+      # scheduled sends, and reply detection (polls INBOX to mark leads replied
+      # and to confirm warm-up contacts answered).
+      IMAP_HOST: ${IMAP_HOST:-}
+      IMAP_PORT: ${IMAP_PORT:-993}
+      IMAP_USER: ${IMAP_USER:-}
+      IMAP_PASS: ${IMAP_PASS:-}
+      IMAP_SENT_FOLDER: ${IMAP_SENT_FOLDER:-Sent}
+      IMAP_INBOX_FOLDER: ${IMAP_INBOX_FOLDER:-INBOX}
 
   # ── Optional: Supabase Studio admin UI (profile: studio) ────────────
   meta:

@@ -1,20 +1,13 @@
-import nodemailer from "nodemailer";
-import { instrument, toPlainText } from "@leadforge/shared/email-render";
+import { instrument } from "@leadforge/shared/email-render";
+import { isRecipientAllowed, planNextSend } from "@leadforge/shared/send-planner";
 import { supabase } from "../lib/supabase.js";
+import { sendMail, transporter } from "../lib/mailer.js";
+import { scheduleEmail } from "../lib/queues.js";
 
-const SMTP_PORT = Number(process.env.SMTP_PORT) || 465;
-const transporter =
-  process.env.SMTP_USER && process.env.SMTP_PASS
-    ? nodemailer.createTransport({
-        host: process.env.SMTP_HOST || "smtp.gmail.com",
-        port: SMTP_PORT,
-        // 465 = implicit TLS; 587/25 = STARTTLS (secure must be false or you get
-        // "wrong version number" from a TLS handshake on a plaintext port)
-        secure: SMTP_PORT === 465,
-        auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-      })
-    : null;
-const FROM = process.env.EMAIL_FROM || `Redwan <${process.env.SMTP_USER || ""}>`;
+// A job may fire early (clock drift), late (worker restart), or after the org
+// already spent today's quota through another path. Re-plan on arrival rather
+// than trusting the delay that was computed at enqueue time.
+const SLOT_TOLERANCE_MS = 60_000;
 
 export async function processEmail(job) {
   const { emailId } = job.data;
@@ -40,16 +33,31 @@ export async function processEmail(job) {
     throw new Error("SMTP_USER/SMTP_PASS not configured");
   }
 
+  // Warm-up may have started (or been restarted) after this was queued.
+  const { allowed, settings } = await isRecipientAllowed(supabase, email.org_id, email.to_email, { kind: email.kind });
+  if (!allowed) {
+    await supabase
+      .from("emails")
+      .update({ status: "failed", error: "blocked: warm-up in progress, recipient is not a warm-up contact" })
+      .eq("id", emailId);
+    return { emailId, skipped: "warmup" };
+  }
+
+  // Re-check pacing at run time: if this slot is no longer valid (cap spent,
+  // outside the window, fired early), push the job to the next real slot.
+  const now = new Date();
+  const plan = await planNextSend(supabase, email.org_id, { now, settings });
+  if (plan.at.getTime() - now.getTime() > SLOT_TOLERANCE_MS) {
+    const delay = plan.at.getTime() - now.getTime();
+    await supabase.from("emails").update({ scheduled_at: plan.at.toISOString() }).eq("id", emailId);
+    await scheduleEmail(emailId, email.org_id, delay);
+    return { emailId, rescheduled: plan.at.toISOString(), capReached: plan.capReached };
+  }
+
   const html = instrument(email.body_html, email.tracking_id, email.to_email);
 
   try {
-    const info = await transporter.sendMail({
-      from: FROM,
-      to: email.to_email,
-      subject: email.subject,
-      html,
-      text: toPlainText(html),
-    });
+    const info = await sendMail({ to: email.to_email, subject: email.subject, html });
 
     await supabase
       .from("emails")

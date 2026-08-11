@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { ProviderSelect } from "@/components/providers/provider-select";
+import { WarmupCard } from "@/components/settings/warmup-card";
 
 export const metadata = { title: "Settings — LeadForge" };
 
@@ -60,6 +61,10 @@ export default async function SettingsPage() {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      <div className="mt-4">
+        <WarmupCard />
       </div>
     </div>
   );

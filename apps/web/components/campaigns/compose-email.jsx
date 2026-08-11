@@ -4,6 +4,7 @@ import * as React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Mail, Loader2, PenLine } from "lucide-react";
+import { sendResultMessage } from "@/lib/send-result";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,7 +42,7 @@ export function ComposeEmail({ orgId }) {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed to send");
-      toast.success(json.queued ? "Email sent." : json.warning || "Email recorded.");
+      toast.success(sendResultMessage(json));
       queryClient.invalidateQueries({ queryKey: ["emails", orgId] });
       setTo("");
       setSubject("");

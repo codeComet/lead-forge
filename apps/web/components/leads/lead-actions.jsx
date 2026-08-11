@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Sparkles, Loader2, Mail, Copy, FileText, Globe, ExternalLink, Link2, CheckCircle2, AlertCircle, Code2, Save, Instagram, Languages } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { sendResultMessage } from "@/lib/send-result";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -495,7 +496,7 @@ function ProposalCard({ proposal, business, lead, demo }) {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed to send");
-      toast.success(json.queued ? "Email queued for sending." : "Email recorded.");
+      toast.success(sendResultMessage(json));
       setOpen(false);
     } catch (e) {
       toast.error(e.message);
